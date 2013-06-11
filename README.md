@@ -63,24 +63,37 @@
 
 ###配置步骤
 
-1. clone到本地,配置到linux个人目录
-
+1. clone到本地,配置到linux个人目录（如果是从linux_config过来的，不需要clone）
+   
+        git clone git@github.com:wklken/k-vim.git
 
 2. 安装依赖包
-   ctags,pep8,pyflake,pylint
-   sudo apt-get install ctags
-   brew install ctags
+   
+   
+        sudo apt-get install ctags
+        brew install ctags
 
-   sudo pip install pyflakes
-   sudo pip install pep8
+        #使用python需要
+        sudo pip install pyflakes
+        sudo pip install pylint
+        sudo pip install pep8
    
 3. 安装插件
-
-
-   安装速度取决于网速.....
-   :BundleClean to clean up unused plugins
-:BundleInstall to install newly added plugins
-:BundleInstall! to upgrade all plugins
+   
+        cd k-vim/
+   
+        sh install.sh
+   
+        #会进入安装插件的列表，目前31个插件，一一安装是从github clone的，完全取决于网速
+   
+        #装完之后，要变异YCM，看第4步 编译自动补全YouCompleteMe （这步也有点长）
+   
+        install.sh
+        本质上做的事情
+        1.将vimrc/vim文件夹软连接到$HOME，编程系统vim配置
+        2.git clone安装vundle（clone到bundle目录下）
+        3.通过vundle安装其他所有插件（相当于进入vimrc, 命令行执行:BundleInstall）
+        4.编译需要手动编译的插件，eg.YCM
 
 4. 可能遇到的问题:
 
