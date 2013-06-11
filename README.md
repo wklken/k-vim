@@ -75,6 +75,9 @@
    sudo pip install pep8
    
 3. 安装插件
+
+
+   安装速度取决于网速.....
    :BundleClean to clean up unused plugins
 :BundleInstall to install newly added plugins
 :BundleInstall! to upgrade all plugins

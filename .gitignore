@@ -1,0 +1,4 @@
+bundle/*
+*.pyc
+*.bak
+*.bk
