@@ -1,0 +1,360 @@
+snippet #!
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+${1}
+endsnippet
+
+snippet code
+# -*- coding: utf-8 -*-
+endsnippet
+
+snippet im
+import ${1}
+endsnippet
+
+snippet fim
+from ${1} import ${2}
+endsnippet
+
+snippet from
+from ${1} import ${2}
+endsnippet
+
+#字符串注释
+snippet /
+# ${1}
+endsnippet
+
+snippet #
+# ${1}
+endsnippet
+
+snippet //
+""" ${1} """
+endsnippet
+
+snippet main
+if __name__ == '__main__':
+    ${1}
+endsnippet
+
+snippet _
+__${1:init}__${2}
+endsnippet
+
+snippet di
+def __init__(self${2}):
+    ${3:pass}
+endsnippet
+
+snippet if
+if ${1}:
+    ${2}
+endsnippet
+
+snippet ife
+if ${1:expression}:
+    ${2:# TODO}
+else:
+    ${0:# TODO}
+endsnippet
+
+snippet ifee
+if ${1:expression}:
+    ${2:# TODO}
+elif ${3:expression}:
+    ${4:# TODO}
+else:
+    ${0:# TODO}
+endsnippet
+
+snippet el
+else:
+    ${0:# TODO}
+endsnippet
+
+snippet ei
+elif ${1}:
+    ${2}
+endsnippet
+
+snippet for
+for ${1:i} in ${2:sequence}:
+    ${0:# TODO}
+endsnippet
+
+snippet while
+while ${1:expression}:
+    ${0:# TODO}
+endsnippet
+
+snippet def
+def ${1:function_name}(${2}):
+    """${3docstirng for $1}"""
+    ${3:# TODO: write code...}
+endsnippet
+
+snippet defs
+def ${1:function_name}(self, ${2}):
+    """${3docstirng for $1}"""
+    ${3:# TODO: write code...}
+endsnippet
+
+snippet cla
+class ${1:clsname}(${2:object}):
+    """${3:docstring for $1}"""
+    def __init__(self${4}):
+        ${5}
+endsnippet
+
+#异常处理
+snippet try
+try:
+    ${1}
+except ${2}:
+    ${3}
+endsnippet
+
+
+snippet rai
+raise ${1}
+endsnippet
+
+snippet as
+assert ${1}
+endsnippet
+
+snippet dowh
+while True:
+    ${1: # TODO: write code...}
+    if ${2:condition}:
+        break
+endsnippet
+
+#单个关键字
+snippet t
+True${1}
+endsnippet
+
+snippet f
+False${1}
+endsnippet
+
+snippet n
+None${1}
+endsnippet
+
+snippet r
+return ${1}
+endsnippet
+
+snippet s
+self.${1}
+endsnippet
+
+snippet p
+print ${1}
+endsnippet
+
+snippet pr
+print "${1}"
+endsnippet
+
+snippet pri
+print '${1}'
+endsnippet
+
+snippet property
+def ${1}():
+    doc = "${2: The $1 property.}"
+    def fget(self):
+        ${3:return self._$1}
+    def fset(self, value):
+        ${4:self._$1 = value}
+    def fdel(self):
+        ${5:del self._$1}
+    return locals()
+$1 = property(**$1())
+endsnippet
+
+snippet ld
+${1:var} = lambda ${2}: ${3}
+endsnippet
+
+snippet _
+__${1:init}__${2}
+endsnippet
+
+snippet pdb
+import pdb; pdb.set_trace()
+endsnippet
+
+# ------- docs -----------
+snippet doc
+"""
+@Author: ${1:`wklken`}
+@Email: ${2:`wklken@yeah.net`}
+@Date: ${3}
+@Desc: ${4}
+"""
+endsnippet
+
+snippet tr
+import traceback; traceback.print_exc()
+endsnippet
+
+snippet prt
+print "TRACK ================= ${1}", ${2}
+endsnippet
+snippet #! "#!"
+#!/usr/bin/env python
+endsnippet
+
+snippet cla "cla"
+class ${1:ClassName}(${2:BaseClassName}):
+    """
+    ${3:docstring for $1}.
+    """
+    ${4}
+endsnippet
+
+snippet clam "clam"
+class ${1:ModelName}(${2:models.Model}):
+    """
+    ${3:A model of a $1}.
+    """
+    ${4:properties}
+    def __unicode__(self):
+        return self.${5:property}:
+    class Meta:
+        ${6:meta properties}
+endsnippet
+
+snippet def "def"
+def ${1:fname}(${2:`!v indent('.') ? 'self' : ''`}):
+    """${3:docstring for $1}"""
+    ${4:pass}
+endsnippet
+
+snippet defs "defs"
+def ${1:fname}(self, ${2:**kwargs}):
+    """${3:docstring for $1}"""
+    ${3:pass}
+endsnippet
+
+snippet docs "docs"
+'''
+File: ${1:`!v Filename('$1.py', 'foo.py')`}
+Author: ${2:`!v g:snips_author`}
+Description: ${3}
+'''
+endsnippet
+
+snippet eli: "eli:"
+elif ${1:condition}:
+    ${1:code...}
+endsnippet
+
+snippet els: "els:"
+else:
+    ${1:code...}
+endsnippet
+
+snippet if: "if:"
+if ${1:condition}:
+    ${2:code...}
+endsnippet
+
+snippet ife: "ife:"
+if ${1:condition}:
+    ${2:code...}
+else:
+    ${3:code...}
+endsnippet
+
+snippet for "for"
+for ${1:object} in ${2:objects}:
+    ${3:pass}
+${4}
+endsnippet
+
+snippet fro "fro"
+from ${1:package} import ${2:module}
+${3}
+endsnippet
+
+snippet ifmain "ifmain"
+if __name__ == '__main__':
+    ${1:main()}
+endsnippet
+
+snippet imp "imp"
+import ${1:module}
+${2}
+endsnippet
+
+snippet init "init"
+def __init__(self, ${1:args}):
+    ${2}
+endsnippet
+
+snippet lam "lam"
+${1:var} = lambda ${2:vars} : ${3:action}
+endsnippet
+
+snippet property "property"
+def ${1:foo}():
+    doc = "${2:The $1 property.}"
+    def fget(self):
+        ${3:return self._$1}
+    def fset(self, value):
+        ${4:self._$1 = value}
+endsnippet
+
+snippet whi "whi"
+while ${1:condition}:
+    ${2:# code...}
+endsnippet
+
+snippet pdb "pdb"
+import pdb; pdb.set_trace()
+endsnippet
+
+snippet try "Try/Except"
+try:
+    ${1:pass}
+except ${2:Exception}${3:, e}:
+    ${4:raise $3}
+endsnippet
+
+snippet try "Try/Except/Else"
+try:
+    ${1:pass}
+except ${2:Exception}${3:, e}:
+    ${4:raise $3}
+else:
+    ${5:pass}
+endsnippet
+
+snippet try "Try/Except/Finally"
+try:
+    ${1:pass}
+except ${2:Exception}${3:, e}:
+    ${4:raise $3}
+finally:
+    ${5:pass}
+endsnippet
+
+snippet try "Try/Except/Else/Finally"
+try:
+    ${1:pass}
+except ${2:Exception}${3:, e}:
+    ${4:raise $3}
+else:
+    ${5:pass}
+finally:
+    ${6:pass}
+endsnippet
+
+# vim:ft=snippets:

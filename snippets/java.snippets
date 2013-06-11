@@ -1,0 +1,202 @@
+snippet class
+public class ${1:name}
+{
+    public static void main(String[] args)
+    {
+        ${0:/* TODO */}
+    }
+}
+endsnippet
+
+
+
+snippet If
+if ( ${1:condition} )
+    ${2:/* TODO */};
+endsnippet
+
+
+
+snippet Unless
+if ( ! ${1:condition} )
+    ${2:/* TODO */};
+endsnippet
+
+
+
+snippet if
+if ( ${1:condition} )
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet ife
+if ( ${1:condition} )
+{
+    ${2:/* TODO */}
+}
+else
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet ifee
+if ( ${1:condition} )
+{
+    ${2:/* TODO */}
+}
+elsif ( ${3:condition} )
+{
+    ${4:/* TODO */}
+}
+else
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet unless
+if ( ! ${1:condition} )
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet unlesse
+if ( ! ${1:condition} )
+{
+    ${2:/* TODO */}
+}
+else
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet unlessee
+if ( ! ${1:condition} )
+{
+    ${2:/* TODO */}
+}
+else if ( ${3:condition} )
+{
+    ${4:/* TODO */}
+}
+else
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet eif
+else if ( ${1:condition} )
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet else
+else
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet until
+while ( ! ${1:expression} )
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet Until
+do {
+    ${0:/* TODO */}
+} while ( ! ${1:expression} );
+endsnippet
+
+
+
+snippet while
+while ( ${1:expression} )
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet While
+do {
+    ${0:/* TODO */}
+while ( ${1:expression} );
+endsnippet
+
+
+
+snippet for
+for (int ${1:i} = ${2:0}; $1 ${3:<=} ${4:number}; $1${5:++})
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet For
+for (int ${1:i} = ${2:number}; $1 ${3:>=} ${4:0}; $1${5:--})
+{
+    ${0:/* TODO */}
+}
+endsnippet
+
+
+
+snippet f
+/**
+ * @brief    ${1:brief description}
+ * @return   ${2:return something when}
+ */
+${3:public} ${4:int} ${5:function_name}(${6})
+{
+    $0
+}
+endsnippet
+
+
+
+snippet "\bsw(itch)?" r
+switch (${1:variable}) {
+    case ${2:value}:
+        ${3:/* TODO */;}
+        break;${4}
+} /* switch $1 */
+endsnippet
+
+
+
+snippet case
+case ${1:value}:
+    ${0:/* TODO */;}
+    break;
+endsnippet

@@ -1,0 +1,237 @@
+snippet #!
+#!/bin/bash
+endsnippet
+
+
+
+snippet If
+[ ${1:condition} ] && ${0:command}
+endsnippet
+
+
+
+snippet Unless
+[ ${1:condition} ] || ${0:command}
+endsnippet
+
+
+
+snippet if
+if [ ${1:condition} ]; then
+    ${0:# TODO}
+fi
+endsnippet
+
+
+
+snippet ife
+if [ ${1:condition} ]; then
+    ${2:#code}
+else
+    ${0:#code}
+fi
+endsnippet
+
+
+
+snippet ifee
+if [ ${1:condition} ]; then
+    ${2:#code}
+elif [ ${3:condition} ]; then
+    ${4:#code}
+else
+    ${0:#code}
+fi
+endsnippet
+
+
+
+snippet unless
+if [ ! ${1:condition} ]; then
+    ${0:# TODO}
+fi
+endsnippet
+
+
+
+snippet unlesse
+if [ ! ${1:condition} ]; then
+    ${2:#code}
+else
+    ${0:#code}
+fi
+endsnippet
+
+
+
+snippet unlessee
+if [ ! ${1:condition} ]; then
+    ${2:#code}
+elif [ ${3:condition} ]; then
+    ${4:#code}
+else
+    ${0:#code}
+fi
+endsnippet
+
+
+
+
+snippet "\bfor(_?each)?" "for" r
+for ${1:i} in ${2:list}; do
+    ${0:# TODO}
+done
+endsnippet
+
+
+
+snippet while
+while [ ${1:condition} ]; do
+    ${0:# TODO}
+done
+endsnippet
+
+
+
+snippet f
+${1:function_name}() {
+    ${0:# TODO}
+}
+endsnippet
+
+
+
+snippet "\bswitch" "case" r
+case "${1:param}" in
+"${2:expression}")
+    ${3:# TODO}
+    ;;
+
+$0
+esac
+endsnippet
+
+
+
+snippet case
+"${1:expression}")
+    ${2:# TODO}
+    ;;
+
+$0
+endsnippet
+
+
+
+snippet readline
+${1:command} | while read ${2:items}; do
+    ${0:# TODO}
+done
+endsnippet
+
+
+
+snippet open
+cat "${1:file}" | while read ${2:items}; do
+    ${0:# TODO}
+done
+endsnippet
+
+
+
+snippet openr
+cat "${1:file}" | while read ${2:items}; do
+    ${0:# TODO}
+done
+endsnippet
+
+
+
+snippet die
+echo "ERR: ${1:text}" > /dev/stderr
+exit 1
+endsnippet
+
+
+
+snippet warn
+echo "WARN: ${1:text}" > /dev/stderr
+endsnippet
+
+
+
+snippet dieif
+if [ ${1:expression} ]; then
+    echo "ERR: ${2:text}" > /dev/stderr
+    exit 1
+fi
+endsnippet
+
+
+
+snippet dieunless
+if [ ! ${1:expression} ]; then
+    echo "ERR: ${2:text}" > /dev/stderr
+    exit 1
+fi
+endsnippet
+
+
+
+snippet warnif
+[ ${1:expression} ] && echo "WARN: ${2:text}" > /dev/stderr
+endsnippet
+
+
+
+snippet warnunless
+[ ${1:expression} ] || echo "WARN: ${2:text}" > /dev/stderr
+endsnippet
+
+
+
+snippet *=
+${1:variable1}=$(($$1 * ${2:$variable2}))
+endsnippet
+
+
+
+snippet +=
+${1:variable1}=$(($$1 + ${2:$variable2}))
+endsnippet
+
+
+
+snippet -=
+${1:variable1}=$(($$1 - ${2:$variable2}))
+endsnippet
+
+
+
+snippet /=
+${1:variable1}=$(($$1 / ${2:$variable2}))
+endsnippet
+
+
+
+snippet %=
+${1:variable1}=$(($$1 % ${2:$variable2}))
+endsnippet
+
+
+
+snippet .=
+${1:variable1}="${$1}${2:$variable2}"
+endsnippet
+
+
+
+snippet ++
+${1:variable}=$(($$1 + 1))
+endsnippet
+
+
+
+snippet --
+${1:variable}=$(($$1 - 1))
+endsnippet

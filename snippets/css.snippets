@@ -1,0 +1,11 @@
+snippet "^(\s*)(.*[^:{])$" "{ ... } //" r
+`!p snip.rv=match.group(0)` {
+`!p snip.rv=match.group(1)`  $0
+`!p snip.rv=match.group(1)`} /* `!p snip.rv=match.group(2)` */
+endsnippet
+
+snippet "^(\s*)(.*[^:]){$" "{ ... }" r
+`!p snip.rv=match.group(1) + match.group(2)` {
+`!p snip.rv=match.group(1)`  $0
+`!p snip.rv=match.group(1)`}
+endsnippet
