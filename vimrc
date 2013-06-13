@@ -40,9 +40,9 @@ set autoread          " 文件修改之后自动载入。
 set shortmess=atI       " 启动的时候不显示那个援助索马里儿童的提示
 
 " 备份,到另一个位置. 防止误删, 目前是取消备份
-set backup
-set backupext=.bak
-set backupdir=~/bak/vimbk/
+"set backup
+"set backupext=.bak
+"set backupdir=~/bak/vimbk/
 
 " 取消备份。 视情况自己改
 set nobackup
@@ -489,7 +489,8 @@ let g:indentLine_char = '¦'
 
 "主题 solarized
 Bundle 'altercation/vim-colors-solarized'
-let g:solarized_termtrans=0
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
 let g:solarized_contrast="normal"
 let g:solarized_visibility="normal"
 
@@ -646,6 +647,7 @@ set background=dark
 
 " 修改主题和颜色展示
 colorscheme solarized
+
 "colorscheme molokai
 "colorscheme desert
 
