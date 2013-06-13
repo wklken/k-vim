@@ -37,3 +37,5 @@ export SHELL="/bin/sh"
 vim -u $CURRENT_DIR/vimrc +BundleInstall! +BundleClean +qall
 export SHELL=$system_shell
 
+cd $CURRENT_DIR/bundle/YouCompleteMe/
+bash -x install.sh --clang-completer
