@@ -181,6 +181,8 @@ set helplang=cn
 "language message zh_CN.UTF-8
 "set langmenu=zh_CN.UTF-8
 "set enc=2byte-gb18030
+" 下面这句只影响普通模式 (非图形界面) 下的 Vim。
+set termencoding=utf-8
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
@@ -489,7 +491,7 @@ let g:indentLine_char = '¦'
 
 "主题 solarized
 Bundle 'altercation/vim-colors-solarized'
-let g:solarized_termcolors=256
+"let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 let g:solarized_contrast="normal"
 let g:solarized_visibility="normal"
@@ -595,7 +597,7 @@ nnoremap <leader>h :GundoToggle<CR>
 Bundle 'vim-scripts/mru.vim'
 map <leader>f :MRU<CR>
 let MRU_Max_Menu_Entries = 20
-let MRU_Use_Current_Window = 0
+let MRU_Use_Current_Window = 1
 let MRU_Max_Entries = 100
 
 "for jinja2 highlight
@@ -615,6 +617,11 @@ Bundle 'nono/jquery.vim'
 
 "for show no user whitespaces
 Bundle 'bronson/vim-trailing-whitespace'
+
+"for visual selection
+Bundle 'terryma/vim-expand-region'
+map = <Plug>(expand_region_expand)
+map - <Plug>(expand_region_shrink)
 
 " end turn on
 filetype plugin indent on
@@ -642,11 +649,11 @@ if has("gui_running")
     set t_Co=256
 endif
 
-set t_Co=256
-set background=dark
 
 " 修改主题和颜色展示
 colorscheme solarized
+set background=dark
+set t_Co=256
 
 "colorscheme molokai
 "colorscheme desert
@@ -655,7 +662,7 @@ colorscheme solarized
 hi! link SignColumn   LineNr
 hi! link ShowMarksHLl DiffAdd
 hi! link ShowMarksHLu DiffChange
-" for error highlight，防止错误整行标红导致看不清
+"" for error highlight，防止错误整行标红导致看不清
 highlight clear SpellBad
 highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
 highlight clear SpellCap
