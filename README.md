@@ -393,6 +393,20 @@ molokai主题
 
    ![expand-region](https://raw.github.com/terryma/vim-expand-region/master/expand-region.gif)
 
+7. ####[vim-multiple-cursors](https://github.com/terryma/vim-multiple-cursors)
+
+   多光标批量操作
+
+        [sd]
+        ctrl + m 开始选择
+        ctrl + p 向上取消
+        ctrl + x 跳过
+        esc   退出
+
+   演示(官方演示图)
+
+   ![multiple-cursors](https://raw.github.com/terryma/vim-multiple-cursors/master/assets/example1.gif)
+
 
 > 具体语言
 
