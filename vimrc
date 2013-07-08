@@ -370,7 +370,7 @@ nnoremap U <C-r>
 map <Leader>sa ggVG"
 
 " automatically reload vimrc when it's saved
-au BufWritePost .vimrc so ~/.vimrc'"
+au BufWritePost .vimrc so ~/.vimrc
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>
