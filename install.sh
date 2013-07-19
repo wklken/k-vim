@@ -18,6 +18,7 @@ lnif() {
 echo "backing up current vim config"
 today=`date +%Y%m%d`
 for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -e $i ] && [ ! -L $i ] && mv $i $i.$today; done
+for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -L $i ] && unlink $i ; done
 
 
 echo "setting up symlinks"
@@ -37,6 +38,10 @@ export SHELL="/bin/sh"
 vim -u $CURRENT_DIR/vimrc +BundleInstall! +BundleClean +qall
 export SHELL=$system_shell
 
+
+
+echo "compile YouCompleteMe"
+echo "if error,you need to compile it yourself"
 cd $CURRENT_DIR/bundle/YouCompleteMe/
 bash -x install.sh --clang-completer
 

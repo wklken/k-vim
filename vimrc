@@ -493,7 +493,7 @@ let g:solarized_visibility="normal"
 
 "主题 molokai
 Bundle 'tomasr/molokai'
-let g:molokai_original = 1
+"let g:molokai_original = 1
 
 
 "更高效的移动 ,, + w/fx
