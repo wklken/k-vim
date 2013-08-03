@@ -78,7 +78,8 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
 
         #会进入安装插件的列表，目前30+个插件，一一安装是从github clone的，完全取决于网速
 
-        #安装完插件后，会自动编译YCM，注意，可能编译失败（缺少某些依赖包,暂不支持mac osx 10.9），失败的话手动编译吧，看第4步 编译自动补全YouCompleteMe （这步耗时也有点长，但绝对值得）
+        #安装完插件后，会自动编译YCM，注意，可能编译失败（缺少某些依赖包,暂不支持mac osx 10.9）
+        失败的话手动编译吧，看第4步 编译自动补全YouCompleteMe （这步耗时也有点长，但绝对值得）
 
         install.sh
         本质上做的事情
@@ -118,21 +119,21 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
 
    去掉某些自己用不到的插件: 编辑vimrc，注释掉插件对应Bundle行即可(加一个双引号),保存退出即可
 
-       "Bundle 'fholgado/minibufexpl.vim'
+        "Bundle 'fholgado/minibufexpl.vim'
 
    如果想从物理上清除（删除插件文件），注释保存后再次进入vim
 
    命令行模式，执行:
 
-       :BundleClean
+        :BundleClean
 
    如果要安装新插件，在vimrc中加入bundle，然后执行
 
-       :BundleInstall
+        :BundleInstall
 
    更新插件
 
-       :BundleUpdate
+        :BundleUpdate
 
 6. 给mac用户
 
@@ -142,13 +143,13 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
 
    然后(需要sudo)
 
-       mv /usr/bin/vim /usr/bin/vim.bk
-       ln -s /usr/local/bin/mvim /usr/bin/vim
+        mv /usr/bin/vim /usr/bin/vim.bk
+        ln -s /usr/local/bin/mvim /usr/bin/vim
 
    最后，在.bashrc/.bash_profile中加入
 
-       alias vi='mvim -v'
-       alias vim='mvim -v'
+        alias vi='mvim -v'
+        alias vim='mvim -v'
 
    配置完成
 
@@ -240,6 +241,17 @@ molokai主题
    演示
 
    ![thenerdtree](https://github.com/wklken/gallery/blob/master/vim/thenerdtree.gif?raw=true)
+
+2. ####[fholgado/minibufexpl.vim](https://github.com/fholgado/minibufexpl.vim)
+
+   必装，buffer管理, 可以查找其他同类插件
+
+        [sd]
+            <Tab>  切换buffer
+            左右方向键  切换buffer
+            ,bn   切到后一个
+            ,bp   切到前一个
+            ,bd   关闭当前buffer
 
 2. ####[majutsushi/tagbar](https://github.com/majutsushi/tagbar)
 

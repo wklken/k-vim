@@ -373,14 +373,16 @@ map <Leader>sa ggVG"
 au BufWritePost .vimrc so ~/.vimrc
 
 " Close the current buffer
-map <leader>bd :Bclose<cr>
-" " Close all the buffers
-map <leader>ba :1,1000 bd!<cr>
+"map <leader>bd :Bclose<cr>
+"" " Close all the buffers
+"map <leader>ba :1,1000 bd!<cr>
 
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
+
+" tabnext  tabpreviouse
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -474,7 +476,7 @@ let g:rbpt_colorpairs = [
     \ ['darkred',     'DarkOrchid3'],
     \ ['red',         'firebrick3'],
     \ ]
-let g:rbpt_max = 16
+let g:rbpt_max = 40
 let g:rbpt_loadcmd_toggle = 0
 
 "代码排版缩进标识
@@ -625,6 +627,24 @@ let g:multi_cursor_next_key='<C-m>'
 let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
+
+"for minibufferexpl
+Bundle 'fholgado/minibufexpl.vim'
+let g:miniBufExplMapWindowNavVim = 1
+let g:miniBufExplMapWindowNavArrows = 1
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplModSelTarget = 1
+"解决FileExplorer窗口变小问题
+let g:miniBufExplForceSyntaxEnable = 1
+let g:miniBufExplorerMoreThanOne=2
+let g:miniBufExplCycleArround=1
+
+" 默认方向键左右可以切换buffer
+nnoremap <TAB> :MBEbn<CR>
+noremap <leader>bn :MBEbn<CR>
+noremap <leader>bp :MBEbp<CR>
+noremap <leader>bd :MBEbd<CR>
+
 
 " end turn on
 filetype plugin indent on
