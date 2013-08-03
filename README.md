@@ -278,6 +278,9 @@ molokai主题
    文件搜索,ack/Command-T需要依赖于外部包,不喜欢有太多依赖的,除非十分强大
 
         [sd] ,p  打开ctrlp搜索
+        [sd] ,f  相当于mru功能，show recently opened files
+
+        ctrl + j/k 进行上下移动
 
    演示
 
@@ -534,12 +537,6 @@ molokai主题
 
        [sd] ,h  查看文件编辑历史
 
-
-4. ####[vim-scripts/mru.vim](https://github.com/vim-scripts/mru.vim)
-
-   最近打开文件列表
-
-       [sd] ,f show recently opened files
 
 5. ####[thiderman/nginx-vim-syntax](https://github.com/thiderman/nginx-vim-syntax)
 

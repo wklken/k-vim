@@ -505,6 +505,7 @@ Bundle 'Lokaltog/vim-easymotion'
 Bundle 'kien/ctrlp.vim'
 let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
+map <leader>f :CtrlPMRU<CR>
 "set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux"
 let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$\|.rvm$'
 let g:ctrlp_working_path_mode=0
@@ -589,13 +590,6 @@ Bundle 'tpope/vim-fugitive'
 "edit history, 可以查看回到某个历史状态
 Bundle 'sjl/gundo.vim'
 nnoremap <leader>h :GundoToggle<CR>
-
-"for mru, recently opened files
-Bundle 'vim-scripts/mru.vim'
-map <leader>f :MRU<CR>
-let MRU_Max_Menu_Entries = 20
-let MRU_Use_Current_Window = 1
-let MRU_Max_Entries = 100
 
 "for jinja2 highlight
 Bundle 'Glench/Vim-Jinja2-Syntax'
