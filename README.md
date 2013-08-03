@@ -1,39 +1,20 @@
 k-vim
 ======================
-###说明下
-
-    1.有些插件可能自己用不上，安装后可以注解掉,执行BundleClean就行，这样或许会快些（当然，电脑强大的可以无视）
-    2.有些插件并不在下面列表里，可以自己配置安装，k-vim仅仅是供参考，这就是为啥自己最好fork的原因, 每个插件的配置自己可以深挖下
-    3.当发现有问题，调试方法，注掉所有插件或配置，然后二分法逐一恢复，可以定位到出现问题的插件或配置
 
 ###vim插件分类及快捷键
 
 > 给人一条Vim 命令，他能折腾一晚上；告诉他怎么自定义Vim 命令，他能捣腾一辈子
 >
-> 生命不息,折腾不止
+> 生命不息,折腾不止 (╯‵□′)╯︵┻━┻)
+>
+> 编辑器之神 = 生产力(效率为王) + 性感(界面快捷键) + 装x神器
 
 
-
-###写在前面
-
-    用vim,将近两年,用原生的用了很长一段时间,后来也折腾过几次,用过网上流行的配置,但总感觉很多地方不能满足需求.
-
-    后来决定自己搞一个,参考了很多,往往一个功能有多个插件,会逐一尝试使用一段时间,之后才决定用哪个
-
-    例如补全,python的从pydiction到最近的jedi和python-mode,最终找到了YCM
-
-    插件,首先,要能提高生产力(提升效率),所以要找最给力的
-
-    其次,要漂亮(快捷键和界面),用着有一点点不舒服就自定义
-
-    最后,才是酷(装X神器....额,不提倡,(╯‵□′)╯︵┻━┻)
-
-PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_config)下一个一部分，如果需要，可以参考，主要是一键配置环境
 
 ###vim基本用法
 
 初学者: [vim训练稿](http://blog.csdn.net/wklken/article/details/7533272)
-两年前的三月份,第一次开始使用vim,后来整理了一份,对着敲几遍
+几年前的三月份,第一次正儿八经开始使用vim,后来整理了一份,对着敲几遍,训练稿
 
 推荐: 耗子叔的 [简明vim练级攻略](http://coolshell.cn/articles/5426.html)
 
@@ -42,29 +23,44 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
 ###使用说明
 
 
-1. 使用原生vim,最好先熟悉了再来看插件,插件之所以为插件,辅助性质
+1. 能熟练使用原生vim,最好先熟悉了再来使用插件扩展
 
 2. 以下插件,仅介绍用途优点等,详细配置可以在github中搜索查看详细用途和配置
 
    当前vim使用配置,在vimrc中查看
 
-   快捷键为插件默认/或者当前配置vimrc定义的,如果需要修改,查看vimrc中对插件配置进行修改 [sd]为自定义 [d]为默认
+   快捷键为插件默认/或者当前配置vimrc定义的,如果需要修改,查看vimrc中对插件配置进行修改 [sd]标记的为自定义 [d]标记的为默认快捷键
 
-   有什么问题,先看插件文档说明->代码选项->github上的issues->google it
+  
 
-   相信我,你遇到的问题,一定别人也遇到了,大部分可解决,少部分无解….
 
-   二八定律,关注可以最大提升自身生产力的那20%插件,如何配置,还需要自己去亲自实践
+
 
 2. 由于平时会使用python和golang,所以语言方面的配置偏向于这两个
 
-   其它的可以参照网上配置(通用的插件可以配置,具体语言插件需要自己去研究)
+   其它的可以参照网上配置(通用的插件可以配置,其他具体语言插件可以自己配置加入)
 
 3. fork一份
 
-   搞一份符合自己习惯的vim配置,当然,欢迎推荐好用更酷的插件配置:)
+   根据自己使用的语言，自身习惯进行修改
+   
+   有些插件用不到，可以注释删除，有些插件没有，可以自行添加（vundle很强大只要github上有都能配置），有些插件快捷键等可以自己去进一步了解
+   
+   得到一份符合自己习惯的vim配置，后续能在任何地方进行一键配置
+   
+   
+      二八定律,关注可以最大提升自身生产力的那20%插件,具体要亲自实践
+      有什么问题,先看插件文档说明->代码选项->github上的issues->google it
+      你遇到的问题,一定别人也遇到了,大部分可解决,少部分无解….
+   
+   
+   欢迎推荐好用更酷的插件配置:)
 
-   我的配置也会不定期更新
+   我的配置也会不定期更新，thx
+   
+
+
+PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_config)下一部分，如果需要，可以参考，主要是用于一键配置环境
 
 --------------
 
@@ -78,7 +74,7 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
 2. 安装依赖包
 
         sudo apt-get install ctags
-        brew install ctags
+        #brew install ctags     (mac用户)
 
         #使用python需要
         sudo pip install pyflakes
@@ -89,33 +85,35 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
 
         cd k-vim/
 
-        sh install.sh
+        sh -x install.sh
 
-        #会进入安装插件的列表，目前31个插件，一一安装是从github clone的，完全取决于网速
+        #会进入安装插件的列表，目前30+个插件，一一安装是从github clone的，完全取决于网速
 
-        #安装完插件后，会自动编译YCM，注意，可能编译失败（缺少某些依赖包），失败的话手动编译吧，看第4步 编译自动补全YouCompleteMe （这步耗时也有点长，但绝对值得）
+        #安装完插件后，会自动编译YCM，注意，可能编译失败（缺少某些依赖包,暂不支持mac osx 10.9），失败的话手动编译吧，看第4步 编译自动补全YouCompleteMe （这步耗时也有点长，但绝对值得）
 
         install.sh
         本质上做的事情
-        1.将vimrc/vim文件夹软连接到$HOME，编程系统vim配置
+        1.将vimrc/vim文件夹软链接到$HOME，编程系统vim配置
         2.git clone安装vundle（clone到bundle目录下）
-        3.通过vundle安装其他所有插件（相当于进入vimrc, 命令行执行:BundleInstall）
+        3.通过vundle安装其他所有插件（相当于进入vimrc, 命令行执行:BundleInstall）,从github全部搞到本地
         4.编译需要手动编译的插件，eg.YCM
 
 4. 可能遇到的问题:
 
    编译相关插件,修改配置
  
-
-   * 相对行号
-
-   vimrc中配置,如果不习惯,可以去掉,[相关参考](http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/)
-
    * 编译自动补全YouCompleteMe
 
    [文档](https://github.com/Valloric/YouCompleteMe)
 
    这个插件需要Vim 7.3.584,所以,如果vim版本太低,需要[编译安装](https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source)
+   
+   
+   * 相对行号
+
+   vimrc中配置,如果不习惯,可以去掉,[相关参考](http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/)
+
+
 
    * 配置主题
 
@@ -124,7 +122,59 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
    默认配置的是[solarized dark主题](https://github.com/altercation/vim-colors-solarized)
 
    想要修改终端配色为solarized可以参考 [这里](https://github.com/sigurdga/gnome-terminal-colors-solarized)
+   
+5. 安装/卸载/更新插件：
+   
+   可能发现打开vim很慢，可能是插件有点多了，这个配置插件全开
+   
+   去掉某些自己用不到的插件: 
+   
+   编辑vimrc，注释掉插件对应Bundle行即可(加一个双引号),保存退出即可
+   
+       "Bundle 'fholgado/minibufexpl.vim'
+       
+   如果想从物理上清除（删除插件文件），注释保存后再次进入vim
+   
+   命令行模式，执行:
+   
+       :BundleClean
+       
+   如果要安装新插件，在vimrc中加入bundle，然后执行
+   
+       :BundleInstall
+       
+   更新插件
+   
+       :BundleUpdate
 
+6. 给mac用户
+
+   可以使用mac vim
+   
+   首先，安装最新mac vim ,可以正常打开
+   
+   然后(需要sudo)
+       
+       mv /usr/bin/vim /usr/bin/vim.bk
+       ln -s /usr/local/bin/mvim /usr/bin/vim
+       
+   最后，在.bashrc/.bash_profile中加入
+   
+       alias vi='mvim -v'
+       alias vim='mvim -v'
+       
+   配置完成
+
+7. 冲突和问题排查
+
+   插件很多，并且其默认快捷键或者配置可能发生冲突
+   
+   当加入新插件发现有冲突或者展现有问题
+
+   排除法进行排查：注掉所有插件或配置，然后二分法逐一恢复，可以定位到出现问题的插件或配置
+   
+   
+-------------
 
 ###截图
 
@@ -136,11 +186,13 @@ molokai主题
 
 ![molokai](https://github.com/wklken/gallery/blob/master/vim/molokai.png?raw=true)
 
+-------------
+
 ###自定义快捷键说明
 
 以下快捷键中<leader>==
 
-    F1   关掉，防止跳出帮助
+    F1  关掉，防止跳出帮助
     F2  set nu/nonu
     F3  set list/nolist
     F4  set wrap/nowrap
@@ -172,7 +224,7 @@ molokai主题
     ,p 开启文件搜索 ctrlp
     ,/ 去除匹配高亮
 
-
+--------------------
  
 ###插件及其快捷键说明
 
@@ -182,7 +234,7 @@ molokai主题
 
 1. ####[gmarik/vundle](https://github.com/gmarik/vundle)
 
-    DONE, 必装,用于管理所有插件
+    必装,用于管理所有插件
 
     命令行模式下管理命令:
 
@@ -194,8 +246,6 @@ molokai主题
 > 导航及搜索
 
 1. ####[vim-scripts/The-NERD-tree](https://github.com/vim-scripts/The-NERD-tree)
-
-   DONE
 
    必装,开启目录树导航
 
@@ -210,7 +260,7 @@ molokai主题
 
 2. ####[majutsushi/tagbar](https://github.com/majutsushi/tagbar)
 
-   DONE,必装,标签导航,纬度和taglist不同
+   必装,标签导航,纬度和taglist不同
 
        [sd] <F9> 打开
 
@@ -220,7 +270,7 @@ molokai主题
 
 3. ####[vim-scripts/taglist.vim](https://github.com/vim-scripts/taglist.vim)
 
-    DONE,必装
+   必装
 
         [sd] <F8>打开
 
@@ -231,11 +281,14 @@ molokai主题
 4. ####[kien/ctrlp.vim](https://github.com/hdima/python-syntax)
 
    文件搜索,ack/Command-T需要依赖于外部包,不喜欢有太多依赖的,除非十分强大
+   
+        ,p  打开ctrlp搜索
 
    演示
 
    ![ctrip](https://github.com/wklken/gallery/blob/master/vim/ctrlp.gif?raw=true)
-
+   
+   
 
 > 显示增强
 
@@ -244,7 +297,7 @@ molokai主题
 
 1. ####[Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline)
 
-   DONE, 必装
+   必装，状态栏美观
 
    演示
 
@@ -252,7 +305,7 @@ molokai主题
 
 2. ####[kien/rainbow_parentheses.vim](https://github.com/kien/rainbow_parentheses.vim)
 
-   DONE,必装
+   必装,括号高亮
 
    演示
 
@@ -260,10 +313,9 @@ molokai主题
 
 3. ####[Yggdroot/indentLine](https://github.com/Yggdroot/indentLine)
 
-   DONE,装不装看个人喜好了,缩进标识
+   选装,装不装看个人喜好了,缩进标识
  
-
-   另一个类似的,整块背景色的的,nathanaelkane/vim-indent-guides
+   另一个类似的,整块背景色的的,[nathanaelkane/vim-indent-guides](https://github.com/nathanaelkane/vim-indent-guides),自选吧
 
    看来看去还是st2的好看,唉
 
@@ -279,12 +331,12 @@ molokai主题
 
 4. ####[altercation/vim-colors-solarized](https://github.com/altercation/vim-colors-solarized)
 
-   DONE, 主题,目前我使用的,看起来舒服
+   经典主题,目前我使用的,看起来舒服
 
 
 5. ####[tomasr/molokai](https://github.com/tomasr/molokai)
 
-   DONE, 另一个主题,可选,偶尔换换味道
+   用sublime text2的同学应该很熟悉, 另一个主题,可选,偶尔换换味道
 
 
 > 快速移动
@@ -293,7 +345,7 @@ molokai主题
 
 1. ####[Lokaltog/vim-easymotion](https://github.com/Lokaltog/vim-easymotion)
 
-   跳转到光标后任意位置
+   必装，效率提升杀手锏，跳转到光标后任意位置
 
    配置(我的leader键配置 let g:mapleader = ',')
 
@@ -306,6 +358,8 @@ molokai主题
 
 2. ####[vim-scripts/matchit.zip](https://github.com/vim-scripts/matchit.zip)
 
+   选装
+   
    % 匹配成对的标签，跳转
 
 
@@ -317,11 +371,13 @@ molokai主题
 
 1. ####[Valloric/YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
 
-   YCM是目前用到的最好的自动不全插件,用这个写代码太舒畅了
+   必装，强烈推荐
+   
+   YCM是我目前用到的最好的自动补全插件,我只能说，用这个写代码太舒畅了
 
    这个需要自己去看官方的配置方式,演示在官方github有
 
-   需要Vim 7.3.584 ([如何编译vim](https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source))
+   需要Vim 7.3.584 以上版本([如何编译vim](https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source))
 
    需要编译这个插件(见github文档)
 
@@ -335,9 +391,9 @@ molokai主题
 
 2. ####[vim-scripts/UltiSnips](https://github.com/vim-scripts/UltiSnips)
 
-   快速插入自定义定义好的代码片段
+   必装，效率杀手锏，快速插入自定义的代码片段
 
-   自动不全加这个,高效必备
+   自动补全加这个,高效必备
 
    演示
 
@@ -345,7 +401,7 @@ molokai主题
 
 2. ####[scrooloose/nerdcommenter](https://github.com/scrooloose/nerdcommenter)
 
-   快速批量加减注释
+   必装，另一个大大提升效率的地方，快速批量加减注释
 
        [d] shift+v+方向键选中(默认当前行)   ->  ,cc  加上注释  -> ,cu 解开注释
 
@@ -355,13 +411,14 @@ molokai主题
 
 3. ####[tpope/vim-surround](https://github.com/tpope/vim-surround)
 
-   快速给词加环绕符号,例如引号
+   必装，很给力的功能，快速给词加环绕符号,例如引号
 
    [tpope/vim-repeat](https://github.com/tpope/vim-repeat)
 
    repeat进行增强,'.'可以重复命令
 
-       [d]cs"' [inside]
+       [d]
+          cs"' [inside]
           "Hello world!" -> 'Hello world!'
           ds"
           "Hello world!" -> Hello world!
@@ -374,7 +431,7 @@ molokai主题
 
 4. ####[Raimondi/delimitMate](https://github.com/Raimondi/delimitMate)
 
-   输入引号,括号时,自动补全
+   必装，输入引号,括号时,自动补全
 
    演示
 
@@ -382,7 +439,7 @@ molokai主题
 
 5. ####[godlygeek/tabular](https://github.com/godlygeek/tabular)
 
-   code alignment
+   选装，代码格式化用的，code alignment
 
         [sd]
         ,a=  按等号切分格式化
@@ -390,7 +447,7 @@ molokai主题
 
 6. ####[terryma/vim-expand-region](https://github.com/terryma/vim-expand-region)
 
-   visual mode selection
+   选装，visual mode selection
    视图模式下可伸缩选中部分，用于快速选中某些块
 
         [sd]
@@ -403,7 +460,7 @@ molokai主题
 
 7. ####[vim-multiple-cursors](https://github.com/terryma/vim-multiple-cursors)
 
-   多光标批量操作
+   选装，多光标批量操作
 
         [sd]
         ctrl + m 开始选择
@@ -423,14 +480,16 @@ molokai主题
     python   golang   markdown
 
     需要其它语言支持的,可以到github上捞,上面很多流行的vim配置,eg. spf13-vim
+    
+    以下均为选装，根据自己需要
 
 1. ####[python-syntax](https://github.com/hdima/python-syntax)
 
-   python语法高亮,就是python.vim,在github,有维护和更新
+   使用Python建议安装，python语法高亮,就是python.vim,在github,有维护和更新
 
 2. ####[scrooloose/syntastic](https://github.com/scrooloose/syntastic)
 
-   静态语法及风格检查,支持多种语言
+   建议安装，静态语法及风格检查,支持多种语言
 
    修改了下标记一列的背景色,原有的背景色在solarized下太难看了…..
 
@@ -449,7 +508,7 @@ molokai主题
 
 4. ####[jnwhiteh/vim-golang](https://github.com/jnwhiteh/vim-golang)
 
-   golang语法高亮
+   使用golang建议安装， golang语法高亮
 
    golang刚入门使用,项目中还没正式开始,目前很多golang的手册有配置vim的介绍,后续有需求再弄
 
@@ -521,37 +580,10 @@ molokai主题
 
 2. ####vim-scripts/Conque-Shell
 
-   用过一阵,不大适应,回头瞅瞅
-
 3. ####vim-scripts/YankRing.vim
-
-   剪贴板增强的,装了一段时间发现用得太少,卸了….
-
-   回头看看
 
 4. ####vim-scripts/auto.git
 
-   用过一阵，快速切换模式的
-
-> 那些使用过弃用的
-
-1. ####[vim-scripts/python_match.vim](https://github.com/vim-scripts/python_match.vim)
-
-   特性:重定义%,可以在python的if/elif/else  try/except/finally等结构中跳转,但是平时百分号用的太少,主要是不顺手,卸了
-
-   有兴趣可以试试
-
-2. ####[yonchu/accelerated-smooth-scroll](https://github.com/yonchu/accelerated-smooth-scroll)
-
-   上下移动时,平滑滚动,用了一段时间,不大适应,卸了,看个人喜好
-
-3. ####[ervandew/supertab](https://github.com/ervandew/supertab)
-
-   YouCompleteMe自带包含了,所以不需要了
-
-4. ####[nathanaelkane/vim-indent-guides](https://github.com/nathanaelkane/vim-indent-guides)
-
-   块状的缩进标识，但是总是配得很丑，废弃用了竖线的那个
 
 以上插件并没有buffer管理的,可以搜索安装MiniBuferExplorer/Buferexplorer，插件不错，但是目前没用习惯，暂时没加入
 
@@ -566,6 +598,6 @@ Email: wklken@yeah.net
 
 Github: https://github.com/wklken
 
-Blog: http://blog.csdn.net/wklken(待迁移)
+Blog: http://wklken.me
 
 2013-06-11 于深圳
