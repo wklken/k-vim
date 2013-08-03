@@ -310,7 +310,9 @@ map <space> /
 "map <c-space> ?"
 
 map Y y$
-cmap w!! %!sudo tee > /dev/null %
+"cmap w!! %!sudo tee > /dev/null %
+" w!! to sudo & write a file
+cmap w!! w !sudo tee >/dev/null %
 noremap <silent><leader>/ :nohls<CR>
 
 inoremap kj <Esc>
@@ -412,7 +414,7 @@ Bundle 'gmarik/vundle'
 Bundle 'vim-scripts/The-NERD-tree'
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
-let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$' ]
+let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
 let g:netrw_home='~/bak'
 
 "标签导航
@@ -507,7 +509,11 @@ let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
 map <leader>f :CtrlPMRU<CR>
 "set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux"
-let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$\|.rvm$'
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz)$',
+    \ }
+"\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
 let g:ctrlp_working_path_mode=0
 let g:ctrlp_match_window_bottom=1
 let g:ctrlp_max_height=15

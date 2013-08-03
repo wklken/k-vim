@@ -275,7 +275,7 @@ molokai主题
 
 4. ####[kien/ctrlp.vim](https://github.com/hdima/python-syntax)
 
-   文件搜索,ack/Command-T需要依赖于外部包,不喜欢有太多依赖的,除非十分强大
+   文件搜索,ack/Command-T需要依赖于外部包,不喜欢有太多依赖的,除非十分强大, 具体 [文档](http://kien.github.io/ctrlp.vim/)
 
         [sd] ,p  打开ctrlp搜索
         [sd] ,f  相当于mru功能，show recently opened files
@@ -392,7 +392,7 @@ molokai主题
 
    必装，另一个大大提升效率的地方，快速批量加减注释
 
-       [d] shift+v+方向键选中(默认当前行)   ->  ,cc  加上注释  -> ,cu 解开注释
+        [d] shift+v+方向键选中(默认当前行)   ->  ,cc  加上注释  -> ,cu 解开注释
 
    演示
 
