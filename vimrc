@@ -1,10 +1,10 @@
 "==========================================
 " Author:  wklken
-" Version: 5
+" Version: 6
 " Email: wklken@yeah.net
-" BlogPost: http://blog.csdn.net/wklken/article/details/8044678
+" BlogPost: http://wklken.me
 " ReadMe: README.md
-" Last_modify: 2012-12-16
+" Last_modify: 2013-08-04
 " Sections:
 "     ->General 基础设置
 "     ->Show 展示/排班等界面格式设置
@@ -20,7 +20,6 @@
 "==========================================
 
 "set guifont=Monaco:h20          " 字体 && 字号
-"配色方案
 
 " history存储长度。
 set history=2000
