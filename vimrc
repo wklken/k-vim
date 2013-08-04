@@ -403,6 +403,8 @@ filetype off " required! turn off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+"################### 插件管理 ###################"
+
 "使用Vundle来管理Vundle
 Bundle 'gmarik/vundle'
 " vim plugin bundle control, command model
@@ -410,12 +412,32 @@ Bundle 'gmarik/vundle'
 " :BundleInstall!    update
 " :BundleClean       remove plugin not in list
 
+"################### 导航 ###################"
 "目录导航
-Bundle 'vim-scripts/The-NERD-tree'
+Bundle 'scrooloose/nerdtree'
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
 let g:netrw_home='~/bak'
+"close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end
+
+"for minibufferexpl
+Bundle 'fholgado/minibufexpl.vim'
+let g:miniBufExplMapWindowNavVim = 1
+let g:miniBufExplMapWindowNavArrows = 1
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplModSelTarget = 1
+"解决FileExplorer窗口变小问题
+let g:miniBufExplForceSyntaxEnable = 1
+let g:miniBufExplorerMoreThanOne=2
+let g:miniBufExplCycleArround=1
+
+" 默认方向键左右可以切换buffer
+nnoremap <TAB> :MBEbn<CR>
+noremap <leader>bn :MBEbn<CR>
+noremap <leader>bp :MBEbp<CR>
+noremap <leader>bd :MBEbd<CR>
 
 "标签导航
 Bundle 'majutsushi/tagbar'
@@ -450,6 +472,25 @@ let Tlist_Use_Horiz_Window = 0
 let Tlist_Use_Right_Window = 0
 let Tlist_WinWidth = 25
 
+"for file search ctrlp, 文件搜索
+Bundle 'kien/ctrlp.vim'
+let g:ctrlp_map = '<leader>p'
+let g:ctrlp_cmd = 'CtrlP'
+map <leader>f :CtrlPMRU<CR>
+"set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux"
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz)$',
+    \ }
+"\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+let g:ctrlp_working_path_mode=0
+let g:ctrlp_match_window_bottom=1
+let g:ctrlp_max_height=15
+let g:ctrlp_match_window_reversed=0
+let g:ctrlp_mruf_max=500
+let g:ctrlp_follow_symlinks=1
+
+"################### 显示增强 ###################"
 
 "状态栏增强展示
 Bundle 'Lokaltog/vim-powerline'
@@ -487,6 +528,8 @@ let g:indentLine_noConcealCursor = 1
 let g:indentLine_color_term = 0
 let g:indentLine_char = '¦'
 
+"for show no user whitespaces
+Bundle 'bronson/vim-trailing-whitespace'
 
 "主题 solarized
 Bundle 'altercation/vim-colors-solarized'
@@ -499,45 +542,14 @@ let g:solarized_visibility="normal"
 Bundle 'tomasr/molokai'
 "let g:molokai_original = 1
 
+"################### 快速移动 ###################"
 
 "更高效的移动 ,, + w/fx
 Bundle 'Lokaltog/vim-easymotion'
 
-"for file search ctrlp
-Bundle 'kien/ctrlp.vim'
-let g:ctrlp_map = '<leader>p'
-let g:ctrlp_cmd = 'CtrlP'
-map <leader>f :CtrlPMRU<CR>
-"set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux"
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz)$',
-    \ }
-"\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-let g:ctrlp_working_path_mode=0
-let g:ctrlp_match_window_bottom=1
-let g:ctrlp_max_height=15
-let g:ctrlp_match_window_reversed=0
-let g:ctrlp_mruf_max=500
-let g:ctrlp_follow_symlinks=1
+Bundle 'vim-scripts/matchit.zip'
 
-"自动补全单引号，双引号等 Bundle 'underlog/ClosePairs'
-Bundle 'Raimondi/delimitMate'
-
-"快速 加减注释
-Bundle 'scrooloose/nerdcommenter'
-
-"快速插入代码片段
-Bundle 'vim-scripts/UltiSnips'
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-"定义存放代码片段的文件夹 .vim/snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示
-let g:UltiSnipsSnippetDirectories=["snippets", "bundle/UltiSnips/UltiSnips"]
-
-" 快速加入修改环绕字符
-Bundle 'tpope/vim-surround'
-"for repeat -> enhance surround.vim, . to repeat command
-Bundle 'tpope/vim-repeat'
+"################### 补全及快速编辑 ###################"
 
 "迄今位置用到的最好的自动VIM自动补全插件
 Bundle 'Valloric/YouCompleteMe'
@@ -548,21 +560,49 @@ let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 
 
-" for markdown
-Bundle 'plasticboy/vim-markdown'
-let g:vim_markdown_folding_disabled=1
+"快速插入代码片段
+"Bundle 'vim-scripts/UltiSnips'
+Bundle 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+"定义存放代码片段的文件夹 .vim/snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示
+let g:UltiSnipsSnippetDirectories=["snippets", "bundle/UltiSnips/UltiSnips"]
+
+"快速 加减注释
+Bundle 'scrooloose/nerdcommenter'
+
+" 快速加入修改环绕字符
+Bundle 'tpope/vim-surround'
+"for repeat -> enhance surround.vim, . to repeat command
+Bundle 'tpope/vim-repeat'
+
+"自动补全单引号，双引号等
+Bundle 'Raimondi/delimitMate'
+" for python docstring ",优化输入
+au FileType python let b:delimitMate_nesting_quotes = ['"']
+
+"for code alignment
+Bundle 'godlygeek/tabular'
+nmap <Leader>a= :Tabularize /=<CR>
+vmap <Leader>a= :Tabularize /=<CR>
+nmap <Leader>a: :Tabularize /:\zs<CR>
+vmap <Leader>a: :Tabularize /:\zs<CR>
+
+"for visual selection
+Bundle 'terryma/vim-expand-region'
+map = <Plug>(expand_region_expand)
+map - <Plug>(expand_region_shrink)
+
+"for mutil cursor
+Bundle 'terryma/vim-multiple-cursors'
+" Default mapping
+let g:multi_cursor_next_key='<C-m>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
 
 
-" for python.vim syntax highlight
-Bundle 'hdima/python-syntax'
-let python_highlight_all = 1
-
-"for nginx conf file highlight.   need to confirm it works
-Bundle 'thiderman/nginx-vim-syntax'
-
-" task list
-Bundle 'vim-scripts/TaskList.vim'
-map <leader>td <Plug>TaskList
+"################# 语法检查 ###############
 
 " 编辑时自动语法检查标红, vim-flake8目前还不支持,所以多装一个
 " 使用pyflakes,速度比pylint快
@@ -580,9 +620,18 @@ Bundle 'kevinw/pyflakes-vim'
 let g:pyflakes_use_quickfix = 0
 
 
+"################# 具体语言语法高亮 ###############
+
+" for python.vim syntax highlight
+Bundle 'hdima/python-syntax'
+let python_highlight_all = 1
+
 " for golang
 Bundle 'jnwhiteh/vim-golang'
 
+" for markdown
+Bundle 'plasticboy/vim-markdown'
+let g:vim_markdown_folding_disabled=1
 
 " for javascript
 Bundle "pangloss/vim-javascript"
@@ -590,61 +639,26 @@ let g:html_indent_inctags = "html,body,head,tbody"
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
 
+"for jquery
+Bundle 'nono/jquery.vim'
+
+"for jinja2 highlight
+Bundle 'Glench/Vim-Jinja2-Syntax'
+
+"for nginx conf file highlight.   need to confirm it works
+Bundle 'thiderman/nginx-vim-syntax'
+
+"################### 其他 ###################"
+" task list
+Bundle 'vim-scripts/TaskList.vim'
+map <leader>td <Plug>TaskList
+
 " for git 尚未用起来
 Bundle 'tpope/vim-fugitive'
 
 "edit history, 可以查看回到某个历史状态
 Bundle 'sjl/gundo.vim'
 nnoremap <leader>h :GundoToggle<CR>
-
-"for jinja2 highlight
-Bundle 'Glench/Vim-Jinja2-Syntax'
-
-Bundle 'vim-scripts/matchit.zip'
-
-"for code alignment
-Bundle 'godlygeek/tabular'
-nmap <Leader>a= :Tabularize /=<CR>
-vmap <Leader>a= :Tabularize /=<CR>
-nmap <Leader>a: :Tabularize /:\zs<CR>
-vmap <Leader>a: :Tabularize /:\zs<CR>
-
-"for jquery
-Bundle 'nono/jquery.vim'
-
-"for show no user whitespaces
-Bundle 'bronson/vim-trailing-whitespace'
-
-"for visual selection
-Bundle 'terryma/vim-expand-region'
-map = <Plug>(expand_region_expand)
-map - <Plug>(expand_region_shrink)
-
-"for mutil cursor
-Bundle 'terryma/vim-multiple-cursors'
-" Default mapping
-let g:multi_cursor_next_key='<C-m>'
-let g:multi_cursor_prev_key='<C-p>'
-let g:multi_cursor_skip_key='<C-x>'
-let g:multi_cursor_quit_key='<Esc>'
-
-"for minibufferexpl
-Bundle 'fholgado/minibufexpl.vim'
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
-"解决FileExplorer窗口变小问题
-let g:miniBufExplForceSyntaxEnable = 1
-let g:miniBufExplorerMoreThanOne=2
-let g:miniBufExplCycleArround=1
-
-" 默认方向键左右可以切换buffer
-nnoremap <TAB> :MBEbn<CR>
-noremap <leader>bn :MBEbn<CR>
-noremap <leader>bp :MBEbp<CR>
-noremap <leader>bd :MBEbd<CR>
-
 
 " end turn on
 filetype plugin indent on
@@ -685,6 +699,7 @@ set t_Co=256
 hi! link SignColumn   LineNr
 hi! link ShowMarksHLl DiffAdd
 hi! link ShowMarksHLu DiffChange
+
 "" for error highlight，防止错误整行标红导致看不清
 highlight clear SpellBad
 highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline

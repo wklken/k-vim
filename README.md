@@ -229,15 +229,24 @@ molokai主题
 
 > 导航及搜索
 
-1. ####[vim-scripts/The-NERD-tree](https://github.com/vim-scripts/The-NERD-tree)
+1. ####[scrooloose/nerdtree](https://github.com/scrooloose/nerdtree)
 
    必装,开启目录树导航
 
         [sd]
-            ,n 打开树形目录结构
-            p 到上层目录
-            K 到同目录第一个节点
-            J 到同目录最后一个节点
+            ,n  打开 关闭树形目录结构
+
+            在nerdtree窗口常用操作：(小写当前，大写root)
+            x.......Close the current nodes parent收起当前目录树
+            R.......Recursively refresh the current root刷新根目录树
+            r.......Recursively refresh the current directory刷新当前目录
+            P.......Jump to the root node
+            p.......Jump to current nodes parent
+            K.......Jump up inside directories at the current tree depth  到同目录第一个节点
+            J.......Jump down inside directories at the current tree depth 最后一个节点
+            o.......Open files, directories and bookmarks
+            i.......Open selected file in a split window上下分屏
+            s.......Open selected file in a new vsplit左右分屏
    演示
 
    ![thenerdtree](https://github.com/wklken/gallery/blob/master/vim/thenerdtree.gif?raw=true)
@@ -378,7 +387,11 @@ molokai主题
         neocomplcache
         jedi(对python的补全)
 
-2. ####[vim-scripts/UltiSnips](https://github.com/vim-scripts/UltiSnips)
+   快捷键:
+
+        ,gd  跳到声明位置, 仅 filetypes: c, cpp, objc, objcpp, python 有效
+
+2. ####[SirVer/ultisnips](https://github.com/SirVer/ultisnips)
 
    必装，效率杀手锏，快速插入自定义的代码片段
 
@@ -421,6 +434,8 @@ molokai主题
 
    必装，输入引号,括号时,自动补全
 
+   对python的docstring 三引号做了处理(只处理""", '''暂时没配，可以自己加)
+
    演示
 
    ![delimitmate](https://github.com/wklken/gallery/blob/master/vim/delimate.gif?raw=true)
@@ -460,6 +475,26 @@ molokai主题
 
    ![multiple-cursors](https://raw.github.com/terryma/vim-multiple-cursors/master/assets/example1.gif)
 
+> 语法检查
+
+1. ####[scrooloose/syntastic](https://github.com/scrooloose/syntastic)
+
+   建议安装，静态语法及风格检查,支持多种语言
+
+   修改了下标记一列的背景色,原有的背景色在solarized下太难看了…..
+
+   演示
+
+   ![syntastic](https://github.com/wklken/gallery/blob/master/vim/syntastic.png?raw=true)
+
+2. ####[kevinw/pyflakes-vim](https://github.com/kevinw/pyflakes-vim)
+
+   虽然这个的作者推荐使用syntastic,但是这个插件对于pythoner还是很需要的
+
+   因为有一个特牛的功能,fly check,即,编码时在buffer状态就能动态查错标记,弥补syntastic只能保存和打开时检查语法错误的不足
+
+   演示
+   ![pyflakes](https://github.com/wklken/gallery/blob/master/vim/pyflakes.png?raw=true)
 
 > 具体语言
 
@@ -472,31 +507,11 @@ molokai主题
 
    使用Python建议安装，python语法高亮,就是python.vim,在github,有维护和更新
 
-2. ####[scrooloose/syntastic](https://github.com/scrooloose/syntastic)
-
-   建议安装，静态语法及风格检查,支持多种语言
-
-   修改了下标记一列的背景色,原有的背景色在solarized下太难看了…..
-
-   演示
-
-   ![syntastic](https://github.com/wklken/gallery/blob/master/vim/syntastic.png?raw=true)
-
-3. ####[kevinw/pyflakes-vim](https://github.com/kevinw/pyflakes-vim)
-
-   虽然这个的作者推荐使用syntastic,但是这个插件对于pythoner还是很需要的
-
-   因为有一个特牛的功能,fly check,即,编码时在buffer状态就能动态查错标记,弥补syntastic只能保存和打开时检查语法错误的不足
-
-   演示
-   ![pyflakes](https://github.com/wklken/gallery/blob/master/vim/pyflakes.png?raw=true)
-
 4. ####[jnwhiteh/vim-golang](https://github.com/jnwhiteh/vim-golang)
 
    使用golang建议安装， golang语法高亮
 
    golang刚入门使用,项目中还没正式开始,目前很多golang的手册有配置vim的介绍,后续有需求再弄
-
 
 5. ####[plasticboy/vim-markdown](https://github.com/plasticboy/vim-markdown)
 
@@ -505,6 +520,18 @@ molokai主题
 6. ####[pangloss/vim-javascript](https://github.com/pangloss/vim-javascript)
 
    偶尔会看看js,频率不高
+
+7. ####[nono/jquery.vim](https://github.com/nono/jquery.vim)
+
+   jquery高亮
+
+5. ####[thiderman/nginx-vim-syntax](https://github.com/thiderman/nginx-vim-syntax)
+
+   nginx配置文件语法高亮,常常配置服务器很有用
+
+6. ####[Glench/Vim-Jinja2-Syntax](https://github.com/Glench/Vim-Jinja2-Syntax)
+
+   jinja2 语法高亮
 
 
 > 其它扩展增强
@@ -536,21 +563,6 @@ molokai主题
    编辑文件时光机
 
        [sd] ,h  查看文件编辑历史
-
-
-5. ####[thiderman/nginx-vim-syntax](https://github.com/thiderman/nginx-vim-syntax)
-
-   nginx配置文件语法高亮,常常配置服务器很有用
-
-6. ####[Glench/Vim-Jinja2-Syntax](https://github.com/Glench/Vim-Jinja2-Syntax)
-
-   jinja2 语法高亮
-
-7. ####[nono/jquery.vim](https://github.com/nono/jquery.vim)
-
-   jquery高亮
-
-
 
 > 待考察的
 
