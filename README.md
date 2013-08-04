@@ -266,7 +266,7 @@ molokai主题
 
    必装,标签导航,纬度和taglist不同
 
-       [sd] <F9> 打开
+        [sd] <F9> 打开
 
    演示
 
@@ -419,13 +419,14 @@ molokai主题
 
    repeat进行增强,'.'可以重复命令
 
-       [d]
-       cs"' [inside]
-       "Hello world!" -> 'Hello world!'
-       ds"
-       "Hello world!" -> Hello world!
-       ysiw"
-       Hello -> "Hello"
+        [d]
+        cs"' [inside]
+        "Hello world!" -> 'Hello world!'
+        ds"
+        "Hello world!" -> Hello world!
+        ysiw"
+        Hello -> "Hello"
+
    演示
 
    ![surround](https://github.com/wklken/gallery/blob/master/vim/surround.gif?raw=true)
@@ -544,8 +545,8 @@ molokai主题
 
    重构代码时一般通读,标记修改位置,非常实用
 
-       [sd]
-       ,td 打开todo列表
+        [sd]
+        ,td 打开todo列表
 
    演示
 
@@ -562,7 +563,7 @@ molokai主题
 
    编辑文件时光机
 
-       [sd] ,h  查看文件编辑历史
+        [sd] ,h  查看文件编辑历史
 
 > 待考察的
 
@@ -574,11 +575,7 @@ molokai主题
 
 4. ####vim-scripts/auto.git
 
-
-以上插件并没有buffer管理的,可以搜索安装MiniBuferExplorer/Buferexplorer，插件不错，但是目前没用习惯，暂时没加入
-
 ------------------------
-
 
 The End!
 
