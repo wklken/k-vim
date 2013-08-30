@@ -529,6 +529,8 @@ let g:indentLine_char = '¦'
 
 "for show no user whitespaces
 Bundle 'bronson/vim-trailing-whitespace'
+map <leader><space> :FixWhitespace<cr>
+
 
 "主题 solarized
 Bundle 'altercation/vim-colors-solarized'

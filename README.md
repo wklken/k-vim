@@ -333,6 +333,9 @@ molokai主题
 
    将代码行最后无效的空格标红
 
+        [sd] ,空格    去掉当前行末尾空格
+
+
 4. ####[altercation/vim-colors-solarized](https://github.com/altercation/vim-colors-solarized)
 
    经典主题,目前我使用的,看起来舒服
