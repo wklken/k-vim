@@ -57,7 +57,9 @@ set t_ti= t_te=
 
 "- 则点击光标不会换,用于复制
 set mouse-=a           " 鼠标暂不启用, 键盘党....
-set selection=exclusive
+" 修复ctrl+m 多光标操作选择的bug，但是改变了ctrl+v进行字符选中时将包含光标下的字符
+"set selection=exclusive
+set selection=inclusive
 set selectmode=mouse,key
 
 " No annoying sound on errors
@@ -596,6 +598,7 @@ map - <Plug>(expand_region_shrink)
 
 "for mutil cursor
 Bundle 'terryma/vim-multiple-cursors'
+let g:multi_cursor_use_default_mapping=0
 " Default mapping
 let g:multi_cursor_next_key='<C-m>'
 let g:multi_cursor_prev_key='<C-p>'
