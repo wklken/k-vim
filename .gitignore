@@ -2,3 +2,4 @@ bundle/*
 *.pyc
 *.bak
 *.bk
+waf

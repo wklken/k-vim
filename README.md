@@ -608,3 +608,20 @@ GitHub: https://github.com/LittleKey
 GitCafe: https://gitcafe.com/LittleKey
 
 2013-09-11 at home...:)
+
+## 下面是LittleKey fork后的修改
+
+* 主要写Python C/C++ MarkDown TeX
+
+#### from vimrc
+
+× 修改了solarized的参数
+× 还有一点被遗忘了的小修改
+
+#### from install.sh
+
+* 添加了YCM对于C-Family language的配置文件，并备份了原文件
+
+#### add wscript
+
+* 添加了wscript文件，以使用waf进行更方便的安装(only Linux, because LittleKey专注Debian 20年)

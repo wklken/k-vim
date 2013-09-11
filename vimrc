@@ -533,10 +533,10 @@ let g:indentLine_char = '¦'
 Bundle 'bronson/vim-trailing-whitespace'
 map <leader><space> :FixWhitespace<cr>
 
-
+" 使用solarized主题
 "主题 solarized
 Bundle 'altercation/vim-colors-solarized'
-"let g:solarized_termcolors=256
+let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 let g:solarized_contrast="normal"
 let g:solarized_visibility="normal"
