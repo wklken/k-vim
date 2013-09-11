@@ -451,9 +451,9 @@ set tags=tags;/
 let Tlist_Ctags_Cmd="/usr/bin/ctags"
 nnoremap <silent> <F8> :TlistToggle<CR>
 let Tlist_Auto_Highlight_Tag = 1
-let Tlist_Auto_Open = 0
+let Tlist_Auto_Open = 1 " fix 0 -> 1
 let Tlist_Auto_Update = 1
-let Tlist_Close_On_Select = 0
+let Tlist_Close_On_Select = 1 " fix 0 -> 1
 let Tlist_Compact_Format = 0
 let Tlist_Display_Prototype = 0
 let Tlist_Display_Tag_Scope = 1
@@ -554,14 +554,15 @@ Bundle 'vim-scripts/matchit.zip'
 
 "################### 补全及快速编辑 ###################"
 
-"迄今位置用到的最好的自动VIM自动补全插件
+"迄今位置(为止)用到的最好的自动VIM自动补全插件
 Bundle 'Valloric/YouCompleteMe'
 "youcompleteme  默认tab  s-tab 和自动补全冲突
 "let g:ycm_key_list_select_completion=['<c-n>']
 let g:ycm_key_list_select_completion = ['<Down>']
 "let g:ycm_key_list_previous_completion=['<c-p>']
 let g:ycm_key_list_previous_completion = ['<Up>']
-
+" load .ycm_extra_conf.py
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
 
 "快速插入代码片段
 "Bundle 'vim-scripts/UltiSnips'

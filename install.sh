@@ -44,6 +44,12 @@ echo "compile YouCompleteMe"
 echo "if error,you need to compile it yourself"
 cd $CURRENT_DIR/bundle/YouCompleteMe/
 bash -x install.sh --clang-completer
+echo "fix YouCompleteMe cpp/ycm/.ycm_extra_conf.py file"
+echo "use hard link"
+echo "back old file"
+cd $CURRENT_DIR/bundle/YouCompleteMe/cpp/ycm/
+mv .ycm_extra_conf.py _ycm_extra_conf.py_old
+ln $CURRENT_DIR/others/YCM-Configure-File/_ycm_extra_conf.py .ycm_extra_conf
 
 #vim bk and undo dir
 if [ ! -d ~/bak/vimbk ]

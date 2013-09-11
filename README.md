@@ -52,9 +52,9 @@ k-vim
 
    欢迎推荐好用更酷的插件配置:)
 
-   我的配置也会不定期更新，thx
+   我(this not LittleKey)的配置也会不定期更新，thx
 
-PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_config)下一部分，如果需要，可以参考，主要是用于一键配置环境
+PS: 这个vim配置是我(this not LittleKey)的[linux_config](https://github.com/wklken/linux_config)下一部分，如果需要，可以参考，主要是用于一键配置环境
 
 --------------
 
@@ -595,3 +595,16 @@ Github: https://github.com/wklken
 Blog: http://wklken.me
 
 2013-06-11 于深圳
+
+# Fork from GitHub [wklken/k-vim](https://github.com/wklken/k-vim)
+LittleKey (code newbie)
+
+Email: LittleKeyRain@gmail.com
+
+BitBucket: https://bitbucket.org/LittleKey
+
+GitHub: https://github.com/LittleKey
+
+GitCafe: https://gitcafe.com/LittleKey
+
+2013-09-11 at home...:)
