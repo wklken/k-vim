@@ -28,6 +28,8 @@ def configure(ctx):
         ctx.find_program("ctags", var="CTAGS")
         ctx.find_program("vim", var="VIM")
         ctx.find_program("cmake", var="CMAKE")
+        ctx.find_program("sh", var="SH")
+        ctx.find_program("touch", var="TOUCH")
 
 def options(ctx):
     ctx.add_option('--env', action='store', default='', help='auto instead env')
@@ -45,7 +47,8 @@ def build(bld):
     else:
         pass
 
-    bld(rule = 'sh -x install.sh')
+    #bld(rule = '${SH} -x ${SRC}', source='install.sh')
+    bld(rule = '${TOUCH} {SRC}', source='one')
 
 def do(ctx):
     from waflib import Options
