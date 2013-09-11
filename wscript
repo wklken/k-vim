@@ -18,7 +18,7 @@ def configure(ctx):
 
     ctx.env.ENV = ctx.options.env
 
-    if "ENV" == 'auto':
+    if ctx.env.ENV == 'auto':
         ctx.find_program("aptitude", var="APTITUDE")
         ctx.find_program("pip", var="PIP")
     else:
@@ -38,7 +38,7 @@ def build(bld):
     if bld.cmd == 'install':
         pass
 
-    elif "ENV" == 'auto':
+    elif bld.env.ENV == 'auto':
         bld(rule = '${APTITUDE} install ${SRC}',
                     source = 'python-${PIP} ${CTAGS} ${VIM} ${VIM}-python ${cmake} build-essential')
         bld(rule = '${PIP} install ${PYFLAKES}')
