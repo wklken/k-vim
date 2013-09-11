@@ -39,8 +39,7 @@ def build(bld):
         pass
 
     elif bld.env.ENV == 'auto':
-        bld(rule = '${APTITUDE} install ${TAG}',
-                    target = 'python-${PIP} ${CTAGS} ${VIM} ${VIM}-python ${cmake} build-essential')
+        bld(rule = '${APTITUDE} install python-${PIP} ${CTAGS} ${VIM} ${VIM}-python ${cmake} build-essential')
         bld(rule = '${PIP} install ${PYFLAKES}')
         bld(rule = '${PIP} install ${PEP8}')
         bld(rule = '${PIP} install ${PYLINT}')
