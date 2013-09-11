@@ -1,5 +1,5 @@
 WAF = ./waf
-WCFLAG = --env auto
+WCFLAG = '' #--env auto #  wscript安装软件有问题，所以暂不能用
 CURRENT_DIR = .
 YCM_DIR = ${CURRENT_DIR}/bundle/YouCompleteMe/cpp/ycm/
 CONF_FILE_DIR = ${CURRENT_DIR}/others/YCM--Configure-File/
@@ -15,11 +15,8 @@ three: two
 	ln ${CONF_FILE_DIR}/${CONF_FILE} ${YCM_DIR}/${OLD_CONF_FILE}
 	${RM} one two
 
-two: nextone
+two: one
 	sh -x install.sh
 
-build/one:
-	${WAF} configure ${WCFLAG}
-
-nextone: build/one
+one:
 	${WAF} build
