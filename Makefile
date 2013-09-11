@@ -1,11 +1,11 @@
-WAF = './waf'
-WCFLAG = '--env auto'
-CURRENT_DIR = '.'
-YCM_DIR = '${CURRENT_DIR}/bundle/YouCompleteMe/cpp/ycm/'
-CONF_FILE_DIR = '${CURRENT_DIR}/others/YCM--Configure-File/'
-CONF_FILE = '_ycm_extra_conf.py'
-OLD_CONF_FILE = '.ycm_extra_conf'
-RM = 'rm'
+WAF = ./waf
+WCFLAG = --env auto
+CURRENT_DIR = .
+YCM_DIR = ${CURRENT_DIR}/bundle/YouCompleteMe/cpp/ycm/
+CONF_FILE_DIR = ${CURRENT_DIR}/others/YCM--Configure-File/
+CONF_FILE = _ycm_extra_conf.py
+OLD_CONF_FILE = .ycm_extra_conf
+RM = rm
 
 one:
 	${WAF} configure ${WCFLAG}
