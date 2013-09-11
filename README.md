@@ -619,8 +619,8 @@ GitCafe: https://gitcafe.com/LittleKey
 
 ### from vimrc
 
-× 修改了solarized的参数
-× 还有一点被遗忘了的小修改
+* 修改了solarized的参数
+* 还有一点被遗忘了的小修改
 
 ### from install.sh
 
