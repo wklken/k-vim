@@ -40,10 +40,10 @@ def build(bld):
 
     elif bld.env.ENV == 'auto':
         for software in 'python-${PIP} ${CTAGS} ${VIM} ${VIM}-python ${cmake} build-essential'.split():
-            bld(rule = '${APTITUDE} install' + os.path.basename(software))
-        bld(rule = '${PIP} install' + os.path.basename('${PYFLAKES}'))
-        bld(rule = '${PIP} install' + os.path.basename(' ${PEP8}'))
-        bld(rule = '${PIP} install' + os.path.basename('${PYLINT}'))
+            bld(rule = '${APTITUDE} install ' + os.path.basename(software))
+        bld(rule = '${PIP} install ' + os.path.basename('${PYFLAKES}'))
+        bld(rule = '${PIP} install ' + os.path.basename(' ${PEP8}'))
+        bld(rule = '${PIP} install ' + os.path.basename('${PYLINT}'))
     else:
         pass
 
