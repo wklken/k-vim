@@ -664,6 +664,7 @@ GitCafe: https://gitcafe.com/LittleKey
   装YCM有个必要且比较容易漏装的依赖：
    
 * vim-python
-    sudo aptitude install vim-python
+
+        sudo aptitude install vim-python
 
 增加一次成功的概率吧....
