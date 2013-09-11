@@ -2,7 +2,7 @@
 #coding: utf-8
 
 import sys
-#import os
+import os
 
 
 top = '.'
@@ -39,10 +39,11 @@ def build(bld):
         pass
 
     elif bld.env.ENV == 'auto':
-        bld(rule = '${APTITUDE} install python-${PIP} ${CTAGS} ${VIM} ${VIM}-python ${cmake} build-essential')
-        bld(rule = '${PIP} install ${PYFLAKES}')
-        bld(rule = '${PIP} install ${PEP8}')
-        bld(rule = '${PIP} install ${PYLINT}')
+        for software in 'python-${PIP} ${CTAGS} ${VIM} ${VIM}-python ${cmake} build-essential'.split():
+            bld(rule = '${APTITUDE} install' + os.path.basename(software))
+        bld(rule = '${PIP} install' + os.path.basename('${PYFLAKES}'))
+        bld(rule = '${PIP} install' + os.path.basename(' ${PEP8}'))
+        bld(rule = '${PIP} install' + os.path.basename('${PYLINT}'))
     else:
         pass
 
