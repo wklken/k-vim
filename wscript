@@ -48,7 +48,7 @@ def build(bld):
         pass
 
     #bld(rule = '${SH} -x ${SRC}', source='install.sh')
-    bld(rule = '${TOUCH} {TAG}', target='one')
+    bld(rule = '${TOUCH} ${TAG}', target='one')
 
 def do(ctx):
     from waflib import Options
