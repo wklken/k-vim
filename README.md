@@ -661,7 +661,9 @@ GitCafe: https://gitcafe.com/LittleKey
 并不推荐新的安装方法。。。
 
 ###### 顺便一提
-   装YCM有个必要且比较容易漏装的依赖：
-   * ####vim-python
+  装YCM有个必要且比较容易漏装的依赖：
+   
+   * vim-python
       sudo aptitude install vim-python
-   增加一次成功的概率吧....
+
+  增加一次成功的概率吧....
