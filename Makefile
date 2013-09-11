@@ -15,8 +15,11 @@ three: one two
 	ln ${CONF_FILE_DIR}/${CONF_FILE} ${YCM_DIR}/${OLD_CONF_FILE}
 	${RM} one two
 
-two: one
+two: one nextone
 	sh -x install.sh
 
 one:
 	${WAF} configure ${WCFLAG}
+
+nextone: one
+	${WAF} build
