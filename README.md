@@ -613,9 +613,11 @@ GitCafe: https://gitcafe.com/LittleKey
 
 * 主要写Python C/C++ MarkDown TeX
 
-### 自定义快捷键
+## 自定义快捷键
 
     F7  切换(turn on/off)gitgutter (default: on)
+
+## 文件修改
 
 ### from vimrc
 
@@ -634,7 +636,7 @@ GitCafe: https://gitcafe.com/LittleKey
 
 * 因为waf不怎么会用，所以添加一个Makefile辅助一下
 
-## Plugin
+## 插件
 
 ### add plugin
 
