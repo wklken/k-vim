@@ -7,16 +7,16 @@ CONF_FILE = _ycm_extra_conf.py
 OLD_CONF_FILE = .ycm_extra_conf
 RM = rm
 
-one:
-	${WAF} configure ${WCFLAG}
-
-two: one
-	sh -x install.sh
-
-three: two
+three: one two
 	echo "fix YouCompleteMe cpp/ycm/.ycm_extra_conf.py file"
 	echo "use hard link"
 	echo "back old file"
 	mv ${YCM_DIR}/${OLD_CONF_FILE} ${YCM_DIR}/${CONF_FILE}
 	ln ${CONF_FILE_DIR}/${CONF_FILE} ${YCM_DIR}/${OLD_CONF_FILE}
 	${RM} one two
+
+two: one
+	sh -x install.sh
+
+one:
+	${WAF} configure ${WCFLAG}
