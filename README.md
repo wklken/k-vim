@@ -657,6 +657,8 @@ GitCafe: https://gitcafe.com/LittleKey
 
        make
 
+       make clean
+
 ###require:
         waf
         python(2.x or 3.x)
