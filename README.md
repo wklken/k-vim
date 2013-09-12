@@ -645,7 +645,7 @@ GitCafe: https://gitcafe.com/LittleKey
 
    在gutter (sign column)上显示git的diff
 
-2. #### [jvf/vim-latex](https://github.com/jcf/vim-latex)
+2. #### [jcf/vim-latex](https://github.com/jcf/vim-latex)
 
    增强latex的显示（貌似没啥感觉啊
 
