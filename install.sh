@@ -61,5 +61,5 @@ if [ ! -d ~/bak/vimundo ]
 then
     mkdir -p ~/bak/vimundo
 fi
-
+cd $CURRENT_DIR/
 touch two

@@ -2,4 +2,6 @@ bundle/*
 *.pyc
 *.bak
 *.bk
-waf
+*waf*
+build
+k-vim
