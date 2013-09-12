@@ -418,7 +418,7 @@ Bundle 'gmarik/vundle'
 Bundle 'scrooloose/nerdtree'
 "map <leader>n :NERDTreeToggle<CR>
 "map到F10
-nnoremap <F10> :NERDTree<CR>
+nmap <F10> :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$', '^waf$']
 let g:netrw_home='~/bak'
