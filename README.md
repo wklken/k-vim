@@ -618,7 +618,7 @@ GitCafe: https://gitcafe.com/LittleKey
     F7  切换(turn on/off)gitgutter (default: on)
     F10 打开nerdtree(原先是: ,n)
 
-## 文件修改
+## 文件修改(即将删除)
 
 ### from vimrc
 
