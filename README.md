@@ -596,7 +596,7 @@ Blog: http://wklken.me
 
 2013-06-11 于深圳
 
-# Fork from GitHub [wklken/k-vim](https://github.com/wklken/k-vim)
+## Fork from GitHub [wklken/k-vim](https://github.com/wklken/k-vim)
 LittleKey (code newbie)
 
 Email: LittleKeyRain@gmail.com
@@ -609,19 +609,51 @@ GitCafe: https://gitcafe.com/LittleKey
 
 2013-09-11 at home...:)
 
-## 下面是LittleKey fork后的修改
+# 下面是LittleKey fork后的修改
 
 * 主要写Python C/C++ MarkDown TeX
 
-#### from vimrc
+### 自定义快捷键
+
+    F7  切换(turn on/off)gitgutter (default: on)
+
+### from vimrc
 
 × 修改了solarized的参数
 × 还有一点被遗忘了的小修改
 
-#### from install.sh
+### from install.sh
 
 * 添加了YCM对于C-Family language的配置文件，并备份了原文件
 
-#### add wscript
+### add wscript
 
 * 添加了wscript文件，以使用waf进行更方便的安装(only Linux, because LittleKey专注Debian 20年)
+
+### add Makefile
+
+* 因为waf不怎么会用，所以添加一个Makefile辅助一下
+
+## Plugin
+
+### add plugin
+
+1. #### [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
+
+   在gutter (sign column)上显示git的diff
+
+## 新的安装方法
+
+       git clone https://github.com/wklken/k-vim.git
+
+       ./waf configure
+
+       make
+
+###require:
+        waf
+        python(2.x or 3.x)
+        make
+        and...configure will tell you...
+
+并不推荐新的安装方法。。。

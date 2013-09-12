@@ -418,7 +418,7 @@ Bundle 'gmarik/vundle'
 Bundle 'scrooloose/nerdtree'
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
-let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
+let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$', '^waf$']
 let g:netrw_home='~/bak'
 "close vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end
@@ -451,9 +451,9 @@ set tags=tags;/
 let Tlist_Ctags_Cmd="/usr/bin/ctags"
 nnoremap <silent> <F8> :TlistToggle<CR>
 let Tlist_Auto_Highlight_Tag = 1
-let Tlist_Auto_Open = 1 " fix 0 -> 1
+let Tlist_Auto_Open = 0
 let Tlist_Auto_Update = 1
-let Tlist_Close_On_Select = 1 " fix 0 -> 1
+let Tlist_Close_On_Select = 0
 let Tlist_Compact_Format = 0
 let Tlist_Display_Prototype = 0
 let Tlist_Display_Tag_Scope = 1
@@ -667,6 +667,14 @@ nnoremap <leader>h :GundoToggle<CR>
 
 " end turn on
 filetype plugin indent on
+
+"###################Add for LittleKey##########""
+"VIM git, 可以用vim来使用git
+"Bundle 'motemen/git-vim'
+
+"shows a git diff in the gutter
+Bundle 'airblade/vim-gitgutter'
+nnoremap <F7> :GitGutterToggle<CR>
 
 "========================== config for plugins end ======================================
 
