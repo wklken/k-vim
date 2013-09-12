@@ -646,7 +646,7 @@ GitCafe: https://gitcafe.com/LittleKey
 
 ## 新的安装方法
 
-       git clone https://github.com/wklken/k-vim.git
+       git clone https://github.com/LittleKey/k-vim.git
 
        ./waf configure
 
