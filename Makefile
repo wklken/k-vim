@@ -6,6 +6,7 @@ CONF_FILE_DIR = ${CURRENT_DIR}/others/YCM-Configure-File
 CONF_FILE = _ycm_extra_conf.py
 OLD_CONF_FILE = .ycm_extra_conf.py
 RM = rm
+RFLAG = -rf
 
 three: two
 	echo "fix YouCompleteMe cpp/ycm/.ycm_extra_conf.py file"
@@ -13,7 +14,6 @@ three: two
 	echo "back old file"
 	mv ${YCM_DIR}/${OLD_CONF_FILE} ${YCM_DIR}/${CONF_FILE}
 	ln ${CONF_FILE_DIR}/${CONF_FILE} ${YCM_DIR}/${OLD_CONF_FILE}
-	${RM} -rf one two build
 
 two: one
 	sh -x install.sh
@@ -21,3 +21,6 @@ two: one
 one:
 	${WAF} build
 	cp build/one ./one
+
+clean:
+	${RM} ${RFLAG} one two build
