@@ -416,7 +416,9 @@ Bundle 'gmarik/vundle'
 "################### 导航 ###################"
 "目录导航
 Bundle 'scrooloose/nerdtree'
-map <leader>n :NERDTreeToggle<CR>
+"map <leader>n :NERDTreeToggle<CR>
+"map到F10
+nnoremap <F10> :NERDTree<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$', '^waf$']
 let g:netrw_home='~/bak'
@@ -583,7 +585,7 @@ Bundle 'tpope/vim-repeat'
 "自动补全单引号，双引号等
 Bundle 'Raimondi/delimitMate'
 " for python docstring ",优化输入
-au FileType python let b:delimitMate_nesting_quotes = ['"']
+au FileType python let b:delimitMate_nesting_quotes = ['"', "'"] "adding '
 
 "for code alignment
 Bundle 'godlygeek/tabular'
@@ -675,6 +677,12 @@ filetype plugin indent on
 "shows a git diff in the gutter
 Bundle 'airblade/vim-gitgutter'
 nnoremap <F7> :GitGutterToggle<CR>
+
+"python-mode,  PyLint, Rope, Pydoc, breakpoints from box"
+"Bundle 'klen/python-mode'
+
+" vim latex支持
+Bundle 'jcf/vim-latex'
 
 "========================== config for plugins end ======================================
 

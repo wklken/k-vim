@@ -616,6 +616,7 @@ GitCafe: https://gitcafe.com/LittleKey
 ## 自定义快捷键
 
     F7  切换(turn on/off)gitgutter (default: on)
+    F10 打开nerdtree(原先是: ,n)
 
 ## 文件修改
 
@@ -644,6 +645,10 @@ GitCafe: https://gitcafe.com/LittleKey
 
    在gutter (sign column)上显示git的diff
 
+2. #### [jvf/vim-latex](https://github.com/jcf/vim-latex)
+
+   增强latex的显示（貌似没啥感觉啊
+
 ## 新的安装方法
 
        git clone https://github.com/LittleKey/k-vim.git
@@ -658,7 +663,7 @@ GitCafe: https://gitcafe.com/LittleKey
         make
         and...configure will tell you...
 
-并不推荐新的安装方法。。。
+*p.s: 并不推荐新的安装方法。。。*
 
 ###### 顺便一提
   装YCM有个必要且比较容易漏装的依赖：
