@@ -1,10 +1,12 @@
 "==========================================
-" Author:  wklken
-" Version: 6
+" Old_Author:  wklken
+" Author: LittleKey
+" Version: 6.1
 " Email: wklken@yeah.net
+" Email: LittleKeyRain@gmail.com
 " BlogPost: http://wklken.me
 " ReadMe: README.md
-" Last_modify: 2013-08-04
+" Last_modify: 2013-09-13
 " Sections:
 "     ->General 基础设置
 "     ->Show 展示/排班等界面格式设置
@@ -123,7 +125,8 @@ set showcmd
 " A buffer becomes hidden when it is abandoned
 set hidden
 set wildmode=list:longest
-set ttyfast
+set ttyfast 
+:retab " 打开文件时重新插入所有tab
 
 
 "行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
@@ -736,4 +739,3 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
-

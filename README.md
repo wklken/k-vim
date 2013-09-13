@@ -613,29 +613,14 @@ GitCafe: https://gitcafe.com/LittleKey
 
 * 主要写Python C/C++ MarkDown TeX
 
+## 自定义设置
+
+    × 会在打开文件时重新插入所有tab（以统一替换为相应长度的空格(defaule=4 space)）
+
 ## 自定义快捷键
 
     F7  切换(turn on/off)gitgutter (default: on)
     F10 打开nerdtree(原先是: ,n)
-
-## 文件修改(即将删除)
-
-### from vimrc
-
-* 修改了solarized的参数
-* 还有一点被遗忘了的小修改
-
-### from install.sh
-
-* 添加了YCM对于C-Family language的配置文件，并备份了原文件
-
-### add wscript
-
-* 添加了wscript文件，以使用waf进行更方便的安装(only Linux, because LittleKey专注Debian 20年)
-
-### add Makefile
-
-* 因为waf不怎么会用，所以添加一个Makefile辅助一下
 
 ## 插件
 
