@@ -636,16 +636,20 @@ GitCafe: https://gitcafe.com/LittleKey
 
 ## 新的安装方法
 
+    #### build waf
+       git clone https://code.google.com/p/waf/
+       cd waf/
+       ./waf-light configure build
+
+    #### start install
        git clone https://github.com/LittleKey/k-vim.git
+       cp waf k-vim
 
-       ./waf configure
-
+       ./waf configure  # 会打印一个不全的依赖表，至少请补全它们再继续安装，否则就请一直重复这一步吧
        make
-
        make clean
 
 ###require:
-        waf
         python(2.x or 3.x)
         make
         and...configure will tell you...
