@@ -636,7 +636,7 @@ GitCafe: https://gitcafe.com/LittleKey
 
 ## 新的安装方法
 
- #### build waf
+#### build waf
 
        git clone https://code.google.com/p/waf/
        cd waf/
