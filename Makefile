@@ -18,9 +18,8 @@ three: two
 two: one
 	sh -x install.sh
 
-one:
+one: tmp
 	${WAF} build
-	cp build/one ./one
 
 clean:
-	${RM} ${RFLAG} one two build
+	${RM} ${RFLAG} one two build tmp

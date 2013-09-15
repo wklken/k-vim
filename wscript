@@ -30,6 +30,7 @@ def configure(ctx):
         ctx.find_program("cmake", var="CMAKE")
         ctx.find_program("sh", var="SH")
         ctx.find_program("touch", var="TOUCH")
+    open("tmp", 'w').close()
 
 def options(ctx):
     ctx.add_option('--env', action='store', default='', help='auto instead env')
@@ -48,7 +49,7 @@ def build(bld):
         pass
 
     #bld(rule = '${SH} -x ${SRC}', source='install.sh')
-    bld(rule = '${TOUCH} one')
+    open("one", 'w').close()
 
 def do(ctx):
     from waflib import Options
