@@ -1,7 +1,7 @@
 "==========================================
 " Old_Author:  wklken
 " Author: LittleKey
-" Version: 6.1
+" Version: 6.2
 " Email: wklken@yeah.net
 " Email: LittleKeyRain@gmail.com
 " BlogPost: http://wklken.me
@@ -568,6 +568,9 @@ let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 " load .ycm_extra_conf.py
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
+"跳到定义,否则跳到声明 ,jd 或者 F12
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <F12> : YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 "快速插入代码片段
 "Bundle 'vim-scripts/UltiSnips'
@@ -686,6 +689,20 @@ nnoremap <F7> :GitGutterToggle<CR>
 
 " vim latex支持
 Bundle 'jcf/vim-latex'
+
+"vimshell, 在VIM下使用shell"
+"Bundle 'Shougo/vimshell.vim
+"
+"auto-completion 貌似也是一个自动编译的插件
+
+"Bundle 'Shougo/neocomplcache.vim'
+"使用自动编译
+"let g:neocomplcache_enable_at_startup = 1
+"使用smartcase
+"let g:neocomplcache_enable_smart_case = 1
+"最小语法关键字长度
+"let g:neocomplcache_min_syntax_length = 3
+"let g:neocomplchache_lock_buffer_name_pattern = '\*ku\*'
 
 "========================== config for plugins end ======================================
 
