@@ -621,6 +621,8 @@ GitCafe: https://gitcafe.com/LittleKey
 
     F7  切换(turn on/off)gitgutter (default: on)
     F10 打开nerdtree(原先是: ,n)
+    F12 跳转到定义, 否则跳转到声明 (使用YCM)
+    ,jd 与F12效果相同 (我还没决定好用哪个)
 
 ## 插件
 
@@ -660,7 +662,7 @@ GitCafe: https://gitcafe.com/LittleKey
 
 ###### 顺便一提
   装YCM有个必要且比较容易漏装的依赖：
-   
+
 * vim-python
 
         sudo aptitude install vim-python
