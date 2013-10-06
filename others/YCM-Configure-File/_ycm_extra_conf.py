@@ -17,18 +17,19 @@ flags = [
     '-stdlib=libc++',
     '-x',
     'c++',
-    '-I',
-    '.',
+    #'-I',
+    #'.',
+    #'-isystem',
+    #'/usr/lib/c++/v1',
     '-isystem',
-    '/usr/lib/c++/v1',
-    '-lgmpxx',
-    '-lgmp',
-    '-B',
-    '/usr',
-    '-I',
-    '/usr/include',
-    '-L',
-    '/usr/lib'
+    '../llvm/include',
+    '-isystem',
+    '/usr/lib/gcc/i486-linux-gnu/4.8',
+    #'-I',
+    #'/usr/include/c++/4.8/tr1/',
+    #'-I',
+    '-isystem',
+    '/usr/include'
 ]
 
 if compilation_database_folder:
