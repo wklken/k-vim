@@ -624,6 +624,9 @@ GitCafe: https://gitcafe.com/LittleKey
     F12 跳转到定义, 否则跳转到声明, 使用 CTRL + o 跳回调用处 (使用YCM)
     ,jd 与F12效果相同 (我还没决定好用哪个)
 
+    H 跳到行首
+    L 跳到行尾
+
 ## 插件
 
 ### add plugin

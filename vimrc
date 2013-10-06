@@ -347,7 +347,7 @@ noremap <right> :bn<CR>
 nmap t o<ESC>k
 nmap T O<ESC>j
 
-" ctrl +jk to move lines   经常敲错换错行...一致没想好配哪个映射
+" ctrl +jk to move lines   经常敲错换错行...一直没想好配哪个映射
 "noremap <C-k> :m+<CR>
 "noremap <C-j> :m-2<CR>
 "inoremap <C-j> <Esc>:m+<CR>
