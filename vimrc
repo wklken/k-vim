@@ -344,7 +344,7 @@ noremap <right> :bn<CR>
 nmap t o<ESC>k
 nmap T O<ESC>j
 
-" ctrl +jk to move lines   经常敲错换错行...一致没想好配哪个映射
+" ctrl +jk to move lines   经常敲错换错行...一直没想好配哪个映射
 "noremap <C-k> :m+<CR>
 "noremap <C-j> :m-2<CR>
 "inoremap <C-j> <Esc>:m+<CR>
@@ -554,7 +554,7 @@ Bundle 'vim-scripts/matchit.zip'
 
 "################### 补全及快速编辑 ###################"
 
-"迄今位置用到的最好的自动VIM自动补全插件
+"迄今为止用到的最好的自动VIM自动补全插件
 Bundle 'Valloric/YouCompleteMe'
 "youcompleteme  默认tab  s-tab 和自动补全冲突
 "let g:ycm_key_list_select_completion=['<c-n>']
