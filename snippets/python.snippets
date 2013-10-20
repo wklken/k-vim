@@ -68,6 +68,14 @@ snippet prt
 print "TRACK ================= ${1}", ${2}
 endsnippet
 
+snippet rep
+repr(${1})
+endsnippet
+
+snippet repr
+repr(${1})
+endsnippet
+
 snippet _
 __${1:init}__${2}
 endsnippet
@@ -79,6 +87,11 @@ endsnippet
 snippet a
 assert ${1}
 endsnippet
+
+snippet isi
+isinstance(${1}, ${2})
+endsnippet
+
 ############# 逻辑控制
 snippet el
 else:
