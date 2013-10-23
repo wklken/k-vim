@@ -67,6 +67,8 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
 2. 安装依赖包
 
         sudo apt-get install ctags
+        sudo apt-get install build-essential cmake python-dev  #编译YCM自动补全插件依赖
+
         #brew install ctags     (mac用户)
 
         #使用python需要
@@ -581,6 +583,8 @@ molokai主题
 3. ####vim-scripts/YankRing.vim
 
 4. ####vim-scripts/auto.git
+
+5. ####[AndrewRadev/splitjoin.vim](https://github.com/AndrewRadev/splitjoin.vim)
 
 ------------------------
 
