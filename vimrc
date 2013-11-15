@@ -571,6 +571,7 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extr
 "跳到定义,否则跳到声明 ,jd 或者 F12
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <F12> : YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <F11> : GundoToggle<CR>
 
 "快速插入代码片段
 "Bundle 'vim-scripts/UltiSnips'

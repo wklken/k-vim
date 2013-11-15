@@ -621,6 +621,7 @@ GitCafe: https://gitcafe.com/LittleKey
 
     F7  切换(turn on/off)gitgutter (default: on)
     F10 打开nerdtree(原先是: ,n)
+    F11 编辑文件时光机(等价于 ,h)
     F12 跳转到定义, 否则跳转到声明, 使用 CTRL + o 跳回调用处 (使用YCM)
     ,jd 与F12效果相同 (我还没决定好用哪个)
 
