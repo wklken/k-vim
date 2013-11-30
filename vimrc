@@ -127,15 +127,15 @@ set ttyfast
 
 
 "行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
-set relativenumber
-au FocusLost * :set number
+set relativenumber number
+au FocusLost * :set norelativenumber number
 au FocusGained * :set relativenumber
 " 插入模式下用绝对行号, 普通模式下用相对
-autocmd InsertEnter * :set number
+autocmd InsertEnter * :set norelativenumber number
 autocmd InsertLeave * :set relativenumber
 function! NumberToggle()
   if(&relativenumber == 1)
-    set number
+    set norelativenumber number
   else
     set relativenumber
   endif
@@ -292,7 +292,17 @@ nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
 ""为方便复制，用<F2>开启/关闭行号显示:
-nnoremap <F2> :set nonumber! number?<CR>
+function! HideNumber()
+  if(&relativenumber == &number)
+    set relativenumber! number!
+  elseif(&number)
+    set number!
+  else
+    set relativenumber!
+  endif
+  set number?
+endfunc
+nnoremap <F2> :call HideNumber()<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
               "set paste
