@@ -323,6 +323,8 @@ molokai主题
 
 3. ####[Yggdroot/indentLine](https://github.com/Yggdroot/indentLine)
 
+   update: 2013-11-30 复制的时候竖线太讨厌，新版本已经注释，需要的自己开启哈
+
    选装,装不装看个人喜好了,缩进标识
 
    另一个类似的,整块背景色的的,[nathanaelkane/vim-indent-guides](https://github.com/nathanaelkane/vim-indent-guides),自选吧, 看来看去还是st2的好看,唉

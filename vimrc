@@ -119,7 +119,6 @@ set expandtab                " 将Tab自动转化成空格    [需要输入真�
 
 set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
 
-set showcmd
 " A buffer becomes hidden when it is abandoned
 set hidden
 set wildmode=list:longest
@@ -306,7 +305,7 @@ nnoremap <F2> :call HideNumber()<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
               "set paste
-set pastetoggle=<F5>            " when in insert mode, press <F2> to go to
+set pastetoggle=<F5>            " when in insert mode, press <F5> to go to
                                 "    paste mode, where you can paste mass data
                                 "    that won't be autoindented
 
@@ -533,11 +532,11 @@ let g:rbpt_colorpairs = [
 let g:rbpt_max = 40
 let g:rbpt_loadcmd_toggle = 0
 
-"代码排版缩进标识
-Bundle 'Yggdroot/indentLine'
-let g:indentLine_noConcealCursor = 1
-let g:indentLine_color_term = 0
-let g:indentLine_char = '¦'
+"代码排版缩进标识  作用不大，复制的时候太蛋疼，去掉
+"Bundle 'Yggdroot/indentLine'
+"let g:indentLine_noConcealCursor = 1
+"let g:indentLine_color_term = 0
+"let g:indentLine_char = '¦'
 
 "for show no user whitespaces
 Bundle 'bronson/vim-trailing-whitespace'
@@ -642,6 +641,7 @@ let python_highlight_all = 1
 
 " for golang
 Bundle 'jnwhiteh/vim-golang'
+Bundle 'Blackrush/vim-gocode'
 
 " for markdown
 Bundle 'plasticboy/vim-markdown'
