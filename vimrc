@@ -55,6 +55,7 @@ set cursorline              " 突出显示当前行
 "好处：误删什么的，如果以前屏幕打开，可以找回
 set t_ti= t_te=
 
+
 "- 则点击光标不会换,用于复制
 set mouse-=a           " 鼠标暂不启用, 键盘党....
 " 修复ctrl+m 多光标操作选择的bug，但是改变了ctrl+v进行字符选中时将包含光标下的字符
@@ -592,6 +593,11 @@ Bundle 'tpope/vim-repeat'
 Bundle 'Raimondi/delimitMate'
 " for python docstring ",优化输入
 au FileType python let b:delimitMate_nesting_quotes = ['"']
+
+"自动补全html/xml标签
+Bundle 'docunext/closetag.vim'
+let g:closetag_html_style=1 
+
 
 "for code alignment
 Bundle 'godlygeek/tabular'

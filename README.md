@@ -66,10 +66,16 @@ PS: 这个vim配置是我的[linux_config](https://github.com/wklken/linux_confi
 
 2. 安装依赖包
 
+        # ubuntu
         sudo apt-get install ctags
         sudo apt-get install build-essential cmake python-dev  #编译YCM自动补全插件依赖
 
-        #brew install ctags     (mac用户)
+        # centos
+        sudo yum install python-devel.x86_64
+        sudo yum groupinstall 'Development Tools'
+
+        # mac
+        #brew install ctags
 
         #使用python需要
         sudo pip install pyflakes
