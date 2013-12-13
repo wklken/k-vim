@@ -605,6 +605,11 @@ Bundle 'Raimondi/delimitMate'
 " for python docstring ",优化输入
 au FileType python let b:delimitMate_nesting_quotes = ['"', "'"] "adding '
 
+"自动补全html/xml标签
+Bundle 'docunext/closetag.vim'
+let g:closetag_html_style=1
+
+
 "for code alignment
 Bundle 'godlygeek/tabular'
 nmap <Leader>a= :Tabularize /=<CR>
