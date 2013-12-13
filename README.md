@@ -632,23 +632,27 @@ GitCafe: https://gitcafe.com/LittleKey
 
 ### add plugin
 
+> 杂项
+
 1. #### [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
 
    在gutter (sign column)上显示git的diff
 
-2. #### [jcf/vim-latex](https://github.com/jcf/vim-latex)
+> 语言支持
+
+1. #### [jcf/vim-latex](https://github.com/jcf/vim-latex)
 
    增强latex的显示（貌似没啥感觉啊
 
-3. #### [othree/html5.vim](https://github.com/othree/html5.vim)
+2. #### [othree/html5.vim](https://github.com/othree/html5.vim)
 
    Html5 支持(语法高亮, 自动缩进, etc)
 
-4. #### [cakebaker/scss-syntax.vim](https://github.com/cakebaker/scss-syntax.vim)
+3. #### [cakebaker/scss-syntax.vim](https://github.com/cakebaker/scss-syntax.vim)
 
    Sassy CSS 语法高亮
 
-5. #### [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
+4. #### [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
 
    CSS 高亮色彩(美观)
 

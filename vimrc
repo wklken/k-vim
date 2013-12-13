@@ -662,25 +662,6 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 "for nginx conf file highlight.   need to confirm it works
 Bundle 'thiderman/nginx-vim-syntax'
 
-" for HTML5 omnicomplete and syntax"
-Bundle 'othree/html5.vim'
-" Disable event-handler attributes support:
-"let g:html5_event_handler_attributes_complete = 0
-
-" Disable RDFa attributes support:
-"let g:html5_rdfa_attributes_complete = 0
-
-" Disable microdata attributes support:
-"let g:html5_microdata_attributes_complete = 0
-
-" Disable WAI-ARIA attribute support:
-"let g:html5_aria_attributes_complete = 0
-
-" CSS 支持
-Bundle 'groenewege/vim-less'
-Bundle 'cakebaker/scss-syntax.vim'
-Bundle 'skammer/vim-css-color'
-
 "################### 其他 ###################"
 " task list
 Bundle 'vim-scripts/TaskList.vim'
@@ -704,12 +685,6 @@ filetype plugin indent on
 Bundle 'airblade/vim-gitgutter'
 nnoremap <F7> :GitGutterToggle<CR>
 
-"python-mode,  PyLint, Rope, Pydoc, breakpoints from box"
-"Bundle 'klen/python-mode'
-
-" vim latex支持
-Bundle 'jcf/vim-latex'
-
 "vimshell, 在VIM下使用shell"
 "Bundle 'Shougo/vimshell.vim
 "
@@ -723,6 +698,32 @@ Bundle 'jcf/vim-latex'
 "最小语法关键字长度
 "let g:neocomplcache_min_syntax_length = 3
 "let g:neocomplchache_lock_buffer_name_pattern = '\*ku\*'
+
+"###################语法支持###################""
+"python-mode,  PyLint, Rope, Pydoc, breakpoints from box"
+"Bundle 'klen/python-mode'
+
+" vim latex支持
+Bundle 'jcf/vim-latex'
+
+" for HTML5 omnicomplete and syntax"
+Bundle 'othree/html5.vim'
+" Disable event-handler attributes support:
+"let g:html5_event_handler_attributes_complete = 0
+
+" Disable RDFa attributes support:
+"let g:html5_rdfa_attributes_complete = 0
+
+" Disable microdata attributes support:
+"let g:html5_microdata_attributes_complete = 0
+
+" Disable WAI-ARIA attribute support:
+"let g:html5_aria_attributes_complete = 0
+
+" CSS 支持
+Bundle 'groenewege/vim-less'
+Bundle 'cakebaker/scss-syntax.vim'
+Bundle 'skammer/vim-css-color'
 
 "========================== config for plugins end ======================================
 
