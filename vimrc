@@ -125,22 +125,22 @@ set showcmd
 " A buffer becomes hidden when it is abandoned
 set hidden
 set wildmode=list:longest
-set ttyfast 
+set ttyfast
 :retab " 打开文件时重新插入所有tab
 
 
 "行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
-set relativenumber
+set relativenumber number
 au FocusLost * :set norelativenumber number
-au FocusGained * :set nonumber relativenumber
+au FocusGained * :set relativenumber
 " 插入模式下用绝对行号, 普通模式下用相对
 autocmd InsertEnter * :set norelativenumber number
-autocmd InsertLeave * :set nonumber relativenumber
+autocmd InsertLeave * :set relativenumber
 function! NumberToggle()
   if(&relativenumber == 1)
     set norelativenumber number
   else
-    set nonumber relativenumber
+    set relativenumber
   endif
 endfunc
 nnoremap <C-n> :call NumberToggle()<cr>
@@ -206,12 +206,12 @@ autocmd! bufwritepost .vimrc source % " vimrc文件修改之后自动加载。 l
 "让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
 "set completeopt+=longest
 set completeopt=longest,menu
- 
+
 "离开插入模式后自动关闭预览窗口
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 "回车即选中当前项
 inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
- 
+
 "上下左右键的行为 会显示其他信息
 inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
 inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
@@ -295,7 +295,18 @@ nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
 ""为方便复制，用<F2>开启/关闭行号显示:
-nnoremap <F2> :set norelativenumber nonumber! number?<CR>
+"nnoremap <F2> :set norelativenumber nonumber! number?<CR>
+function! HideNumber()
+    if(&relativenumber == &number)
+        set relativenumber! number!
+    elseif(&number)
+        set number!
+    else
+        set relativenumber!
+    endif
+    set number?
+endfunc
+nnoremap <F2> :call HideNumber()<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
               "set paste
