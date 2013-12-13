@@ -640,6 +640,23 @@ GitCafe: https://gitcafe.com/LittleKey
 
    增强latex的显示（貌似没啥感觉啊
 
+3. #### [othree/html5.vim](https://github.com/othree/html5.vim)
+
+   Html5 支持(语法高亮, 自动缩进, etc)
+
+4. #### [cakebaker/scss-syntax.vim](https://github.com/cakebaker/scss-syntax.vim)
+
+   Sassy CSS 语法高亮
+
+5. #### [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
+
+   CSS 高亮色彩(美观)
+
+5. #### [roenewege/vim-less](https://github.com/groenewege/vim-less)
+
+   LESS(Dynamic CSS) 支持
+
+
 ## 新的安装方法
 
 #### build waf
