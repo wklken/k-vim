@@ -330,7 +330,8 @@ inoremap kj <Esc>
 " I can type :help on my own, thanks.
 noremap <F1> <Esc>"
 
-nnoremap ; :
+" ; can repeat fx/tx. so do not map it
+"nnoremap ; :
 
 nnoremap <leader>v V`}
 
