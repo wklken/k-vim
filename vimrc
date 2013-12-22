@@ -754,3 +754,7 @@ func SetTitle()
     normal o
     normal o
 endfunc
+
+
+" F10 to run python script
+nnoremap <buffer> <F10> :exec '!python' shellescape(@%, 1)<cr>
