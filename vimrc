@@ -203,12 +203,12 @@ autocmd! bufwritepost .vimrc source % " vimrc文件修改之后自动加载。 l
 "让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
 "set completeopt+=longest
 set completeopt=longest,menu
- 
+
 "离开插入模式后自动关闭预览窗口
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 "回车即选中当前项
 inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
- 
+
 "上下左右键的行为 会显示其他信息
 inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
 inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
@@ -597,7 +597,7 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 
 "自动补全html/xml标签
 Bundle 'docunext/closetag.vim'
-let g:closetag_html_style=1 
+let g:closetag_html_style=1
 
 
 "for code alignment
@@ -686,6 +686,7 @@ filetype plugin indent on
 
 "========================== config for plugins end ======================================
 
+" 被动技能
 "==========================================
 " 主题,及一些展示上颜色的修改
 "==========================================
@@ -706,7 +707,6 @@ if has("gui_running")
     set noimd
     set t_Co=256
 endif
-
 
 " 修改主题和颜色展示
 colorscheme solarized
@@ -737,3 +737,20 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
+""定义函数SetTitle，自动插入文件头 尅自定义文件头信息
+autocmd BufNewFile *.sh,*.py exec ":call SetTitle()"
+func SetTitle()
+    "如果文件类型为.sh文件
+    if &filetype == 'sh'
+        call setline(1, "\#!/bin/bash")
+    endif
+
+    if &filetype == 'python'
+        call setline(1, "\#!/usr/bin/env python")
+        call append(1, "\# encoding: utf-8")
+    endif
+
+    normal G
+    normal o
+    normal o
+endfunc
