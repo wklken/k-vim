@@ -309,7 +309,7 @@ molokai主题
 
    ![taglist](https://github.com/wklken/gallery/blob/master/vim/taglist.png?raw=true)
 
-4. ####[kien/ctrlp.vim](https://github.com/hdima/python-syntax)
+4. ####[kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
 
    文件搜索,ack/Command-T需要依赖于外部包,不喜欢有太多依赖的,除非十分强大, 具体 [文档](http://kien.github.io/ctrlp.vim/)
 
