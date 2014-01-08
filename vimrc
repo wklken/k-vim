@@ -74,6 +74,10 @@ set tm=500
 " Show 展示/排班等界面格式设置
 "==========================================
 
+" highlight current line
+set cursorline cursorcolumn
+
+
 "显示行号：
 set number
 set nowrap                    " 取消换行。
@@ -555,12 +559,12 @@ Bundle 'vim-scripts/matchit.zip'
 "################### 补全及快速编辑 ###################"
 
 "迄今位置用到的最好的自动VIM自动补全插件
-"Bundle 'Valloric/YouCompleteMe'
+Bundle 'Valloric/YouCompleteMe'
 "youcompleteme  默认tab  s-tab 和自动补全冲突
-"let g:ycm_key_list_select_completion=['<c-n>']
-"let g:ycm_key_list_select_completion = ['<Down>']
-"let g:ycm_key_list_previous_completion=['<c-p>']
-"let g:ycm_key_list_previous_completion = ['<Up>']
+let g:ycm_key_list_select_completion=['<c-n>']
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_key_list_previous_completion=['<c-p>']
+let g:ycm_key_list_previous_completion = ['<Up>']
 
 
 "快速插入代码片段
@@ -650,7 +654,7 @@ Bundle 'nono/jquery.vim'
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
 "for nginx conf file highlight.   need to confirm it works
-Bundle 'thiderman/nginx-vim-syntax'
+"Bundle 'thiderman/nginx-vim-syntax'
 
 "################### 其他 ###################"
 " task list
@@ -692,11 +696,11 @@ endif
 
 
 " 修改主题和颜色展示
-colorscheme solarized
+"colorscheme solarized
 set background=dark
 set t_Co=256
 
-"colorscheme molokai
+colorscheme molokai
 "colorscheme desert
 
 "设置标记一列的背景颜色和数字一行颜色一致
