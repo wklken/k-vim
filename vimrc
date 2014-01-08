@@ -549,9 +549,6 @@ let g:solarized_visibility="normal"
 Bundle 'tomasr/molokai'
 "let g:molokai_original = 1
 
-"主题 tomorrow-theme
-Bundle 'chriskempson/vim-tomorrow-theme'
-
 "################### 快速移动 ###################"
 
 "更高效的移动 ,, + w/fx
@@ -711,7 +708,7 @@ set t_Co=256
 
 "colorscheme molokai
 "colorscheme desert
-colorscheme vim-tomorrow-theme'
+colorscheme Tomorrow-Night-Bright
 
 "设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr
