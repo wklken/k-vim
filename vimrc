@@ -7,7 +7,7 @@
 " Last_modify: 2013-08-04
 " Sections:
 "     ->General 基础设置
-"     ->Show 展示/排班等界面格式设置
+"     ->Show 展示/排版等界面格式设置
 "     ->file encode, 文件编码,格式
 "     ->others 其它基础配置
 "     ->hot key  自定义快捷键
