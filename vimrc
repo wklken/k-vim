@@ -549,6 +549,9 @@ let g:solarized_visibility="normal"
 Bundle 'tomasr/molokai'
 "let g:molokai_original = 1
 
+"主题 tomorrow-theme
+Bundle 'chriskempson/vim-tomorrow-theme'
+
 "################### 快速移动 ###################"
 
 "更高效的移动 ,, + w/fx
@@ -668,6 +671,12 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'sjl/gundo.vim'
 nnoremap <leader>h :GundoToggle<CR>
 
+"pydoc
+Bundle 'pydoc.vim'
+
+"画图
+Bundle 'DrawIt'
+
 " end turn on
 filetype plugin indent on
 
@@ -700,8 +709,9 @@ endif
 set background=dark
 set t_Co=256
 
-colorscheme molokai
+"colorscheme molokai
 "colorscheme desert
+colorscheme vim-tomorrow-theme'
 
 "设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr
@@ -724,3 +734,5 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
+" 设置python 文件编码快捷键
+iab  #//        #!/bin/env python<CR># -*- coding: utf-8 -*-<CR>#Filename:<Tab><C-R>=expand("%:t")<CR><Esc>o#Date:<Tab><Tab><C-R>=strftime("%Y-%m-%d")<CR>
