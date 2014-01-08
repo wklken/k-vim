@@ -127,20 +127,20 @@ set ttyfast
 
 
 "行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
-set relativenumber
-au FocusLost * :set number
-au FocusGained * :set relativenumber
+"set relativenumber
+"au FocusLost * :set number
+"au FocusGained * :set relativenumber
 " 插入模式下用绝对行号, 普通模式下用相对
-autocmd InsertEnter * :set number
-autocmd InsertLeave * :set relativenumber
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set number
-  else
-    set relativenumber
-  endif
-endfunc
-nnoremap <C-n> :call NumberToggle()<cr>
+"autocmd InsertEnter * :set number
+"autocmd InsertLeave * :set relativenumber
+"function! NumberToggle()
+"  if(&relativenumber == 1)
+"    set number
+"  else
+"    set relativenumber
+"  endif
+"endfunc
+"nnoremap <C-n> :call NumberToggle()<cr>
 
 "create undo file
 set undolevels=1000         " How many undos
@@ -555,12 +555,12 @@ Bundle 'vim-scripts/matchit.zip'
 "################### 补全及快速编辑 ###################"
 
 "迄今位置用到的最好的自动VIM自动补全插件
-Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'
 "youcompleteme  默认tab  s-tab 和自动补全冲突
 "let g:ycm_key_list_select_completion=['<c-n>']
-let g:ycm_key_list_select_completion = ['<Down>']
+"let g:ycm_key_list_select_completion = ['<Down>']
 "let g:ycm_key_list_previous_completion=['<c-p>']
-let g:ycm_key_list_previous_completion = ['<Up>']
+"let g:ycm_key_list_previous_completion = ['<Up>']
 
 
 "快速插入代码片段
