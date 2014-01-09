@@ -204,6 +204,16 @@ molokai主题
 
 ### 自定义快捷键说明
 
+    1. 可以自己修改vimrc中配置，决定是否开启鼠标 
+    set mouse-=a           " 鼠标暂不启用, 键盘党....
+    set mouse=a            " 开启鼠标
+
+    2. 可以自己修改vimrc决定是否使用方向键进行上下左右移动，默认打开，可以注解, 建议注掉:)
+    map <Left> <Nop>
+    map <Right> <Nop>
+    map <Up> <Nop>
+    map <Down> <Nop>
+
     F1  关掉，防止跳出帮助
     F2  set nu/nonu
     F3  set list/nolist
@@ -217,7 +227,7 @@ molokai主题
     t    新起一行，下面，不进入插入模式
     T    新起一行，上面
     ,sa   全选(select all)
-    hjkl  上下左右，强迫使用，要解开的自己改
+    hjkl  上下左右
     ctrl + jkhl 进行上下左右窗口跳转,不需要ctrl+w+jkhl
 
     ,tn  new tab
