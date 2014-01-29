@@ -744,7 +744,7 @@ au Syntax * RainbowParenthesesLoadBraces
 
 ""定义函数SetTitle，自动插入文件头 尅自定义文件头信息
 autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
-func AutoSetFileHead()
+function! AutoSetFileHead()
     "如果文件类型为.sh文件
     if &filetype == 'sh'
         call setline(1, "\#!/bin/bash")
