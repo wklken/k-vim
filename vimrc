@@ -652,8 +652,8 @@ Bundle 'hdima/python-syntax'
 let python_highlight_all = 1
 
 " for golang
-Bundle 'jnwhiteh/vim-golang'
 Bundle 'Blackrush/vim-gocode'
+Bundle 'jnwhiteh/vim-golang'
 
 " for markdown
 Bundle 'plasticboy/vim-markdown'
@@ -672,7 +672,7 @@ Bundle 'nono/jquery.vim'
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
 "for nginx conf file highlight.   need to confirm it works
-Bundle 'thiderman/nginx-vim-syntax'
+"Bundle 'thiderman/nginx-vim-syntax'
 
 "################### 其他 ###################"
 " task list
