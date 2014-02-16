@@ -615,7 +615,7 @@ GitCafe: https://gitcafe.com/LittleKey
 
 # 下面是LittleKey fork后的修改
 
-* 主要写 Python C/C++ MarkDown TeX Html/CSS [Javascript] [JAVA]
+* 主要写 Python C/C++ QtApplication MarkDown TeX Html/CSS [Javascript] [JAVA]
 
 ## 自定义设置
 
