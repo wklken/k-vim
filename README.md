@@ -667,6 +667,7 @@ GitCafe: https://gitcafe.com/LittleKey
 6. #### [evanmiller/nginx-vim-syntax](https://github.com/evanmiller/nginx-vim-syntax)
 
    nginx 支持 原先那个github上的貌似挂了, 所以换了一个...
+   原因不明的下载不能, 于是关掉了...因为我一般也用不上...
 
 
 ## 新的安装方法

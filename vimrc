@@ -676,7 +676,7 @@ Bundle 'nono/jquery.vim'
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
 "for nginx conf file highlight.   need to confirm it works
-Bundle 'evanmiller/nginx-vim-syntax'
+"Bundle 'evanmiller/nginx-vim-syntax'
 
 "################### 其他 ###################"
 " task list
