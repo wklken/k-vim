@@ -9,7 +9,7 @@
 " Last_modify: 2013-09-13
 " Sections:
 "     ->General 基础设置
-"     ->Show 展示/排班等界面格式设置
+"     ->Show 展示/排版等界面格式设置
 "     ->file encode, 文件编码,格式
 "     ->others 其它基础配置
 "     ->hot key  自定义快捷键
@@ -334,7 +334,8 @@ inoremap kj <Esc>
 " I can type :help on my own, thanks.
 noremap <F1> <Esc>"
 
-nnoremap ; :
+" nnoremap ; :
+" ; can repeat fx/tx. so do not map it
 
 nnoremap <leader>v V`}
 
@@ -577,6 +578,12 @@ Bundle 'Valloric/YouCompleteMe'
 let g:ycm_key_list_select_completion = ['<Down>']
 "let g:ycm_key_list_previous_completion=['<c-p>']
 let g:ycm_key_list_previous_completion = ['<Up>']
+"在注释输入中也能补全
+let g:ycm_complete_in_comments = 1
+"在字符串输入中也能补全
+let g:ycm_complete_in_strings = 1
+"注释和字符串中的文字也会被收入补全
+let g:ycm_collect_identifiers_from_comments_and_strings = 0
 " load .ycm_extra_conf.py
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
 "跳到定义,否则跳到声明 ,jd 或者 F12
@@ -585,7 +592,6 @@ nnoremap <F12> : YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <F11> : GundoToggle<CR>
 
 "快速插入代码片段
-"Bundle 'vim-scripts/UltiSnips'
 Bundle 'SirVer/ultisnips'
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
@@ -657,6 +663,7 @@ Bundle 'hdima/python-syntax'
 let python_highlight_all = 1
 
 " for golang
+Bundle 'Blackrush/vim-gocode'
 Bundle 'jnwhiteh/vim-golang'
 
 " for markdown
@@ -796,3 +803,24 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+""定义函数SetTitle，自动插入文件头 尅自定义文件头信息
+autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
+function! AutoSetFileHead()
+    "如果文件类型为.sh文件
+    if &filetype == 'sh'
+        call setline(1, "\#!/bin/bash")
+    endif
+
+    if &filetype == 'python'
+        call setline(1, "\#!/usr/bin/env python")
+        call append(1, "\# encoding:utf-8")
+    endif
+
+    normal G
+    normal o
+    normal o
+endfunc
+
+" F11 to run python script
+nnoremap <buffer> <F10> :exec '!python' shellscape(@%, 1)<cr>

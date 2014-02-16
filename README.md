@@ -1,6 +1,21 @@
 k-vim
 ======================
 
+NOTICE:
+
+目前配置文件还是太乱了, 年后我会提供一个更加简洁的版本(version 7.0),大梳理
+
+
+    1.梳理现有配置文件结构和格式
+    2.去除无用信息，注释全变成中文
+    3.吸收spf13等几大开源vim配置的安装方式，重写安装脚本
+    4.整合更多地插件，可供大家选取
+    5.更新README.md，简洁，更好的展现和录屏
+    6.提供一个文章资源列表
+
+So. 可以先star/watch，版本7更新后再fork. Thx.
+
+
 ### vim插件分类及快捷键
 
 > 给人一条Vim 命令，他能折腾一晚上；告诉他怎么自定义Vim 命令，他能捣腾一辈子
@@ -48,7 +63,7 @@ k-vim
           有什么问题,先看插件文档说明->代码选项->github上的issues->google it
           你遇到的问题,一定别人也遇到了,大部分可解决,少部分无解….
 
-   文章: [不要复杂化vim](http://www.kunli.info/2013/08/13/vim/)
+   文章: [不要复杂化vim](http://www.kunli.info/2013/08/13/vim/)|[七个高效文本编辑习惯](http://blog.jobbole.com/44891/)
 
    欢迎推荐好用更酷的插件配置:)
 
@@ -183,6 +198,16 @@ molokai主题
 
 ### 自定义快捷键说明
 
+    1. 可以自己修改vimrc中配置，决定是否开启鼠标
+    set mouse-=a           " 鼠标暂不启用, 键盘党....
+    set mouse=a            " 开启鼠标
+
+    2. 可以自己修改vimrc决定是否使用方向键进行上下左右移动，默认打开，可以注解, 建议注掉:)
+    map <Left> <Nop>
+    map <Right> <Nop>
+    map <Up> <Nop>
+    map <Down> <Nop>
+
     F1  关掉，防止跳出帮助
     F2  set nu/nonu
     F3  set list/nolist
@@ -196,7 +221,7 @@ molokai主题
     t    新起一行，下面，不进入插入模式
     T    新起一行，上面
     ,sa   全选(select all)
-    hjkl  上下左右，强迫使用，要解开的自己改
+    hjkl  上下左右
     ctrl + jkhl 进行上下左右窗口跳转,不需要ctrl+w+jkhl
 
     ,tn  new tab
@@ -288,7 +313,7 @@ molokai主题
 
    ![taglist](https://github.com/wklken/gallery/blob/master/vim/taglist.png?raw=true)
 
-4. ####[kien/ctrlp.vim](https://github.com/hdima/python-syntax)
+4. ####[kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
 
    文件搜索,ack/Command-T需要依赖于外部包,不喜欢有太多依赖的,除非十分强大, 具体 [文档](http://kien.github.io/ctrlp.vim/)
 
@@ -626,8 +651,8 @@ GitCafe: https://gitcafe.com/LittleKey
     F7  切换(turn on/off)gitgutter (default: on)
     F10 打开nerdtree(原先是: ,n)
     F11 编辑文件时光机(等价于 ,h)
-    F12 跳转到定义, 否则跳转到声明, 使用 CTRL + o 跳回调用处 (使用YCM)
-    ,jd 与F12效果相同 (我还没决定好用哪个)
+    F12 运行python脚本
+    ,jd 跳转到定义, 否则跳转到声明, 使用 CTRL + o 跳回调用处 (使用YCM)
 
     H 跳到行首
     L 跳到行尾
