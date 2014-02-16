@@ -11,6 +11,10 @@ compilation_database_folder = ''
 
 # These are the compilation flags that will be used in case there's no
 # compilation database set.
+qt5_Dir = '/usr/include/qt5'
+qt5_Flag = '-I' + qt5_Dir
+qt5_Flags_List = [ os.path.join(qt5_Flag, apple) for apple in os.listdir(qt5_Dir) ]
+
 flags = [
     '-Wall',
     '-std=c++11',
@@ -25,12 +29,14 @@ flags = [
     '../llvm/include',
     '-isystem',
     '/usr/lib/gcc/i486-linux-gnu/4.8',
+    #'-I/usr/include/qt4',
+    '-I/usr/include/qt5',
     #'-I',
     #'/usr/include/c++/4.8/tr1/',
     #'-I',
     '-isystem',
     '/usr/include'
-]
+] + qt5_Flags_List
 
 if compilation_database_folder:
     database = ycm_core.CompilationDatabase(compilation_database_folder)

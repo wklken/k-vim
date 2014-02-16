@@ -676,7 +676,7 @@ Bundle 'nono/jquery.vim'
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
 "for nginx conf file highlight.   need to confirm it works
-Bundle 'thiderman/nginx-vim-syntax'
+Bundle 'evanmiller/nginx-vim-syntax'
 
 "################### 其他 ###################"
 " task list
@@ -740,6 +740,9 @@ Bundle 'othree/html5.vim'
 Bundle 'groenewege/vim-less'
 Bundle 'cakebaker/scss-syntax.vim'
 Bundle 'skammer/vim-css-color'
+
+" Qt 语法高亮
+Bundle 'kosl90/qt-highlight-vim'
 
 "========================== config for plugins end ======================================
 
