@@ -11,6 +11,8 @@ compilation_database_folder = ''
 
 # These are the compilation flags that will be used in case there's no
 # compilation database set.
+
+# 修改qt5_Dir为qt5头文件的目录即可
 qt5_Dir = '/usr/include/qt5'
 qt5_Flag = '-I' + qt5_Dir
 qt5_Flags_List = [ os.path.join(qt5_Flag, apple) for apple in os.listdir(qt5_Dir) ]
@@ -36,7 +38,7 @@ flags = [
     #'-I',
     '-isystem',
     '/usr/include'
-] + qt5_Flags_List
+    ] + qt5_Flags_List # 合并添加qt5头文件flags
 
 if compilation_database_folder:
     database = ycm_core.CompilationDatabase(compilation_database_folder)
