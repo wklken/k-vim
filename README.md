@@ -664,6 +664,10 @@ GitCafe: https://gitcafe.com/LittleKey
 
    LESS(Dynamic CSS) 支持
 
+6. #### [evanmiller/nginx-vim-syntax](https://github.com/evanmiller/nginx-vim-syntax)
+
+   nginx 支持 原先那个github上的貌似挂了, 所以换了一个...
+
 
 ## 新的安装方法
 
