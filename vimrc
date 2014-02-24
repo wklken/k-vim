@@ -225,7 +225,15 @@ set wildmenu
 set wildignore=*.o,*~,*.pyc,*.class
 
 " Python 文件的一般设置，比如不要 tab 等
-autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
+autocmd FileType php setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
+autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
+autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=120
+autocmd FileType coffee,javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=120
+autocmd FileType html,htmldjango,xhtml,haml setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=0
+autocmd FileType sass,scss,css setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=120
+
+
 
 " if this not work ,make sure .viminfo is writable for you
 if has("autocmd")
@@ -524,8 +532,8 @@ let g:rbpt_colorpairs = [
     \ ['darkred',     'DarkOrchid3'],
     \ ['red',         'firebrick3'],
     \ ]
-let g:rbpt_max = 40
-let g:rbpt_loadcmd_toggle = 0
+let g:rbpt_max = 16
+autocmd Syntax lisp,scheme,clojure,racket RainbowParenthesesToggle
 
 "代码排版缩进标识
 Bundle 'Yggdroot/indentLine'
@@ -705,6 +713,7 @@ endif
 "colorscheme solarized
 set background=dark
 set t_Co=256
+set colorcolumn=120
 
 "colorscheme molokai
 "colorscheme desert
