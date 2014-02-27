@@ -456,6 +456,38 @@ Bundle 'majutsushi/tagbar'
 nmap <F9> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
+" 1.install gotags 'go get -u github.com/jstemmer/gotags'
+" 2.make sure `gotags` in you shell PATH, you can call check it with `which gotags`
+" for gotags. work with tagbar
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
+
+
 "标签导航 要装ctags
 Bundle 'vim-scripts/taglist.vim'
 set tags=tags;/
@@ -577,7 +609,10 @@ let g:ycm_complete_in_comments = 1
 "在字符串输入中也能补全
 let g:ycm_complete_in_strings = 1
 "注释和字符串中的文字也会被收入补全
-let g:ycm_collect_identifiers_from_comments_and_strings = 0
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+"语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
+"let g:ycm_seed_identifiers_with_syntax=1
+let g:ycm_collect_identifiers_from_tags_files = 1
 
 
 "快速插入代码片段
@@ -652,8 +687,9 @@ Bundle 'hdima/python-syntax'
 let python_highlight_all = 1
 
 " for golang
+" 1.install golang and install gocode 'go get github.com/nsf/gocode'
+" 2.make sure gocode in your path: `which gocode` (add $GOPATH/bin to you $PATH)
 Bundle 'Blackrush/vim-gocode'
-Bundle 'jnwhiteh/vim-golang'
 
 " for markdown
 Bundle 'plasticboy/vim-markdown'
