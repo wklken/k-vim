@@ -682,6 +682,9 @@ Bundle 'pydoc.vim'
 "画图
 Bundle 'DrawIt'
 
+"纵向编辑
+Bundle 'VisIncr'
+
 " end turn on
 filetype plugin indent on
 
