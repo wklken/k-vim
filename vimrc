@@ -503,6 +503,9 @@ let g:ctrlp_match_window_reversed=0
 let g:ctrlp_mruf_max=500
 let g:ctrlp_follow_symlinks=1
 
+"文字搜素,ack
+Bundle 'mileszs/ack.vim'
+
 "################### 显示增强 ###################"
 
 "状态栏增强展示
