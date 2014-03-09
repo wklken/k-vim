@@ -614,6 +614,11 @@ let g:ycm_collect_identifiers_from_comments_and_strings = 1
 "let g:ycm_seed_identifiers_with_syntax=1
 let g:ycm_collect_identifiers_from_tags_files = 1
 
+" 引入，可以补全系统，以及python的第三方包
+let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"
+"直接触发自动补全
+let g:ycm_key_invoke_completion = '<C-Space>'
+
 
 "快速插入代码片段
 Bundle 'SirVer/ultisnips'
