@@ -331,8 +331,6 @@ map <C-l> <C-W>l
 noremap H ^
 noremap L $
 
-" Remap VIM 0 to first non-blank character
-map 0 ^
 
 "Map ; to : and save a million keystrokes
 " ex mode commands made easy 用于快速进入命令行
@@ -502,3 +500,4 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
+

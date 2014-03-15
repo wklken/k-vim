@@ -52,14 +52,18 @@ let g:ycm_key_invoke_completion = '<C-Space>'
 
 " 代码片段快速插入
 Bundle 'SirVer/ultisnips'
+" 代码片段资源,需要学习
+" Snippets are separated from the engine. Add this if you want them:
+Bundle 'honza/vim-snippets'
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
-" 定义存放代码片段的文件夹 .vim/snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示
-let g:UltiSnipsSnippetDirectories=["snippets", "bundle/ultisnips/UltiSnips"]
+" 定义存放代码片段的文件夹 .vim/additional_snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示
+let g:UltiSnipsSnippetDirectories=["additional_snippets", 'UltiSnips']
+
 
 " 自动补全单引号，双引号等
 Bundle 'Raimondi/delimitMate'
-" for python docstring ",优化输入
+"" for python docstring ",优化输入
 au FileType python let b:delimitMate_nesting_quotes = ['"']
 
 " 自动补全html/xml标签
@@ -173,6 +177,17 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+" 代码缩进
+" https://github.com/nathanaelkane/vim-indent-guides
+"Bundle 'nathanaelkane/vim-indent-guides'
+"let g:indent_guides_auto_colors = 0
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+"hi IndentGuidesOdd  guibg=red   ctermbg=3
+"hi IndentGuidesEven guibg=green ctermbg=4
+"hi IndentGuidesOdd  ctermbg=black
+"hi IndentGuidesEven ctermbg=darkgrey
 
 "################### 显示增强-主题 ###################"
 
@@ -316,5 +331,10 @@ Bundle 'nono/jquery.vim'
 
 "###### Jinja2 #########
 Bundle 'Glench/Vim-Jinja2-Syntax'
+
+
+"###### nginx #########
+Bundle 'evanmiller/nginx-vim-syntax'
+
 
 "------------------------------------------- end of configs --------------------------------------------

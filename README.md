@@ -1,13 +1,23 @@
 k-vim
 =======================
 
+> VERSION: 7.0
+> LAST_UPDATE_TIME: 2014-03-15
+> NOTE:
+  旧版本用户更新代码后需执行
+        1.bash install.sh [多了一个软连接.vimrc.bundles]
+        2.插件安装和更新 :BundleInstall 和 :BundleUpdate
+  有任何问题提issues
+> PS: 年前答应的版本梳理完毕,拖延了，额，一个月....-_-#
+
 # 目标
 
 > Just a Better Vim Config.
 
-    1.区域划分良好
+    1.结构及配置划分良好
     2.全中文注释
     3.高度可配置修改
+    4.一键安装少折腾
 
 适用人群：
 
@@ -18,6 +28,25 @@ k-vim
 推荐: 耗子叔的 [简明vim练级攻略](http://coolshell.cn/articles/5426.html)
 
 或者,玩游戏 [vim大冒险](http://vim-adventures.com/)
+
+学习步骤:
+
+    1.进入退出，模式切换，插入删除复制粘贴等基本操作
+
+    2.学会快速移动跳转
+
+    3.学会如何进行选中
+
+    4.学会进行文本对象操作
+
+    5.学会批量重复操作
+
+    6.学会vim批量替换
+
+    ------------
+    6.学会使用插件，完成补全，注释，文本快速录入操作等
+
+    7.学会宏 []
 
 ### k-vim使用说明
 
@@ -32,11 +61,13 @@ k-vim
 
         ps.平时用python/golang多些，其他语言根据自身需求添加到 vimrc.bundles->语言相关中
 
-3. fork一份, 然后参照安装步骤进行安装
+3. `fork`一份, 然后参照安装步骤进行安装
 
     根据自己使用语言和自身习惯，对配置进行自定义修改
 
     之后，维护自身配置，后续可以在任意地方安装，`一库在手，天下我有 `，:)
+
+    要关注`k-vim`的更新，github点`Star`，thx a lot!
 
 4. 建议
 
@@ -243,7 +274,7 @@ molokai主题
 
     7. 按键修改
     Y   =y$   复制到行尾
-    U   =Ctrl-r 
+    U   =Ctrl-r
     , + sa    select all,全选
     , + v     选中段落
     kj        代替ESC
@@ -256,11 +287,10 @@ molokai主题
     优化:
     1. j/k 对于换行展示移动更友好
     2. HL 修改成 ^$, 更方便在同行移动
-    3. 0 修改成 ^
-    4. ; 修改成 : ，一键进入命令行模式，不需要按shift
-    5. 命令行模式 ctrl+a/e 到开始结尾
-    6. <和> 代码缩进后自动再次选中
-    7. 对py文件，保存自动去行尾空白，打开自动加行首代码
+    3. ; 修改成 : ，一键进入命令行模式，不需要按shift
+    4. 命令行模式 ctrl+a/e 到开始结尾
+    5. <和> 代码缩进后自动再次选中
+    6. 对py文件，保存自动去行尾空白，打开自动加行首代码
 
 
 ---------------------------------
@@ -315,9 +345,13 @@ molokai主题
         ,gd  跳到声明位置, 仅 filetypes: c, cpp, objc, objcpp, python 有效
 
 
-2. ####代码片段快速插入 [SirVer/ultisnips](https://github.com/SirVer/ultisnips)
+2. ####代码片段快速插入 [SirVer/ultisnips](https://github.com/SirVer/ultisnips) +[honza/vim-snippets](https://github.com/honza/vim-snippets)
+
+    注意：如果是之前安装的k-vim，更新后发现报错，是ultisnips版本问题 执行:BundleUpdate即可
 
     必装，效率杀手锏，快速插入自定义的代码片段
+
+    代码片段集合，有缺陷
 
     自动补全加这个,高效必备, 针对各种语言已经带了一份配置了，可以到安装目录下查看具体，我有针对性补全一份，在snippets目录下，可自行修改
 
@@ -581,12 +615,71 @@ molokai主题
 
     jquery高亮
 
+    [elzr/vim-json](https://github.com/elzr/vim-json)
+
+    json高亮,未配置
+
+    [kchmck/vim-coffee-script](https://github.com/kchmck/vim-coffee-script)
+
+    coffeescript,未配置
+
+    [groenewege/vim-less](https://github.com/groenewege/vim-less)
+
+    less,未配置
+
+    [emmet](https://github.com/mattn/emmet-vim)
+
+    zencoding,未配置
+
+    [gorodinskiy/vim-coloresque](https://github.com/gorodinskiy/vim-coloresque)
+
+    css颜色展示
+
 5. ####Jinja2
 
     [Glench/Vim-Jinja2-Syntax](https://github.com/Glench/Vim-Jinja2-Syntax)
 
     jinja2 语法高亮
 
+6. ####Ruby
+
+    [tpope/vim-rails](https://github.com/tpope/vim-rails)
+    未配置
+
+7. ####PHP
+
+    [spf13/PIV](https://github.com/spf13/PIV)
+    未配置
+
+    [arnaud-lb/vim-php-namespace](https://github.com/arnaud-lb/vim-php-namespace)
+    未配置
+
+8. ####非语言语法高亮
+
+    [evanmiller/nginx-vim-syntax](https://github.com/evanmiller/nginx-vim-syntax)
+    nginx
+
+> 其他
+
+1. ####平滑滚动
+
+    [terryma/vim-smooth-scroll](https://github.com/terryma/vim-smooth-scroll)
+    未配置
+
+2. ####多人协作，结对编程
+
+    [FredKSchott/CoVim](https://github.com/FredKSchott/CoVim)
+    未配置
+
+3. ####单行多行变换
+
+    [AndrewRadev/splitjoin.vim](https://github.com/AndrewRadev/splitjoin.vim)
+    未配置
+
+4. ####TODO关键字列表
+
+    [vim-scripts/TaskList.vim](https://github.com/vim-scripts/TaskList.vim)
+    未配置
 
 ---------------------------------
 
@@ -601,33 +694,60 @@ molokai主题
 2014-03-15更新：
 
     1.更全的注释
-    2.更合理的布局
+    2.更合理文件结构和配置布局
     3.分离插件配置到vimrc.bundles
+    4.更强大的代码补全
+    5.去掉一些无用信息
 
 TODO:
 
-    中文注释修改及补全 https://github.com/acumon/misc/blob/master/.vimrc
+    1.
     Taglist有没有必要存在?
 
-    对比powerline和airline  Bundle 'bling/vim-airline' [spf13]
+
+    2.
     增加一些语言类的插件配置
 
-    ctrlp使用方式(如何打开一个新窗口挖掘下使用方式)
-    fuzzyfinder 到底哪个更好
-    Bundle 'mileszs/ack.vim'
-    Replaces Command-T
+    3.
     代码格式化
-    [godlygeek/tabular](https://github.com/godlygeek/tabular)
+    https://github.com/godlygeek/tabular
+
+    4.
+    代码缩进展示-准备加入
+    https://github.com/nathanaelkane/vim-indent-guides
+
+    5.
+    非paste模式下
+    黏贴的时候，不要自动补全加括号
+
+    6.
+    比较
+    kana/vim-smartinput 和delimate
+    gundo 和 mbbill/undotree [spf13]
+    ctrlp 和 fuzzyfinder 及Shougo/unite.vim
+    powerline和'bling/vim-airline' [spf13]
+
+    7.
+    剪贴板共享-准备加入
+    https://github.com/vim-scripts/YankRing.vim
+
+    8.
+    待使用确认
+    函数参数位置调整 https://github.com/PeterRincker/vim-argumentative
+    iterm2+vim https://github.com/sjl/vitality.vim
+    shell https://github.com/vim-scripts/Conque-Shell
+    git https://github.com/airblade/vim-gitgutter
+
 
 ### Inspire
 
-1. vimrc文件布局`vimrc+vimrc.bundles`配置方式参考 (maximum-awesome)[https://github.com/square/maximum-awesome]
+1. vimrc文件布局`vimrc+vimrc.bundles`配置方式参考 [maximum-awesome](https://github.com/square/maximum-awesome)
 
-2. install.sh 参考`spf13-vim` 的`bootstrap.sh` (spf13-vim)[https://github.com/spf13/spf13-vim]
+2. install.sh 参考`spf13-vim` 的`bootstrap.sh` [spf13-vim](https://github.com/spf13/spf13-vim)
 
-2. 插件管理使用(Vundle)[https://github.com/gmarik/Vundle.vim]
+2. 插件管理使用[Vundle](https://github.com/gmarik/Vundle.vim)
 
-3. 自动补全 (YCM)[https://github.com/Valloric/YouCompleteMe]
+3. 自动补全 [YCM](https://github.com/Valloric/YouCompleteMe)
 
 ------------------------
 
