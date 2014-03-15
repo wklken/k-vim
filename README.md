@@ -2,13 +2,13 @@ k-vim
 =======================
 
 > VERSION: 7.0
+
 > LAST_UPDATE_TIME: 2014-03-15
-> NOTE:
-  旧版本用户更新代码后需执行
-        1.bash install.sh [多了一个软连接.vimrc.bundles]
-        2.插件安装和更新 :BundleInstall 和 :BundleUpdate
-  有任何问题提issues
+
 > PS: 年前答应的版本梳理完毕,拖延了，额，一个月....-_-#
+
+
+> 有任何问题提issues
 
 # 目标
 
@@ -220,11 +220,20 @@ molokai主题
 
 7. 冲突和问题排查
 
-   插件很多，并且其默认快捷键或者配置可能发生冲突
+    插件很多，并且其默认快捷键或者配置可能发生冲突
 
-   当加入新插件发现有冲突或者展现有问题
+    当加入新插件发现有冲突或者展现有问题
 
-   请排除法进行排查：注掉所有插件或配置，然后二分法逐一恢复，可以定位到出现问题的插件或配置,修改其配置或键位即可
+    请排除法进行排查：注掉所有插件或配置，然后二分法逐一恢复，可以定位到出现问题的插件或配置,修改其配置或键位即可
+
+8. 旧版本用户
+
+    旧版本用户更新代码后需执行
+
+        1.bash install.sh [多了一个软连接.vimrc.bundles]
+          or
+          ln -s PATH-TO-k-vim/vimrc.bundles ~/.vimrc.bundles
+        2.插件安装和更新 :BundleInstall 和 :BundleUpdate
 
 ---------------------------------
 
@@ -748,6 +757,8 @@ TODO:
 2. 插件管理使用[Vundle](https://github.com/gmarik/Vundle.vim)
 
 3. 自动补全 [YCM](https://github.com/Valloric/YouCompleteMe)
+
+
 
 ------------------------
 
