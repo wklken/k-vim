@@ -8,7 +8,6 @@ k-vim
     1.区域划分良好
     2.全中文注释
     3.高度可配置修改
-    4.专注于python/golang
 
 适用人群：
 
@@ -127,23 +126,23 @@ molokai主题
 
 4. 可能遇到的问题:
 
-   * 编译自动补全YouCompleteMe
+    - 编译自动补全YouCompleteMe
 
-   [文档](https://github.com/Valloric/YouCompleteMe)
+    [文档](https://github.com/Valloric/YouCompleteMe)
 
-   这个插件需要Vim 7.3.584,所以,如果vim版本太低,需要[编译安装](https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source)
+    这个插件需要Vim 7.3.584,所以,如果vim版本太低,需要[编译安装](https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source)
 
-   * 相对行号
+    - 相对行号
 
-   vimrc中配置,如果不习惯,可以去掉,[相关参考](http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/)
+    vimrc中配置,如果不习惯,可以去掉,[相关参考](http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/)
 
-   * 配置主题
+    - 配置主题
 
-   到vimrc中修改colortheme,可以使用molokai(用惯sublimetext2的童鞋很熟悉)
+    到vimrc中修改colortheme,可以使用molokai(用惯sublimetext2的童鞋很熟悉)
 
-   默认配置的是[solarized dark主题](https://github.com/altercation/vim-colors-solarized)
+    默认配置的是[solarized dark主题](https://github.com/altercation/vim-colors-solarized)
 
-   想要修改终端配色为solarized可以参考 [这里](https://github.com/sigurdga/gnome-terminal-colors-solarized)
+    想要修改终端配色为solarized可以参考 [这里](https://github.com/sigurdga/gnome-terminal-colors-solarized)
 
 5. 安装/卸载/更新插件：
 
@@ -203,45 +202,66 @@ molokai主题
 # 自定义快捷键
 
     1. 可以自己修改vimrc中配置，决定是否开启鼠标
+
     set mouse-=a           " 鼠标暂不启用, 键盘党....
     set mouse=a            " 开启鼠标
 
-    2. 可以自己修改vimrc决定是否使用方向键进行上下左右移动，默认打开，可以注解, 建议注掉:)
+    2. 可以自己修改vimrc决定是否使用方向键进行上下左右移动，默认打开，可以注解
+    hjkl  上下左右
+
     map <Left> <Nop>
     map <Right> <Nop>
     map <Up> <Nop>
     map <Down> <Nop>
 
-    F1  关掉，防止跳出帮助
-    F2  set nu/nonu
-    F3  set list/nolist
-    F4  set wrap/nowrap
-    F5  set paste/nopaste
-    F6  syntax on/off
-    空格 /开启查找
-    Y   =y$   复制到行尾
-    w!!  以sudo的权限保存
-    kj   <Esc>，不用到角落去按esc了
-    t    新起一行，下面，不进入插入模式
-    T    新起一行，上面
-    ,sa   全选(select all)
-    hjkl  上下左右
+    3. 上排F功能键
+
+    F1 废弃这个键,防止调出系统帮助
+    F2 set nu/nonu,行号开关，用于鼠标复制代码用
+    F3 set list/nolist,显示可打印字符开关
+    F4 set wrap/nowrap,换行开关
+    F5 set paste/nopaste,粘贴模式paste_mode开关,用于有格式的代码粘贴
+    F6 syntax on/off,语法开关，关闭语法可以加快大文件的展示
+
+    4. 分屏移动
+
     ctrl + jkhl 进行上下左右窗口跳转,不需要ctrl+w+jkhl
 
-    ,tn  new tab
-    ,tc  tab close
-    ,to  tab only
-    ,tm  tab move
-    ,te  new tab edit
-    ctrl+n  相对行号绝对行号变换，默认用相对行号
-    5j/5k  在相对行号模式下，往上移动5行 往下移动5行
+    5. 搜索
+    <space> 空格，进入搜索状态
+    /       同上
+    ,/      去除匹配高亮
 
-    ,y 展示历史剪贴板
-    ,yc 清空
-    yy/dd -> p -> ctrl+p可以替换非最近一次剪贴内容
+    6. buffer/tab相关
+    <- / -> 前后buffer
 
-    ,p 开启文件搜索 ctrlp
-    ,/ 去除匹配高亮
+    , + tn  新tab
+    , + to  tabonly
+    , + tc  close
+    , + tm  tab move
+    , + te  new tab edit
+
+    7. 按键修改
+    Y   =y$   复制到行尾
+    U   =Ctrl-r 
+    , + sa    select all,全选
+    , + v     选中段落
+    kj        代替ESC
+    kj        <Esc>，不用到角落去按esc了
+    t         新起一行，下面，不进入插入模式
+    T         新起一行，上面
+    , + q     :q，退出vim
+
+
+    优化:
+    1. j/k 对于换行展示移动更友好
+    2. HL 修改成 ^$, 更方便在同行移动
+    3. 0 修改成 ^
+    4. ; 修改成 : ，一键进入命令行模式，不需要按shift
+    5. 命令行模式 ctrl+a/e 到开始结尾
+    6. <和> 代码缩进后自动再次选中
+    7. 对py文件，保存自动去行尾空白，打开自动加行首代码
+
 
 ---------------------------------
 
@@ -624,5 +644,4 @@ Github: https://github.com/wklken
 Blog: [http://www.wklken.me](http://www.wklken.me)
 
 2013-06-11 于深圳
-2014-03-15 更新
 
