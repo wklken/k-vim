@@ -23,6 +23,7 @@ for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -L $i ] && unlink $i ; done
 
 echo "setting up symlinks"
 lnif $CURRENT_DIR/vimrc $HOME/.vimrc
+lnif $CURRENT_DIR/vimrc.bundles $HOME/.vimrc.bundles
 lnif $CURRENT_DIR/ $HOME/.vim
 
 
@@ -42,16 +43,17 @@ export SHELL=$system_shell
 
 echo "compile YouCompleteMe"
 echo "if error,you need to compile it yourself"
+echo "cd $CURRENT_DIR/bundle/YouCompleteMe/ && bash -x install.sh --clang-completer"
 cd $CURRENT_DIR/bundle/YouCompleteMe/
 bash -x install.sh --clang-completer
 
 #vim bk and undo dir
-if [ ! -d ~/bak/vimbk ]
+if [ ! -d /tmp/vimbk ]
 then
-    mkdir -p ~/bak/vimbk
+    mkdir -p /tmp/vimbk
 fi
 
-if [ ! -d ~/bak/vimundo ]
+if [ ! -d /tmp/vimundo ]
 then
-    mkdir -p ~/bak/vimundo
+    mkdir -p /tmp/vimundo
 fi
