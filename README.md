@@ -140,6 +140,7 @@ molokai主题
 3. 安装插件
 
         cd k-vim/
+        #注意原先装过重装时，不要到~/.vim下执行(这是软连接指向k-vim真是目录)，必须到k-vim原生目录执行
 
         sh -x install.sh
 
