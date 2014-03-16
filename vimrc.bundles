@@ -6,6 +6,14 @@
 "################### 包依赖 #####################
 "package dependence:  ctags
 "python dependence:  pep8, pyflake
+"
+"非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
+set nocompatible
+" configure Vundle
+filetype off " required! turn off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
 
 "################### 插件管理 ###################
 
@@ -91,11 +99,11 @@ Bundle 'Lokaltog/vim-easymotion'
 
 Bundle 'vim-scripts/matchit.zip'
 
-" 显示marks
+" 显示marks 还有bug
 " m[a-zA-Z] add mark
 " '[a-zA-Z] go to mark
 " m<Space>  del all marks
-Bundle "kshenoy/vim-signature"
+" Bundle "kshenoy/vim-signature"
 
 
 "################### 快速选中 ###################

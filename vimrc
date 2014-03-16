@@ -30,11 +30,6 @@ let g:mapleader = ','
 " 开启语法高亮
 syntax enable
 
-" configure Vundle
-filetype on " without this vim emits a zero exit status, later, because of :ft off
-filetype off " required! turn off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
 
 " install Vundle bundles
 if filereadable(expand("~/.vimrc.bundles"))
@@ -64,8 +59,6 @@ filetype plugin on
 "启动自动补全
 filetype plugin indent on
 
-"非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
-set nocompatible
 set autoread          " 文件修改之后自动载入。
 set shortmess=atI       " 启动的时候不显示那个援助索马里儿童的提示
 
@@ -479,8 +472,8 @@ if has("gui_running")
 endif
 
 " theme主题
-colorscheme solarized
 set background=dark
+colorscheme solarized
 set t_Co=256
 
 "colorscheme molokai
