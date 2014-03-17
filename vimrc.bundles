@@ -342,7 +342,7 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 
 
 "###### nginx #########
-Bundle 'evanmiller/nginx-vim-syntax'
+"Bundle 'evanmiller/nginx-vim-syntax'
 
 
 "------------------------------------------- end of configs --------------------------------------------
