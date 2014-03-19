@@ -23,13 +23,8 @@ lnif $CURRENT_DIR/vimrc.bundles $HOME/.vimrc.bundles
 lnif "$CURRENT_DIR/" "$HOME/.vim"
 
 echo "Step3: install vundle"
-if [ ! -e $CURRENT_DIR/bundle/vundle ]; then
-    echo "Installing Vundle"
-    git clone https://github.com/gmarik/vundle.git $CURRENT_DIR/bundle/vundle
-else
-    echo "Upgrade Vundle"
-    cd "$HOME/.vim/bundle/vundle" && git pull origin master
-fi
+git submodule init
+git submodule update
 
 echo "Step4: update/install plugins using Vundle"
 system_shell=$SHELL
