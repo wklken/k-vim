@@ -37,6 +37,24 @@ export SHELL="/bin/sh"
 vim -u $HOME/.vimrc.bundles +BundleInstall! +BundleClean +qall
 export SHELL=$system_shell
 
+# add check for vim --version
+WARNING=''
+VERSION=`vim --version | grep "VIM - Vi IMproved" | grep -o "[0-9]\.[0-9]"`
+if [ `echo $VERSION' < 7.4' | bc ` -eq 1 ]
+then
+    WARNING=$WARNING"To use YouCompleteMe, you need to update Vim to (at least)7.4 version \n"
+fi
+if [ !  -z `vim --version | grep -o ' -python ' `]
+then
+    WARNING=$WARNING"Some plugins here need python support, so you need to recompile Vim to add python support\n"
+fi
+if [ -n "$WARNING" ]
+then
+    echo 'WARNING: '
+    echo -e $WARNING
+    echo "Recompile Vim is in need. Please refer to https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source for more"
+fi
+
 
 echo "Step5: compile YouCompleteMe"
 echo "It will take a long time, juse be patient!"
