@@ -28,7 +28,7 @@ lnif $CURRENT_DIR/ $HOME/.vim
 
 if [ ! -e $CURRENT_DIR/vundle ]; then
     echo "Installing Vundle"
-    git clone http://github.com/gmarik/vundle.git $CURRENT_DIR/bundle/vundle
+    git clone https://github.com/gmarik/vundle.git $CURRENT_DIR/bundle/vundle
 fi
 
 
