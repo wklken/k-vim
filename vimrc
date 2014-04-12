@@ -576,6 +576,7 @@ let g:ycm_key_list_select_completion=['<c-n>']
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion=['<c-p>']
 let g:ycm_key_list_previous_completion = ['<Up>']
+nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 
 
 "快速插入代码片段
