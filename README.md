@@ -12,12 +12,13 @@ k-vim
 
 # 目标
 
-> Just a Better Vim Config.
+> Just a Better Vim Config. Keep it Simple.
 
     1.结构及配置划分良好
     2.全中文注释
     3.高度可配置修改
     4.一键安装少折腾
+    5.保持简单
 
 适用人群：
 
@@ -621,6 +622,10 @@ molokai主题
 
     偶尔会看看js,频率不高
 
+    [maksimr/vim-jsbeautify](https://github.com/maksimr/vim-jsbeautify) 未配置
+
+    js/html/css 格式化
+
     [nono/jquery.vim](https://github.com/nono/jquery.vim)
 
     jquery高亮
@@ -641,8 +646,8 @@ molokai主题
 
     zencoding,未配置
 
-    [gorodinskiy/vim-coloresque](https://github.com/gorodinskiy/vim-coloresque)
-
+    [gorodinskiy/vim-coloresque](https://github.com/gorodinskiy/vim-coloresque) 配置 |
+    [vim-css-color](https://github.com/ap/vim-css-color) 未配置
     css颜色展示
 
 5. ####Jinja2
@@ -736,18 +741,64 @@ TODO:
     gundo 和 mbbill/undotree [spf13]
     ctrlp 和 fuzzyfinder 及Shougo/unite.vim
     powerline和'bling/vim-airline' [spf13]
+    nerdcommenter commentary comment https://github.com/tpope/vim-commentary
 
     7.
+    有价值的
+    git https://github.com/airblade/vim-gitgutter
+
+    https://github.com/michaeljsmith/vim-indent-object
+
     剪贴板共享-准备加入
     https://github.com/vim-scripts/YankRing.vim
 
     8.
     待使用确认
     函数参数位置调整 https://github.com/PeterRincker/vim-argumentative
-    iterm2+vim https://github.com/sjl/vitality.vim
     shell https://github.com/vim-scripts/Conque-Shell
-    git https://github.com/airblade/vim-gitgutter
 
+    https://github.com/mhinz/vim-signify
+
+    tpope   Bundle 'tpope/vim-bundler'
+            Bundle 'tpope/vim-cucumber'
+            Bundle 'tpope/vim-endwise'
+            Bundle 'tpope/vim-pastie'
+            Bundle 'tpope/vim-ragtag'
+            Bundle 'tpope/vim-rails'
+            Bundle 'tpope/vim-vividchalk'
+            tpope/vim-sensible
+    vim preview https://github.com/greyblake/vim-preview
+    bufferline https://github.com/bling/vim-bufferline
+    https://github.com/osyo-manga/vim-over
+    更强大的命令行替换 https://github.com/tpope/vim-abolish
+    how about https://github.com/klen/python-mode
+    writing room https://github.com/junegunn/goyo.vim & https://github.com/amix/vim-zenroom2
+    python-imports.vim
+    fast than c tag https://github.com/tacahiroy/ctrlp-funky
+    https://github.com/tpope/vim-unimpaired
+    vim-speeddating
+    speeddating.vim: use CTRL-A/CTRL-X to increment dates, times, and more
+    easybuffer.vim
+    easybuffer.vim - vim plugin to quickly switch between buffers
+    https://github.com/jaredly/vim-debug/
+    https://github.com/suan/vim-instant-markdown
+    https://github.com/msanders/cocoa.vim
+    https://github.com/fatih/vim-go
+    https://github.com/itchyny/lightline.vim
+    https://github.com/vim-scripts/cmdline-completion
+    https://github.com/myusuf3/numbers.vim
+
+    "showmarks
+    Bundle 'vim-scripts/ShowMarks'
+    "markbrowser
+    Bundle 'vim-scripts/Marks-Browser'
+
+    vim-scripts/Conque-Shell
+    shell https://github.com/Shougo/vimshell.vim
+    iterm2+vim https://github.com/sjl/vitality.vim
+
+    text-object 插件做什么用的？
+    https://github.com/kana/vim-textobj-user
 
 ### Inspire
 
@@ -759,7 +810,19 @@ TODO:
 
 3. 自动补全 [YCM](https://github.com/Valloric/YouCompleteMe)
 
+### Resources
 
+1. [Google+](https://plus.google.com/communities/105049811056605918816)
+
+2. [vimbits](http://www.vimbits.com/bits?sort=top)
+
+3. [Learning vim the hard way](http://learnvimscriptthehardway.stevelosh.com/)
+
+4. [Seven habits of effective text editing](http://www.moolenaar.net/habits.html)
+
+5. [openvim tutorial](http://www.openvim.com/tutorial.html)
+
+6. [vim genius](http://www.vimgenius.com/)
 
 ------------------------
 
