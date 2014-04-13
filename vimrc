@@ -28,7 +28,7 @@ let mapleader = ','
 let g:mapleader = ','
 
 " 开启语法高亮
-syntax enable
+syntax on
 
 
 " install Vundle bundles
@@ -126,10 +126,10 @@ set whichwrap+=<,>,h,l
 set ruler
 ""在状态栏显示正在输入的命令
 set showcmd
-" Show current mode
+" 左下角显示当前vim模式
 set showmode
 
-" Set 7 lines to the cursor - when moving vertically using j/k 上下滚动,始终在中间
+" 在上下移动光标时，光标的上方或下方至少会保留显示的行数
 set scrolloff=7
 
 " set winwidth=79
@@ -144,18 +144,18 @@ set number
 " 取消换行。
 set nowrap
 
-"括号配对情况
+" 括号配对情况,跳转并高亮一下匹配的括号
 set showmatch
 " How many tenths of a second to blink when matching brackets
-set mat=2
+set matchtime=2
 
 "设置文内智能搜索提示
 " 高亮search命中的文本。
 set hlsearch
+" 打开增量搜索模式,随着键入即时搜索
+set incsearch
 " 搜索时忽略大小写
 set ignorecase
-" 随着键入即时搜索
-set incsearch
 " 有一个或以上大写字母时仍大小写敏感
 set smartcase     " ignore case if search pattern is all lowercase, case-sensitive otherwise
 
@@ -174,16 +174,16 @@ set foldlevel=99
 " 缩进配置
 
 set smartindent   " Smart indent
-set autoindent    " always set autoindenting on
+set autoindent    " 打开自动缩进
 " never add copyindent, case error   " copy the previous indentation on autoindenting
 
 " tab相关变更
 set tabstop=4     " 设置Tab键的宽度        [等同的空格个数]
-set shiftwidth=4  " number of spaces to use for autoindenting
+set shiftwidth=4  " 每一次缩进对应的空格数
 set softtabstop=4 " 按退格键时可以一次删掉 4 个空格
 set smarttab      " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
 set expandtab     " 将Tab自动转化成空格    [需要输入真正的Tab键时，使用 Ctrl+V + Tab]
-set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
+set shiftround    " 缩进时，取整 use multiple of shiftwidth when indenting with '<' and '>'
 
 " A buffer becomes hidden when it is abandoned
 set hidden
