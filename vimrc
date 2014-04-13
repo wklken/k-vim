@@ -81,7 +81,7 @@ if v:version >= 730
     set undodir=/tmp/vimundo/
 endif
 
-set wildignore=*.swp,*.bak,*.pyc,*.class
+set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 " 突出显示当前行等
 set cursorcolumn
 set cursorline          " 突出显示当前行
@@ -136,7 +136,7 @@ set scrolloff=7
 
 " 命令行（在状态行下）的高度，默认为1，这里是2
 set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P
-" Always show the status line
+" Always show the status line - use 2 lines for the status bar
 set laststatus=2
 
 "显示行号：

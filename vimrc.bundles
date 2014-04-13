@@ -37,6 +37,7 @@ let g:syntastic_enable_highlighting = 0
 let g:syntastic_python_checkers=['pyflakes'] " 使用pyflakes,速度比pylint快
 highlight SyntasticErrorSign guifg=white guibg=black
 
+
 "################### 自动补全 ###################
 
 " 代码自动补全
@@ -340,9 +341,14 @@ Bundle 'nono/jquery.vim'
 "###### Jinja2 #########
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
+"for css color
+"Bundle 'ap/vim-css-color'
+Bundle 'gorodinskiy/vim-coloresque'
 
 "###### nginx #########
 "Bundle 'evanmiller/nginx-vim-syntax'
+
+
 
 
 "------------------------------------------- end of configs --------------------------------------------
