@@ -16,6 +16,12 @@ compilation_database_folder = ''
 qt5_Dir = '/usr/include/qt5'
 qt5_Flag = '-I' + qt5_Dir
 qt5_Flags_List = [ os.path.join(qt5_Flag, apple) for apple in os.listdir(qt5_Dir) ]
+qt5_Flags_List += ['-isystem', '/usr/include/qt5']
+
+qt4_Dir = '/usr/include/qt4'
+qt4_Flag = '-I' + qt4_Dir
+qt4_Flags_List = [ os.path.join(qt4_Flag, apple) for apple in os.listdir(qt4_Dir) ]
+qt4_Flags_List += ['-isystem', '/usr/include/qt4']
 
 flags = [
     '-Wall',
@@ -38,7 +44,7 @@ flags = [
     #'-I',
     '-isystem',
     '/usr/include'
-    ] + qt5_Flags_List # merge qt5 flags with clang flags
+    ] + qt4_Flags_List
 
 if compilation_database_folder:
     database = ycm_core.CompilationDatabase(compilation_database_folder)
