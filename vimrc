@@ -134,7 +134,8 @@ set nowrap
 "括号配对情况
 set showmatch
 " How many tenths of a second to blink when matching brackets
-set matchime=2
+"set matchime=2
+set mat=2
 
 "设置文内智能搜索提示
 " 高亮search命中的文本。
