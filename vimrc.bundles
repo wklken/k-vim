@@ -242,7 +242,7 @@ Bundle 'tomasr/molokai'
 
 "shows a git diff in the gutter
 Bundle 'airblade/vim-gitgutter'
-nnoremap <F7> :GitGutterToggle<CR>
+nnoremap <leader>gg :GitGutterToggle<CR>
 
 "################### 快速导航 ###################
 "目录导航

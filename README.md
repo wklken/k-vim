@@ -820,42 +820,39 @@ Github: https://github.com/wklken
 
 Blog: [http://www.wklken.me](http://www.wklken.me)
 
-2013-06-11 于深圳
-
-
 ## Fork from GitHub [wklken/k-vim](https://github.com/wklken/k-vim)
 LittleKey (code newbie)
 
 Email: LittleKeyRain@gmail.com
 
-BitBucket: https://bitbucket.org/LittleKey
-
 GitHub: https://github.com/LittleKey
 
-GitCafe: https://gitcafe.com/LittleKey
-
-2013-09-11 at home...:)
 
 # 下面是LittleKey fork后的修改
 
-* 主要写 Python C/C++ QtApplication MarkDown TeX Html/CSS [Javascript] [JAVA]
+* 主要写 Python C/C++ QtApplication MarkDown TeX Html/CSS [Javascript] [JAVA] [Ruby]
 
 ## 自定义设置
 
-    × 会在打开文件时重新插入所有tab（以统一替换为相应长度的空格(defaule=4 space)）
 
 ## 自定义快捷键
 
-    F7  切换(turn on/off)gitgutter (default: on)
-    F10 打开nerdtree(原先是: ,n)
+> F1~F6 的设置请查看上面的介绍,或直接阅读vimrc
+
+    F7  切换Tab与Space模式, 具体操作会参照当时的Tab相关设置(Default: 'Space mode')
+    F8  Taglist开关
+    F9  TagBar开关
+    F10 运行python脚本
     F11 编辑文件时光机(等价于 ,h)
-    F12 运行python脚本
     ,jd 跳转到定义, 否则跳转到声明, 使用 CTRL + o 跳回调用处 (使用YCM)
+    ,gg  gitgutter开关 (default: on)
 
     H 跳到行首
     L 跳到行尾
 
 ## 插件
+
+   具体分类请参照vimrc.bundles
 
 ### add plugin
 
@@ -886,11 +883,6 @@ GitCafe: https://gitcafe.com/LittleKey
 5. #### [roenewege/vim-less](https://github.com/groenewege/vim-less)
 
    LESS(Dynamic CSS) 支持
-
-6. #### [evanmiller/nginx-vim-syntax](https://github.com/evanmiller/nginx-vim-syntax)
-
-   nginx 支持 原先那个github上的貌似挂了, 所以换了一个...
-   原因不明的下载不能, 于是关掉了...因为我一般也用不上...
 
 
 ## 新的安装方法

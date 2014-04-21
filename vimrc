@@ -105,6 +105,7 @@ set magic
 set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
 
+
 "==========================================
 " Display Settings 展示/排班等界面格式设置
 "==========================================
@@ -172,6 +173,7 @@ set smarttab      " insert tabs on the start of a line according to shiftwidth, 
 set expandtab     " 将Tab自动转化成空格    [需要输入真正的Tab键时，使用 Ctrl+V + Tab]
 set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
 
+
 set showcmd
 " A buffer becomes hidden when it is abandoned
 set hidden
@@ -195,6 +197,18 @@ function! NumberToggle()
   endif
 endfunc
 nnoremap <C-n> :call NumberToggle()<cr>
+
+" 使用F7切换是否使用空格代替tab(或tab代替空格)
+function! TabToggle()
+  if(&expandtab == 1)
+    set noexpandtab
+    retab!
+  else
+    set expandtab
+    retab
+  endif
+endfunc
+nnoremap <F7> :call TabToggle()<CR>
 
 
 "==========================================
