@@ -176,6 +176,12 @@ nnoremap <leader>h :GundoToggle<CR>
 
 "################### 显示增强 ###################
 
+"状态栏增强展示
+Bundle 'Lokaltog/vim-powerline'
+"if want to use fancy,need to add font patch -> git clone git://gist.github.com/1630581.git ~/.fonts/ttf-dejavu-powerline
+"let g:Powerline_symbols = 'fancy'
+let g:Powerline_symbols = 'unicode'
+
 "括号显示增强
 Bundle 'kien/rainbow_parentheses.vim'
 let g:rbpt_colorpairs = [
