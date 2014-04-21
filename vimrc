@@ -9,11 +9,37 @@
 "       -> Theme Settings  主题设置
 "
 "       -> 插件配置和具体设置在vimrc.bundles中
+"       -> Theme Settings  主题设置
+"
+"       -> 插件配置和具体设置在vimrc.bundles中
 "==========================================
+
 
 "==========================================
 "" Initial Plugin 加载插件
 "==========================================
+
+" 修改leader键
+let mapleader = ','
+let g:mapleader = ','
+
+" 开启语法高亮
+syntax on
+
+
+" install Vundle bundles
+if filereadable(expand("~/.vimrc.bundles"))
+  source ~/.vimrc.bundles
+endif
+
+" ensure ftdetect et al work by including this after the Vundle stuff
+filetype plugin indent on
+
+"==========================================
+" General Settings 基础设置
+"==========================================
+
+"以下配置有详细说明，一些特性不喜欢可以直接注解掉
 
 " 修改leader键
 let mapleader = ','
@@ -56,7 +82,7 @@ set shortmess=atI       " 启动的时候不显示那个援助索马里儿童的
 " 备份,到另一个位置. 防止误删, 目前是取消备份
 "set backup
 "set backupext=.bak
-"set backupdir=~/tmp/vimbk/
+"set backupdir=/tmp/vimbk/
 
 " 取消备份。 视情况自己改
 set nobackup
@@ -74,14 +100,17 @@ endif
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 " 突出显示当前行等
 set cursorcolumn
-set cursorline              " 突出显示当前行
+set cursorline          " 突出显示当前行
+
 
 "设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制
 "好处：误删什么的，如果以前屏幕打开，可以找回
 set t_ti= t_te=
 
+
 "- 则点击光标不会换,用于复制
 set mouse-=a             " 鼠标暂不启用, 键盘党....
+
 " 修复ctrl+m 多光标操作选择的bug，但是改变了ctrl+v进行字符选中时将包含光标下的字符
 "set selection=exclusive
 set selection=inclusive
@@ -132,7 +161,7 @@ set number
 " 取消换行
 set nowrap
 
-"括号配对情况
+" 括号配对情况,跳转并高亮一下匹配的括号
 set showmatch
 " How many tenths of a second to blink when matching brackets
 "set matchime=2
@@ -163,26 +192,25 @@ set foldlevel=99
 " 缩进配置
 
 set smartindent   " Smart indent"
-set autoindent    " always set autoindenting on
+set autoindent    " 打开自动缩进
 " never add copyindent, case error   " copy the previous indentation on autoindenting
 
+" tab相关变更
 set tabstop=4     " 设置Tab键的宽度        [等同的空格个数]
-set shiftwidth=4  " number of spaces to use for autoindenting
+set shiftwidth=4  " 每一次缩进对应的空格数
 set softtabstop=4 " 按退格键时可以一次删掉 4 个空格
 set smarttab      " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
 set expandtab     " 将Tab自动转化成空格    [需要输入真正的Tab键时，使用 Ctrl+V + Tab]
 set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
 
 
-set showcmd
 " A buffer becomes hidden when it is abandoned
 set hidden
 set wildmode=list:longest
 set ttyfast
-:retab " 打开文件时重新插入所有tab
 
 
-"相对行号   行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
+" 相对行号      行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
 set relativenumber number
 au FocusLost * :set norelativenumber number
 au FocusGained * :set relativenumber
@@ -264,9 +292,8 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
-
 "==========================================
-"HotKey Settings  自定义快捷键设置
+" HotKey Settings  自定义快捷键设置
 "==========================================
 
 " 主要案件重定义
@@ -294,22 +321,22 @@ map k gk
 noremap <F1> <Esc>"
 "
 ""为方便复制，用<F2>开启/关闭行号显示:
-"nnoremap <F2> :set norelativenumber nonumber! number?<CR>
 function! HideNumber()
-    if(&relativenumber == &number)
-        set relativenumber! number!
-    elseif(&number)
-        set number!
-    else
-        set relativenumber!
-    endif
-    set number?
+  if(&relativenumber == &number)
+    set relativenumber! number!
+  elseif(&number)
+    set number!
+  else
+    set relativenumber!
+  endif
+  set number?
 endfunc
+nnoremap <F2> :call HideNumber()<CR>
 nnoremap <F2> :call HideNumber()<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
               "set paste
-set pastetoggle=<F5>            "     when in insert mode, press <F2> to go to
+set pastetoggle=<F5>            "    when in insert mode, press <F5> to go to
                                 "    paste mode, where you can paste mass data
                                 "    that won't be autoindented
 
@@ -325,14 +352,15 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-
 " Go to home and end using capitalized directions
 noremap H ^
 noremap L $
 
+
 "Map ; to : and save a million keystrokes
 " ex mode commands made easy 用于快速进入命令行
 nnoremap ; :
+
 
 " 命令行模式增强，ctrl - a到行首， -e 到行尾
 cnoremap <C-j> <t_kd>
@@ -374,7 +402,6 @@ map <leader>tm :tabmove
 map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " ------- 选中及操作改键
-
 "Reselect visual block after indent/outdent.调整缩进后自动选中，方便再次操作
 vnoremap < <gv
 vnoremap > >gv
@@ -398,6 +425,8 @@ inoremap kj <Esc>
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
+nnoremap <C-e> 2<C-e>
+nnoremap <C-y> 2<C-y>
 
 "Jump to start and end of line using the home row keys
 nmap t o<ESC>k
@@ -405,6 +434,7 @@ nmap T O<ESC>j
 
 " Quickly close the current window
 nnoremap <leader>q :q<CR>
+nmap T O<ESC>j
 
 " Swap implementations of ` and ' jump to markers
 " By default, ' jumps to the marked line, ` jumps to the marked line and
@@ -415,6 +445,11 @@ nnoremap ` '
 " remap U to <C-r> for easier redo
 nnoremap U <C-r>
 
+" Quickly edit/reload the vimrc file
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+"==========================================
 
 "==========================================
 " FileType Settings 文件类型设置
@@ -471,10 +506,9 @@ if has("gui_running")
     set t_Co=256
 endif
 
-
 " theme主题
-colorscheme solarized
 set background=dark
+colorscheme solarized
 set t_Co=256
 
 "colorscheme molokai

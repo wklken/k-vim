@@ -19,10 +19,11 @@ call vundle#rc()
 
 "使用Vundle来管理Vundle
 " vim plugin bundle control, command model
-" :BundleInstall     install
-" :BundleInstall!    update
-" :BundleClean       remove plugin not in list
+" :BundleInstall     install 安装配置的插件
+" :BundleInstall!    update  更新
+" :BundleClean       remove plugin not in list 删除本地无用插件
 Bundle 'gmarik/vundle'
+
 
 "################### 基础 ######################
 
@@ -47,13 +48,13 @@ Bundle 'Valloric/YouCompleteMe'
 let g:ycm_key_list_select_completion = ['<Down>']
 "let g:ycm_key_list_previous_completion=['<c-p>']
 let g:ycm_key_list_previous_completion = ['<Up>']
-let g:ycm_complete_in_comments = 1	"在注释输入中也能补全
-let g:ycm_complete_in_strings = 1	"在字符串输入中也能补全
-let g:ycm_collect_identifiers_from_comments_and_strings = 1	"注释和字符串中的文字也会被收入补全
-"let g:ycm_seed_identifiers_with_syntax=1	"语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
+let g:ycm_complete_in_comments = 1  "在注释输入中也能补全
+let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
+let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串中的文字也会被收入补全
+"let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
 let g:ycm_collect_identifiers_from_tags_files = 1
-" load .ycm_extra_conf.py
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
+" 引入，可以补全系统，以及python的第三方包
+let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"
 " 直接触发自动补全
 let g:ycm_key_invoke_completion = '<C-Space>'
 "跳到定义,否则跳到声明 ,jd
@@ -61,22 +62,23 @@ nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 "nnoremap <F12> : YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <F11> : GundoToggle<CR>
 
-"快速插入代码片段
+
+" 代码片段快速插入
 Bundle 'SirVer/ultisnips'
 " 代码片段资源,需要学习
 " Snippets are separated from the engine. Add this if you want them:
 Bundle 'honza/vim-snippets'
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
-"定义存放代码片段的文件夹 .vim/additional_snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示
+" 定义存放代码片段的文件夹 .vim/additional_snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示
 let g:UltiSnipsSnippetDirectories=["additional_snippets", "UltiSnips"]
 
-"自动补全单引号，双引号等
+" 自动补全单引号，双引号等
 Bundle 'Raimondi/delimitMate'
-" for python docstring ",优化输入
-au FileType python let b:delimitMate_nesting_quotes = ['"', "'"] "adding '
+"" for python docstring ",优化输入
+au FileType python let b:delimitMate_nesting_quotes = ['"']
 
-"自动补全html/xml标签
+" 自动补全html/xml标签
 Bundle 'docunext/closetag.vim'
 let g:closetag_html_style=1
 
@@ -97,7 +99,7 @@ Bundle 'scrooloose/nerdcommenter'
 
 " 快速加入修改环绕字符
 Bundle 'tpope/vim-surround'
-"for repeat -> enhance surround.vim, . to repeat command
+" for repeat -> enhance surround.vim, . to repeat command
 Bundle 'tpope/vim-repeat'
 
 " 快速去行尾空格 [, + <Space>]
@@ -160,6 +162,7 @@ let g:ctrlp_max_height=15
 let g:ctrlp_match_window_reversed=0
 let g:ctrlp_mruf_max=500
 let g:ctrlp_follow_symlinks=1
+
 
 " git
 Bundle 'tpope/vim-fugitive'
@@ -228,7 +231,6 @@ let g:indentLine_char = '¦'
 
 "################### 显示增强-主题 ###################"
 
-" 使用solarized主题
 "主题 solarized
 Bundle 'altercation/vim-colors-solarized'
 let g:solarized_termcolors=256

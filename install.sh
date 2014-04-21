@@ -11,13 +11,13 @@ lnif() {
     fi
 }
 
-echo "Setp1: backing up current vim config"
+echo "Step1: backing up current vim config"
 today=`date +%Y%m%d`
 for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -e $i ] && [ ! -L $i ] && mv $i $i.$today; done
 for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -L $i ] && unlink $i ; done
 
 
-echo "Setp2: setting up symlinks"
+echo "Step2: setting up symlinks"
 lnif $CURRENT_DIR/vimrc $HOME/.vimrc
 lnif $CURRENT_DIR/vimrc.bundles $HOME/.vimrc.bundles
 lnif "$CURRENT_DIR/" "$HOME/.vim"
@@ -32,7 +32,7 @@ else
     cd "$HOME/.vim/bundle/vundle" && git pull origin master
 fi
 
-echo "Setp4: update/install plugins using Vundle"
+echo "Step4: update/install plugins using Vundle"
 system_shell=$SHELL
 export SHELL="/bin/sh"
 vim -u $HOME/.vimrc.bundles +BundleInstall! +BundleClean +qall
@@ -54,16 +54,16 @@ bash -x install.sh --clang-completer
 #ln $CURRENT_DIR/others/YCM-Configure-File/_ycm_extra_conf.py .ycm_extra_conf
 
 #vim bk and undo dir
-if [ ! -d ~/tmp/vimbk ]
+if [ ! -d /tmp/vimbk ]
 then
-    mkdir -p ~/tmp/vimbk
+    mkdir -p /tmp/vimbk
 fi
 
-if [ ! -d ~/tmp/vimundo ]
+if [ ! -d /tmp/vimundo ]
 then
-    mkdir -p ~/tmp/vimundo
+    mkdir -p /tmp/vimundo
 fi
+
 echo "Install Done!"
-
 cd $CURRENT_DIR/
 touch two

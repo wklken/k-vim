@@ -397,6 +397,12 @@ molokai主题
         Hello -> "Hello"
 
     演示
+        cs"' [inside]
+        "Hello world!" -> 'Hello world!'
+        ds"
+        "Hello world!" -> Hello world!
+        ysiw"
+        Hello -> "Hello"
 
     ![surround](https://github.com/wklken/gallery/blob/master/vim/surround.gif?raw=true)
 
@@ -408,6 +414,8 @@ molokai主题
         [sd] ,空格    去掉当前行末尾空格
 
 > 快速移动
+
+1. ####位置跳转[Lokaltog/vim-easymotion](https://github.com/Lokaltog/vim-easymotion)
 
 1. ####位置跳转[Lokaltog/vim-easymotion](https://github.com/Lokaltog/vim-easymotion)
 

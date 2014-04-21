@@ -7,3 +7,9 @@ build
 k-vim
 one
 two
+
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
+*.orig
