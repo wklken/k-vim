@@ -19,7 +19,8 @@ two: one
 	sh -x install.sh
 
 one: tmp
-	${WAF} build
+	#${WAF} build
+	{WAF} do
 
 clean:
 	${RM} ${RFLAG} one two build tmp

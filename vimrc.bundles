@@ -92,6 +92,10 @@ let g:closetag_html_style=1
 "let g:neocomplcache_min_syntax_length = 3
 "let g:neocomplchache_lock_buffer_name_pattern = '\*ku\*'
 
+" Python自动补全 jedi
+"Bundle 'davidhalter/jedi-vim'
+
+
 "################### 快速编码 ###################
 
 " 快速注释
