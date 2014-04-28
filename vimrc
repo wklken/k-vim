@@ -486,22 +486,9 @@ let Tlist_Use_Right_Window = 0
 let Tlist_WinWidth = 25
 
 "for file search ctrlp, 文件搜索
-Bundle 'kien/ctrlp.vim'
-let g:ctrlp_map = '<leader>p'
-let g:ctrlp_cmd = 'CtrlP'
-map <leader>f :CtrlPMRU<CR>
-"set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux"
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz)$',
-    \ }
-"\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-let g:ctrlp_working_path_mode=0
-let g:ctrlp_match_window_bottom=1
-let g:ctrlp_max_height=15
-let g:ctrlp_match_window_reversed=0
-let g:ctrlp_mruf_max=500
-let g:ctrlp_follow_symlinks=1
+Bundle 'Shougo/unite.vim'
+"nnoremap <leader>p :Unite file_rec/async<CR>
+nnoremap <leader>p :Unite file_rec<CR>
 
 "文字搜索,ack
 Bundle 'mileszs/ack.vim'
