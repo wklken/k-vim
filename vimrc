@@ -190,6 +190,9 @@ set hidden
 set wildmode=list:longest
 set ttyfast
 
+" 00x增减数字时使用十进制
+set nrformats=
+
 
 " 相对行号      行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
 set relativenumber number
@@ -275,8 +278,10 @@ map <Down> <Nop>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
-map j gj
-map k gk
+nnoremap k gk
+nnoremap gk k
+nnoremap j gj
+nnoremap gj j
 
 " F1 - F6 设置
 " F1 废弃这个键,防止调出系统帮助

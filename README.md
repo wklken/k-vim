@@ -456,8 +456,8 @@ molokai主题
     视图模式下可伸缩选中部分，用于快速选中某些块
 
         [sd]
-        = 增加选中范围(+/=按键)
-        - 减少选中范围(_/-按键)
+        + 增加选中范围(+/=按键)
+        _ 减少选中范围(_/-按键)
 
     演示（直接取链到其github图)
 
@@ -495,9 +495,13 @@ molokai主题
 
 2. ####git [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
 
-    git插件
+    git插件, 编辑文件时进行一些diff操作,例如diff
 
     不是很习惯,所以用的次数太少,目前和现有配置快捷键有冲突,尚未解决
+
+        [sd]
+        ,gs   = git status
+        ,ge   = git diff edit[gd被ycm占用了]
 
 3. ####文件时光机 [sjl/gundo.vim](https://github.com/sjl/gundo.vim)
 

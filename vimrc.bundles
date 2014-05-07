@@ -111,8 +111,8 @@ Bundle 'vim-scripts/matchit.zip'
 
 " 选中区块
 Bundle 'terryma/vim-expand-region'
-map = <Plug>(expand_region_expand)
-map - <Plug>(expand_region_shrink)
+map + <Plug>(expand_region_expand)
+map _ <Plug>(expand_region_shrink)
 
 " 多光标选中编辑
 Bundle 'terryma/vim-multiple-cursors'
@@ -146,6 +146,11 @@ let g:ctrlp_follow_symlinks=1
 
 " git
 Bundle 'tpope/vim-fugitive'
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>ge :Gdiff<CR>
+"nnoremap <leader>ge :Gvsplit<CR>
+"
+"Bundle 'airblade/vim-gitgutter'
 
 " edit history, 可以查看回到某个历史状态
 Bundle 'sjl/gundo.vim'
@@ -210,6 +215,8 @@ let g:solarized_visibility="normal"
 "主题 molokai
 Bundle 'tomasr/molokai'
 "let g:molokai_original = 1
+
+
 
 "################### 快速导航 ###################
 "目录导航
@@ -322,6 +329,7 @@ let python_highlight_all = 1
 " 1.install golang and install gocode 'go get github.com/nsf/gocode'
 " 2.make sure gocode in your path: `which gocode` (add $GOPATH/bin to you $PATH)
 Bundle 'Blackrush/vim-gocode'
+"Bundle 'fatih/vim-go.git'
 
 "###### Markdown #########
 Bundle 'plasticboy/vim-markdown'
