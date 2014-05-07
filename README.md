@@ -478,6 +478,42 @@ molokai主题
 
     ![multiple-cursors](https://raw.github.com/terryma/vim-multiple-cursors/master/assets/example1.gif)
 
+> 文本对象扩展
+
+1. 自定义文本对象 [kana/vim-textobj-user.git](https://github.com/kana/vim-textobj-user.git)
+
+   后面几个扩展对象的依赖
+
+   更多其他扩展,建 [wiki](https://github.com/kana/vim-textobj-user/wiki)
+
+   PS: 特希望有一个扩展支持 '' "" [] {} ()
+
+2. 行文本对象 [kana/vim-textobj-line](https://github.com/kana/vim-textobj-line)
+
+   增加文本对象: l
+
+        dal
+        yal
+        cil
+
+3. 缩进文本对象 [kana/vim-textobj-indent.git](https://github.com/kana/vim-textobj-indent.git)
+
+   增加文本对象: i
+
+   相同缩进属于同一块,对python很有用
+
+        dai
+        yai
+        cii
+
+4. 文件文本对象 [kana/vim-textobj-entire.git](https://github.com/kana/vim-textobj-entire.git)
+
+   增加文本对象: e
+
+        dae
+        yae
+        cie
+
 > 功能相关
 
 1. ####搜索 [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
@@ -811,8 +847,6 @@ TODO:
     shell https://github.com/Shougo/vimshell.vim
     iterm2+vim https://github.com/sjl/vitality.vim
 
-    text-object 插件做什么用的？
-    https://github.com/kana/vim-textobj-user
 
 ### Inspire
 
