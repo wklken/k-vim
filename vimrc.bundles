@@ -144,13 +144,17 @@ let g:ctrlp_mruf_max=500
 let g:ctrlp_follow_symlinks=1
 
 
-" git
+" git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
 Bundle 'tpope/vim-fugitive'
-nnoremap <leader>gs :Gstatus<CR>
+" :Gdiff  :Gstatus :Gvsplit
 nnoremap <leader>ge :Gdiff<CR>
-"nnoremap <leader>ge :Gvsplit<CR>
-"
-"Bundle 'airblade/vim-gitgutter'
+
+" 同git diff,实时展示文件中修改的行
+" 只是不喜欢除了行号多一列, 默认关闭,gs时打开
+Bundle 'airblade/vim-gitgutter'
+let g:gitgutter_enabled = 0
+let g:gitgutter_highlight_lines = 1
+nnoremap <leader>gs :GitGutterToggle<CR>
 
 " edit history, 可以查看回到某个历史状态
 Bundle 'sjl/gundo.vim'

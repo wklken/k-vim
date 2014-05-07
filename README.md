@@ -493,15 +493,25 @@ molokai主题
 
     ![ctrip](https://github.com/wklken/gallery/blob/master/vim/ctrlp.gif?raw=true)
 
-2. ####git [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
+2. ####git 常用操作 [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
 
     git插件, 编辑文件时进行一些diff操作,例如diff
 
     不是很习惯,所以用的次数太少,目前和现有配置快捷键有冲突,尚未解决
 
         [sd]
-        ,gs   = git status
         ,ge   = git diff edit[gd被ycm占用了]
+
+    没有配置其他快捷键,可以参照github,自己增加修改映射
+
+2. ####git状态 [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
+
+    git,在同一个文件内,通过标记和高亮,显示本次文件变更点
+
+        [sd]
+        ,gs   = show diff status [gd被ycm占用了]
+
+    ![gitgutter](https://raw.githubusercontent.com/airblade/vim-gitgutter/master/screenshot.png)
 
 3. ####文件时光机 [sjl/gundo.vim](https://github.com/sjl/gundo.vim)
 
