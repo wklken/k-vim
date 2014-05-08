@@ -185,10 +185,23 @@ nnoremap <leader>h :GundoToggle<CR>
 "################### 显示增强 ###################
 
 "状态栏增强展示
-Bundle 'Lokaltog/vim-powerline'
+" 老的poerline配置
+"Bundle 'Lokaltog/vim-powerline'
 "if want to use fancy,need to add font patch -> git clone git://gist.github.com/1630581.git ~/.fonts/ttf-dejavu-powerline
 "let g:Powerline_symbols = 'fancy'
-let g:Powerline_symbols = 'unicode'
+"let g:Powerline_symbols = 'unicode'
+
+" 新的airline配置
+Bundle 'bling/vim-airline'
+if !exists('g:airline_symbols')
+let g:airline_symbols = {}
+endif
+let g:airline_left_sep = '▶'
+let g:airline_left_alt_sep = '❯'
+let g:airline_right_sep = '◀'
+let g:airline_right_alt_sep = '❮'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
 
 
 "括号显示增强

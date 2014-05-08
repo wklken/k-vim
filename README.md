@@ -570,11 +570,13 @@ molokai主题
 > 显示增强
 
 
-1. ####状态栏增强 [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline)
+1. ####状态栏增强 [bling/vim-airline](https://github.com/bling/vim-airline)
+
+    之前使用powerline, 用airline替换, powerline的配置注释,需要的自行解开
 
     演示
 
-    ![powerline](https://github.com/wklken/gallery/blob/master/vim/powerline.png?raw=true)
+    ![airline](https://raw.githubusercontent.com/wiki/bling/vim-airline/screenshots/demo.gif)
 
 2. ####括号上色高亮 [kien/rainbow_parentheses.vim](https://github.com/kien/rainbow_parentheses.vim)
 
