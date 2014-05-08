@@ -776,6 +776,7 @@ molokai主题
     1.增加文本对象扩展
     2.去除taglist
     3.增加 ctrlp插件 ctrlp-funky用于快速函数搜索跳转
+    4.切换powerline为airline
 
 TODO:
 

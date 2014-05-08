@@ -356,6 +356,10 @@ nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
 
+" switch # *
+nnoremap # *
+nnoremap * #
+
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
 
