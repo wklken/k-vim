@@ -104,7 +104,7 @@ Bundle 'vim-scripts/matchit.zip'
 " m[a-zA-Z] add mark
 " '[a-zA-Z] go to mark
 " m<Space>  del all marks
-Bundle "kshenoy/vim-signature"
+"Bundle "kshenoy/vim-signature"
 
 
 "################### 文本对象 ###################
