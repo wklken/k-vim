@@ -932,6 +932,8 @@ Website: [http://www.LittleKey.me](http://www.LittleKey.me)
 
 ## 新的安装方法
 
+   *不推荐用*
+
 #### build waf
 
        git clone https://code.google.com/p/waf/
@@ -951,14 +953,3 @@ Website: [http://www.LittleKey.me](http://www.LittleKey.me)
         python(2.x or 3.x)
         make
         and...configure will tell you...
-
-*p.s: 并不推荐新的安装方法。。。*
-
-###### 顺便一提
-  装YCM有个必要且比较容易漏装的依赖：
-
-* vim-python
-
-        sudo aptitude install vim-python
-
-增加一次成功的概率吧....
