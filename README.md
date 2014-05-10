@@ -527,7 +527,7 @@ molokai主题
 
     解决问题:使用tagbar当函数比较多的时候,移动耗时较长,使用快速搜索快很多
 
-        ,fu   进入当前文件函数搜索 
+        ,fu   进入当前文件函数搜索
         ,fU   搜索光标下单词对应函数
 
 
@@ -888,7 +888,7 @@ Website: [http://www.LittleKey.me](http://www.LittleKey.me)
     F10 运行python脚本
     F11 编辑文件时光机(等价于 ,h)
     ,jd 跳转到定义, 否则跳转到声明, 使用 CTRL + o 跳回调用处 (使用YCM)
-    ,gg  gitgutter开关 (default: on)
+    ,gs  gitgutter开关 (default: on)
 
     H 跳到行首
     L 跳到行尾
@@ -904,6 +904,8 @@ Website: [http://www.LittleKey.me](http://www.LittleKey.me)
 1. #### [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
 
    在gutter (sign column)上显示git的diff
+
+   在wklken的配置中已添加, 所以去掉这个...不过保持默认打开
 
 > 语言支持
 
