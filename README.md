@@ -866,7 +866,6 @@ Website: [http://www.LittleKey.me](http://www.LittleKey.me)
 > F1~F6 的设置请查看上面的介绍,或直接阅读vimrc
 
     F7  切换Tab与Space模式, 具体操作会参照当时的Tab相关设置(Default: 'Space mode')
-    F8  Taglist开关
     F9  TagBar开关
     F10 运行python脚本
     F11 编辑文件时光机(等价于 ,h)
