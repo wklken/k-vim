@@ -3,7 +3,7 @@ k-vim
 
 > VERSION: 7.0
 
-> LAST_UPDATE_TIME: 2014-03-15
+> LAST_UPDATE_TIME: 2014-05-08
 
 
 ### vim基本用法
@@ -255,6 +255,9 @@ molokai主题
     <space> 空格，进入搜索状态
     /       同上
     ,/      去除匹配高亮
+    (交换了#/* 号键功能)
+    #       正向查找光标下的词
+    *       反向查找光标下的词
 
     6. buffer/tab相关
     <- / -> 前后buffer
@@ -270,8 +273,7 @@ molokai主题
     U   =Ctrl-r
     , + sa    select all,全选
     , + v     选中段落
-    kj        代替ESC
-    kj        <Esc>，不用到角落去按esc了
+    kj        代替<Esc>，不用到角落去按esc了
     t         新起一行，下面，不进入插入模式
     T         新起一行，上面
     , + q     :q，退出vim
@@ -284,6 +286,7 @@ molokai主题
     4. 命令行模式 ctrl+a/e 到开始结尾
     5. <和> 代码缩进后自动再次选中
     6. 对py文件，保存自动去行尾空白，打开自动加行首代码
+    7. 交换#/*号功能,#号为正向查找,*反向
 
 
 ---------------------------------
@@ -446,8 +449,8 @@ molokai主题
     视图模式下可伸缩选中部分，用于快速选中某些块
 
         [sd]
-        = 增加选中范围(+/=按键)
-        - 减少选中范围(_/-按键)
+        + 增加选中范围(+/=按键)
+        _ 减少选中范围(_/-按键)
 
     演示（直接取链到其github图)
 
@@ -468,6 +471,42 @@ molokai主题
 
     ![multiple-cursors](https://raw.github.com/terryma/vim-multiple-cursors/master/assets/example1.gif)
 
+> 文本对象扩展
+
+1. 自定义文本对象 [kana/vim-textobj-user.git](https://github.com/kana/vim-textobj-user.git)
+
+   后面几个扩展对象的依赖
+
+   更多其他扩展,建 [wiki](https://github.com/kana/vim-textobj-user/wiki)
+
+   PS: 特希望有一个扩展支持 '' "" [] {} ()
+
+2. 行文本对象 [kana/vim-textobj-line](https://github.com/kana/vim-textobj-line)
+
+   增加文本对象: l
+
+        dal
+        yal
+        cil
+
+3. 缩进文本对象 [kana/vim-textobj-indent.git](https://github.com/kana/vim-textobj-indent.git)
+
+   增加文本对象: i
+
+   相同缩进属于同一块,对python很有用
+
+        dai
+        yai
+        cii
+
+4. 文件文本对象 [kana/vim-textobj-entire.git](https://github.com/kana/vim-textobj-entire.git)
+
+   增加文本对象: e
+
+        dae
+        yae
+        cie
+
 > 功能相关
 
 1. ####搜索 [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
@@ -483,11 +522,35 @@ molokai主题
 
     ![ctrip](https://github.com/wklken/gallery/blob/master/vim/ctrlp.gif?raw=true)
 
-2. ####git [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
+    插件:
+    当前文件快速函数搜索:[tacahiroy/ctrlp-funky](https://github.com/tacahiroy/ctrlp-funky)
 
-    git插件
+    解决问题:使用tagbar当函数比较多的时候,移动耗时较长,使用快速搜索快很多
+
+        ,fu   进入当前文件函数搜索 
+        ,fU   搜索光标下单词对应函数
+
+
+
+2. ####git 常用操作 [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
+
+    git插件, 编辑文件时进行一些diff操作,例如diff
 
     不是很习惯,所以用的次数太少,目前和现有配置快捷键有冲突,尚未解决
+
+        [sd]
+        ,ge   = git diff edit[gd被ycm占用了]
+
+    没有配置其他快捷键,可以参照github,自己增加修改映射
+
+2. ####git状态 [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
+
+    git,在同一个文件内,通过标记和高亮,显示本次文件变更点
+
+        [sd]
+        ,gs   = show diff status [gd被ycm占用了]
+
+    ![gitgutter](https://raw.githubusercontent.com/airblade/vim-gitgutter/master/screenshot.png)
 
 3. ####文件时光机 [sjl/gundo.vim](https://github.com/sjl/gundo.vim)
 
@@ -498,11 +561,13 @@ molokai主题
 > 显示增强
 
 
-1. ####状态栏增强 [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline)
+1. ####状态栏增强 [bling/vim-airline](https://github.com/bling/vim-airline)
+
+    之前使用powerline, 用airline替换, powerline的配置注释,需要的自行解开
 
     演示
 
-    ![powerline](https://github.com/wklken/gallery/blob/master/vim/powerline.png?raw=true)
+    ![airline](https://raw.githubusercontent.com/wiki/bling/vim-airline/screenshots/demo.gif)
 
 2. ####括号上色高亮 [kien/rainbow_parentheses.vim](https://github.com/kien/rainbow_parentheses.vim)
 
@@ -560,7 +625,9 @@ molokai主题
 
 2. ####Tag [majutsushi/tagbar](https://github.com/majutsushi/tagbar)
 
-    必装,标签导航,纬度和taglist不同
+    必装,标签导航,纬度和taglist不同, taglist的替代者
+
+    注意:之前版本有装taglist,决定用tagbar替代,taglist的配置注解未删除,需要的自行打开
 
          [sd] <F9> 打开
 
@@ -568,15 +635,6 @@ molokai主题
 
     ![tagbar](https://github.com/wklken/gallery/blob/master/vim/tagbar.gif?raw=true)
 
-3. ####Tag [vim-scripts/taglist.vim](https://github.com/vim-scripts/taglist.vim)
-
-    根据需要安装,需要安装依赖ctags
-
-         [sd] <F8>打开
-
-    演示:
-
-    ![taglist](https://github.com/wklken/gallery/blob/master/vim/taglist.png?raw=true)
 
 > 语言相关- 需要自定义编辑确认是否保留(默认打开)
 
@@ -692,7 +750,7 @@ molokai主题
 
 ### Update Log
 
-2014-06-11 创建:
+2013-06-11 创建:
 
     vim配置
 
@@ -704,11 +762,17 @@ molokai主题
     4.更强大的代码补全
     5.去掉一些无用信息
 
+2014-05-07/08更新:
+
+    1.增加文本对象扩展
+    2.去除taglist
+    3.增加 ctrlp插件 ctrlp-funky用于快速函数搜索跳转
+    4.切换powerline为airline
+
 TODO:
 
     1.
     Taglist有没有必要存在?
-
 
     2.
     增加一些语言类的插件配置
@@ -729,25 +793,14 @@ TODO:
     比较
     kana/vim-smartinput 和delimate
     gundo 和 mbbill/undotree [spf13]
-    ctrlp 和 fuzzyfinder 及Shougo/unite.vim
     powerline和'bling/vim-airline' [spf13]
-    nerdcommenter commentary comment https://github.com/tpope/vim-commentary
 
     7.
-    有价值的
-    git https://github.com/airblade/vim-gitgutter
-
-    https://github.com/michaeljsmith/vim-indent-object
-
     剪贴板共享-准备加入
     https://github.com/vim-scripts/YankRing.vim
 
     8.
     待使用确认
-    函数参数位置调整 https://github.com/PeterRincker/vim-argumentative
-    shell https://github.com/vim-scripts/Conque-Shell
-
-    https://github.com/mhinz/vim-signify
 
     tpope   Bundle 'tpope/vim-bundler'
             Bundle 'tpope/vim-cucumber'
@@ -757,38 +810,18 @@ TODO:
             Bundle 'tpope/vim-rails'
             Bundle 'tpope/vim-vividchalk'
             tpope/vim-sensible
-    vim preview https://github.com/greyblake/vim-preview
-    bufferline https://github.com/bling/vim-bufferline
-    https://github.com/osyo-manga/vim-over
-    更强大的命令行替换 https://github.com/tpope/vim-abolish
-    how about https://github.com/klen/python-mode
+
     writing room https://github.com/junegunn/goyo.vim & https://github.com/amix/vim-zenroom2
     python-imports.vim
-    fast than c tag https://github.com/tacahiroy/ctrlp-funky
-    https://github.com/tpope/vim-unimpaired
-    vim-speeddating
-    speeddating.vim: use CTRL-A/CTRL-X to increment dates, times, and more
+
     easybuffer.vim
     easybuffer.vim - vim plugin to quickly switch between buffers
-    https://github.com/jaredly/vim-debug/
-    https://github.com/suan/vim-instant-markdown
-    https://github.com/msanders/cocoa.vim
-    https://github.com/fatih/vim-go
-    https://github.com/itchyny/lightline.vim
-    https://github.com/vim-scripts/cmdline-completion
-    https://github.com/myusuf3/numbers.vim
 
     "showmarks
     Bundle 'vim-scripts/ShowMarks'
     "markbrowser
     Bundle 'vim-scripts/Marks-Browser'
 
-    vim-scripts/Conque-Shell
-    shell https://github.com/Shougo/vimshell.vim
-    iterm2+vim https://github.com/sjl/vitality.vim
-
-    text-object 插件做什么用的？
-    https://github.com/kana/vim-textobj-user
 
 ### Inspire
 
