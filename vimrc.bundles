@@ -79,10 +79,13 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 Bundle 'docunext/closetag.vim'
 let g:closetag_html_style=1
 
+
+
 "################### 快速编码 ###################
 
 " 快速注释
 Bundle 'scrooloose/nerdcommenter'
+
 
 " 快速加入修改环绕字符
 Bundle 'tpope/vim-surround'
@@ -92,6 +95,17 @@ Bundle 'tpope/vim-repeat'
 " 快速去行尾空格 [, + <Space>]
 Bundle 'bronson/vim-trailing-whitespace'
 map <leader><space> :FixWhitespace<cr>
+
+" 快速赋值语句对齐
+Bundle 'godlygeek/tabular'
+nmap <Leader>a= :Tabularize /=<CR>
+vmap <Leader>a= :Tabularize /=<CR>
+" :号也对齐
+nmap <Leader>a: :Tabularize /:<CR>
+vmap <Leader>a: :Tabularize /:<CR>
+" :号不变
+"nmap <Leader>a: :Tabularize /:\zs<CR>
+"vmap <Leader>a: :Tabularize /:\zs<CR>
 
 "################### 快速移动 ###################
 
@@ -185,7 +199,7 @@ nnoremap <leader>h :GundoToggle<CR>
 "################### 显示增强 ###################
 
 "状态栏增强展示
-" 老的poerline配置
+" 老的powerline配置
 "Bundle 'Lokaltog/vim-powerline'
 "if want to use fancy,need to add font patch -> git clone git://gist.github.com/1630581.git ~/.fonts/ttf-dejavu-powerline
 "let g:Powerline_symbols = 'fancy'
@@ -394,13 +408,13 @@ Bundle 'nono/jquery.vim'
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
 "for css color
-"Bundle 'ap/vim-css-color'
+"not work in iterm2 which termianl selection is not xterm-256
+"Bundle 'ap/vim-css-color'  
+
 Bundle 'gorodinskiy/vim-coloresque'
 
 "###### nginx #########
 "Bundle 'evanmiller/nginx-vim-syntax'
-
-
 
 
 "------------------------------------------- end of configs --------------------------------------------
