@@ -124,19 +124,29 @@ Bundle 'Lokaltog/vim-easymotion'
 
 Bundle 'vim-scripts/matchit.zip'
 
-" 显示marks 还有bug
+" 显示marks - 方便自己进行标记和跳转
 " m[a-zA-Z] add mark
 " '[a-zA-Z] go to mark
 " m<Space>  del all marks
 "Bundle "kshenoy/vim-signature"
 
 
-"################### 快速选中 ###################
+"################### 文本对象 ###################
 
+" 支持自定义文本对象
+Bundle 'kana/vim-textobj-user.git'
+" 增加行文本对象: l   dal yal cil
+Bundle 'kana/vim-textobj-line'
+" 增加文件文本对象: e   dae yae cie
+Bundle 'kana/vim-textobj-entire.git'
+" 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
+Bundle 'kana/vim-textobj-indent.git'
+
+"################### 快速选中 ###################
 " 选中区块
 Bundle 'terryma/vim-expand-region'
-map = <Plug>(expand_region_expand)
-map - <Plug>(expand_region_shrink)
+map + <Plug>(expand_region_expand)
+map _ <Plug>(expand_region_shrink)
 
 " 多光标选中编辑
 Bundle 'terryma/vim-multiple-cursors'
@@ -167,9 +177,30 @@ let g:ctrlp_match_window_reversed=0
 let g:ctrlp_mruf_max=500
 let g:ctrlp_follow_symlinks=1
 
+" ctrlp插件1 - 不用ctag进行函数快速跳转
+Bundle 'tacahiroy/ctrlp-funky'
+nnoremap <Leader>fu :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+let g:ctrlp_funky_syntax_highlight = 1
 
-" git
+
+
+let g:ctrlp_extensions = ['funky']
+
+
+
+" git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
 Bundle 'tpope/vim-fugitive'
+" :Gdiff  :Gstatus :Gvsplit
+nnoremap <leader>ge :Gdiff<CR>
+
+" 同git diff,实时展示文件中修改的行
+" 只是不喜欢除了行号多一列, 默认关闭,gs时打开
+Bundle 'airblade/vim-gitgutter'
+let g:gitgutter_enabled = 1
+let g:gitgutter_highlight_lines = 1
+nnoremap <leader>gs :GitGutterToggle<CR>
 
 "VIM git, 可以用vim来使用git
 "Bundle 'motemen/git-vim'
@@ -184,10 +215,23 @@ nnoremap <leader>h :GundoToggle<CR>
 "################### 显示增强 ###################
 
 "状态栏增强展示
-Bundle 'Lokaltog/vim-powerline'
+" 老的poerline配置
+"Bundle 'Lokaltog/vim-powerline'
 "if want to use fancy,need to add font patch -> git clone git://gist.github.com/1630581.git ~/.fonts/ttf-dejavu-powerline
 "let g:Powerline_symbols = 'fancy'
-let g:Powerline_symbols = 'unicode'
+"let g:Powerline_symbols = 'unicode'
+
+" 新的airline配置
+Bundle 'bling/vim-airline'
+if !exists('g:airline_symbols')
+let g:airline_symbols = {}
+endif
+let g:airline_left_sep = '▶'
+let g:airline_left_alt_sep = '❯'
+let g:airline_right_sep = '◀'
+let g:airline_right_alt_sep = '❮'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
 
 "括号显示增强
 Bundle 'kien/rainbow_parentheses.vim'
@@ -246,9 +290,7 @@ let g:solarized_visibility="normal"
 Bundle 'tomasr/molokai'
 "let g:molokai_original = 1
 
-"shows a git diff in the gutter
-Bundle 'airblade/vim-gitgutter'
-nnoremap <leader>gg :GitGutterToggle<CR>
+
 
 "################### 快速导航 ###################
 "目录导航
@@ -314,33 +356,38 @@ let g:tagbar_type_go = {
     \ 'ctagsargs' : '-sort -silent'
 \ }
 
+" 去除ctags
+" 原因: 使用tagbar和ctrlp-funky可以直接快速跳转函数和变量位置,taglist有些多余
 "标签导航 要装ctags
-Bundle 'vim-scripts/taglist.vim'
-set tags=tags;/
-let Tlist_Ctags_Cmd="/usr/bin/ctags"
-nnoremap <silent> <F8> :TlistToggle<CR>
-let Tlist_Auto_Highlight_Tag = 1
-let Tlist_Auto_Open = 0
-let Tlist_Auto_Update = 1
-let Tlist_Close_On_Select = 0
-let Tlist_Compact_Format = 0
-let Tlist_Display_Prototype = 0
-let Tlist_Display_Tag_Scope = 1
-let Tlist_Enable_Fold_Column = 0
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_File_Fold_Auto_Close = 0
-let Tlist_GainFocus_On_ToggleOpen = 1
-let Tlist_Hightlight_Tag_On_BufEnter = 1
-let Tlist_Inc_Winwidth = 0
-let Tlist_Max_Submenu_Items = 1
-let Tlist_Max_Tag_Length = 30
-let Tlist_Process_File_Always = 0
-let Tlist_Show_Menu = 0
-let Tlist_Show_One_File = 1
-let Tlist_Sort_Type = "order"
-let Tlist_Use_Horiz_Window = 0
-let Tlist_Use_Right_Window = 0
-let Tlist_WinWidth = 25
+"Bundle 'vim-scripts/taglist.vim'
+"set tags=tags;/
+""确认自己的ctags路径设置,有时候系统默认ctags和安装ctags不是同一个
+"let Tlist_Ctags_Cmd="/usr/bin/ctags"
+""or
+""let Tlist_Ctags_Cmd="/usr/local/bin/ctags"
+"nnoremap <silent> <F8> :TlistToggle<CR>
+"let Tlist_Auto_Highlight_Tag = 1
+"let Tlist_Auto_Open = 0
+"let Tlist_Auto_Update = 1
+"let Tlist_Close_On_Select = 0
+"let Tlist_Compact_Format = 0
+"let Tlist_Display_Prototype = 0
+"let Tlist_Display_Tag_Scope = 1
+"let Tlist_Enable_Fold_Column = 0
+"let Tlist_Exit_OnlyWindow = 1
+"let Tlist_File_Fold_Auto_Close = 0
+"let Tlist_GainFocus_On_ToggleOpen = 1
+"let Tlist_Hightlight_Tag_On_BufEnter = 1
+"let Tlist_Inc_Winwidth = 0
+"let Tlist_Max_Submenu_Items = 1
+"let Tlist_Max_Tag_Length = 30
+"let Tlist_Process_File_Always = 0
+"let Tlist_Show_Menu = 0
+"let Tlist_Show_One_File = 1
+"let Tlist_Sort_Type = "order"
+"let Tlist_Use_Horiz_Window = 0
+"let Tlist_Use_Right_Window = 0
+"let Tlist_WinWidth = 25
 
 "################### 语言相关 ###################
 
@@ -362,6 +409,7 @@ let python_highlight_all = 1
 " 1.install golang and install gocode 'go get github.com/nsf/gocode'
 " 2.make sure gocode in your path: `which gocode` (add $GOPATH/bin to you $PATH)
 Bundle 'Blackrush/vim-gocode'
+"Bundle 'fatih/vim-go.git'
 
 "###### Markdown #########
 Bundle 'plasticboy/vim-markdown'
