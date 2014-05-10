@@ -38,7 +38,7 @@ flags = [
     '-isystem',
     '/usr/lib/gcc/i486-linux-gnu/4.8',
     #'-I/usr/include/qt4',
-    '-I/usr/include/qt5',
+    #'-I/usr/include/qt5',
     #'-I',
     #'/usr/include/c++/4.8/tr1/',
     #'-I',
