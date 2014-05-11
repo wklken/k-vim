@@ -30,6 +30,8 @@ k-vim
 
 或者,玩游戏 [vim大冒险](http://vim-adventures.com/)
 
+交互教程 入门[openvim](http://www.openvim.com/tutorial.html) 进阶[Vim Genius](http://www.vimgenius.com/)
+
 学习步骤:
 
     1.进入退出，模式切换，插入删除复制粘贴等基本操作
