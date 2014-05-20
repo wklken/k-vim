@@ -196,9 +196,20 @@ set autoindent    " 打开自动缩进
 " never add copyindent, case error   " copy the previous indentation on autoindenting
 
 " tab相关变更
-set tabstop=4     " 设置Tab键的宽度        [等同的空格个数]
-set shiftwidth=4  " 每一次缩进对应的空格数
-set softtabstop=4 " 按退格键时可以一次删掉 4 个空格
+function! TAB(size)
+  " 设置Tab键的宽度        [等同的空格个数]
+  execute "set tabstop=".a:size
+  " 每一次缩进size个空格数
+  execute "set shiftwidth=".a:size
+  " 按退格键时可以一次删掉 size 个空格
+  execute "set softtabstop=".a:size
+endfunc
+
+autocmd FileType * :call TAB(4)     " default Tabsize
+autocmd FileType ruby :call TAB(2)  " ruby Tabsize
+autocmd FileType vim :call TAB(2)   " vimrc Tabsize
+"autocmd FileType c :call TAB(8)    "测试用
+
 set smarttab      " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
 set expandtab     " 将Tab自动转化成空格    [需要输入真正的Tab键时，使用 Ctrl+V + Tab]
 set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
@@ -465,7 +476,8 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 "==========================================
 
 " Python 文件的一般设置，比如不要 tab 等
-autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
+autocmd FileType python :call TAB(4)
+autocmd FileType python set expandtab ai
 
 " 保存python文件时删除多余空格
 " Delete trailing white space on save, useful for Python and CoffeeScript ;)
