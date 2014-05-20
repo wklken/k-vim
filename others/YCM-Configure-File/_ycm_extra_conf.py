@@ -31,14 +31,10 @@ flags = [
     'c++',
     '-isystem',
     '.',
-    #'-isystem',
-    #'/usr/lib/c++/v1',
-    #'-isystem',
-    #'../llvm/include',
+    '-isystem',
+    '../llvm/include',
     '-isystem',
     '/usr/lib/gcc/i586-linux-gnu/4.9',
-    #'-I/usr/include/qt4',
-    #'-I/usr/include/qt5',
     '-isystem',
     '/usr/include'
     ] + qt4_Flags_List
