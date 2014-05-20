@@ -860,6 +860,12 @@ Website: [http://www.LittleKey.me](http://www.LittleKey.me)
 
 ## 自定义设置
 
+### 缩进设置
+
+    default 默认(所有文件)使用四个空格缩进
+    ruby    使用两个空格缩进
+    vimrc   使用两个空格缩进
+    python  使用四个空格缩进
 
 ## 自定义快捷键
 
@@ -870,7 +876,8 @@ Website: [http://www.LittleKey.me](http://www.LittleKey.me)
     F10 运行python脚本
     F11 编辑文件时光机(等价于 ,h)
     ,jd 跳转到定义, 否则跳转到声明, 使用 CTRL + o 跳回调用处 (使用YCM)
-    ,gs  gitgutter开关 (default: on)
+    ,gs gitgutter开关 (default: on)
+    ,a  ack搜索
 
     H 跳到行首
     L 跳到行尾
@@ -910,6 +917,10 @@ Website: [http://www.LittleKey.me](http://www.LittleKey.me)
 5. #### [roenewege/vim-less](https://github.com/groenewege/vim-less)
 
    LESS(Dynamic CSS) 支持
+
+6. #### [mileszs/ack.vim](https://github.com/mileszs/ack.vim)
+
+   在VIM 下直接使用ack, 类似于grep
 
 
 ## 新的安装方法
