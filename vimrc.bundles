@@ -72,6 +72,9 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 " 定义存放代码片段的文件夹 .vim/additional_snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示
 let g:UltiSnipsSnippetDirectories=["additional_snippets", "UltiSnips"]
+" 个人信息
+let g:snips_author="LittleKey"
+let g:snips_author_email="LittleKeyRain@gmail.com"
 
 " 自动补全单引号，双引号等
 Bundle 'Raimondi/delimitMate'
@@ -193,6 +196,11 @@ let g:ctrlp_funky_syntax_highlight = 1
 
 let g:ctrlp_extensions = ['funky']
 
+
+" ack-grep 搜索
+Bundle 'mileszs/ack.vim'
+
+map <leader>a :Ack<space>
 
 
 " git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
