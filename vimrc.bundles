@@ -15,7 +15,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 
-"################### 插件管理 ###################
+"################## 插件管理 ###################"
 
 "使用Vundle来管理插件
 " vim plugin bundle control, command model
@@ -54,9 +54,14 @@ let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符�
 "let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
 let g:ycm_collect_identifiers_from_tags_files = 1
 " 引入，可以补全系统，以及python的第三方包
-let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"
+let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
+let g:ycm_confirm_extra_conf = 1
 " 直接触发自动补全
 let g:ycm_key_invoke_completion = '<C-Space>'
+"跳到定义,否则跳到声明 ,jd
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"nnoremap <F12> : YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <F11> : GundoToggle<CR>
 
 
 " 代码片段快速插入
@@ -67,8 +72,10 @@ Bundle 'honza/vim-snippets'
 let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 " 定义存放代码片段的文件夹 .vim/additional_snippets下，使用自定义和默认的，将会的到全局，有冲突的会提示
-let g:UltiSnipsSnippetDirectories=["additional_snippets", 'UltiSnips']
-
+let g:UltiSnipsSnippetDirectories=["additional_snippets", "UltiSnips"]
+" 个人信息
+let g:snips_author="LittleKey"
+let g:snips_author_email="LittleKeyRain@gmail.com"
 
 " 自动补全单引号，双引号等
 Bundle 'Raimondi/delimitMate'
@@ -79,6 +86,18 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 Bundle 'docunext/closetag.vim'
 let g:closetag_html_style=1
 
+"auto-completion 貌似也是一个自动编译的插件
+"Bundle 'Shougo/neocomplcache.vim'
+"使用自动编译
+"let g:neocomplcache_enable_at_startup = 1
+"使用smartcase
+"let g:neocomplcache_enable_smart_case = 1
+"最小语法关键字长度
+"let g:neocomplcache_min_syntax_length = 3
+"let g:neocomplchache_lock_buffer_name_pattern = '\*ku\*'
+
+" Python自动补全 jedi
+"Bundle 'davidhalter/jedi-vim'
 
 
 "################### 快速编码 ###################
@@ -179,6 +198,11 @@ let g:ctrlp_funky_syntax_highlight = 1
 let g:ctrlp_extensions = ['funky']
 
 
+" ack-grep 搜索
+Bundle 'mileszs/ack.vim'
+
+map <leader>a :Ack<space>
+
 
 " git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
 Bundle 'tpope/vim-fugitive'
@@ -187,14 +211,21 @@ nnoremap <leader>ge :Gdiff<CR>
 
 " 同git diff,实时展示文件中修改的行
 " 只是不喜欢除了行号多一列, 默认关闭,gs时打开
+" 默认打开:in LittleKey/k-vim
 Bundle 'airblade/vim-gitgutter'
-let g:gitgutter_enabled = 0
+let g:gitgutter_enabled = 1
 let g:gitgutter_highlight_lines = 1
 nnoremap <leader>gs :GitGutterToggle<CR>
+
+"VIM git, 可以用vim来使用git
+"Bundle 'motemen/git-vim'
 
 " edit history, 可以查看回到某个历史状态
 Bundle 'sjl/gundo.vim'
 nnoremap <leader>h :GundoToggle<CR>
+
+"vimshell, 在VIM下使用shell"
+"Bundle 'Shougo/vimshell.vim
 
 "################### 显示增强 ###################
 
@@ -216,7 +247,6 @@ let g:airline_right_sep = '◀'
 let g:airline_right_alt_sep = '❮'
 let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.branch = '⎇'
-
 
 "括号显示增强
 Bundle 'kien/rainbow_parentheses.vim'
@@ -255,12 +285,18 @@ au Syntax * RainbowParenthesesLoadBraces
 "hi IndentGuidesEven guibg=green ctermbg=4
 "hi IndentGuidesOdd  ctermbg=black
 "hi IndentGuidesEven ctermbg=darkgrey
+"
+"代码排版缩进标识
+Bundle 'Yggdroot/indentLine'
+let g:indentLine_noConcealCursor = 1
+let g:indentLine_color_term = 0
+let g:indentLine_char = '¦'
 
 "################### 显示增强-主题 ###################"
 
 "主题 solarized
 Bundle 'altercation/vim-colors-solarized'
-"let g:solarized_termcolors=256
+let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 let g:solarized_contrast="normal"
 let g:solarized_visibility="normal"
@@ -335,7 +371,6 @@ let g:tagbar_type_go = {
     \ 'ctagsargs' : '-sort -silent'
 \ }
 
-
 " 去除ctags
 " 原因: 使用tagbar和ctrlp-funky可以直接快速跳转函数和变量位置,taglist有些多余
 "标签导航 要装ctags
@@ -369,7 +404,6 @@ let g:tagbar_type_go = {
 "let Tlist_Use_Right_Window = 0
 "let Tlist_WinWidth = 25
 
-
 "################### 语言相关 ###################
 
 
@@ -382,6 +416,9 @@ let g:pyflakes_use_quickfix = 0
 " for python.vim syntax highlight
 Bundle 'hdima/python-syntax'
 let python_highlight_all = 1
+
+"python-mode,  PyLint, Rope, Pydoc, breakpoints from box"
+"Bundle 'klen/python-mode'
 
 "###### Golang #########
 " 1.install golang and install gocode 'go get github.com/nsf/gocode'
@@ -404,17 +441,37 @@ let g:html_indent_style1 = "inc"
 "for jquery
 Bundle 'nono/jquery.vim'
 
-"###### Jinja2 #########
-Bundle 'Glench/Vim-Jinja2-Syntax'
+" for HTML5 omnicomplete and syntax" WTF
+Bundle 'othree/html5.vim'
+" Disable event-handler attributes support:
+"let g:html5_event_handler_attributes_complete = 0
+" Disable RDFa attributes support:
+"let g:html5_rdfa_attributes_complete = 0
+" Disable microdata attributes support:
+"let g:html5_microdata_attributes_complete = 0
+" Disable WAI-ARIA attribute support:
+"let g:html5_aria_attributes_complete = 0
 
 "for css color
 "not work in iterm2 which termianl selection is not xterm-256
-"Bundle 'ap/vim-css-color'  
+"Bundle 'ap/vim-css-color'
 
 Bundle 'gorodinskiy/vim-coloresque'
 
+" CSS WTF
+Bundle 'groenewege/vim-less'
+Bundle 'cakebaker/scss-syntax.vim'
+Bundle 'skammer/vim-css-color'
+
+"###### Jinja2 #########
+Bundle 'Glench/Vim-Jinja2-Syntax'
 "###### nginx #########
 "Bundle 'evanmiller/nginx-vim-syntax'
 
+"###### LaTeX #########
+Bundle 'jcf/vim-latex'
 
+"###### Qt #########
+" 语法高亮
+Bundle 'kosl90/qt-highlight-vim'
 "------------------------------------------- end of configs --------------------------------------------

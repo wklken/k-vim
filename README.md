@@ -5,24 +5,6 @@ k-vim
 
 > LAST_UPDATE_TIME: 2014-05-08
 
-> PS: 年前答应的版本梳理完毕,拖延了，额，一个月....-_-#
-
-
-> 有任何问题提issues
-
-# 目标
-
-> Just a Better Vim Config. Keep it Simple.
-
-    1.结构及配置划分良好
-    2.全中文注释
-    3.高度可配置修改
-    4.一键安装少折腾
-    5.保持简单
-
-适用人群：
-
-    有一定基础的 vimer
 
 ### vim基本用法
 
@@ -425,6 +407,12 @@ molokai主题
         Hello -> "Hello"
 
     演示
+        cs"' [inside]
+        "Hello world!" -> 'Hello world!'
+        ds"
+        "Hello world!" -> Hello world!
+        ysiw"
+        Hello -> "Hello"
 
     ![surround](https://github.com/wklken/gallery/blob/master/vim/surround.gif?raw=true)
 
@@ -554,7 +542,7 @@ molokai主题
 
     解决问题:使用tagbar当函数比较多的时候,移动耗时较长,使用快速搜索快很多
 
-        ,fu   进入当前文件函数搜索 
+        ,fu   进入当前文件函数搜索
         ,fU   搜索光标下单词对应函数
 
 
@@ -856,5 +844,105 @@ Github: https://github.com/wklken
 
 Blog: [http://www.wklken.me](http://www.wklken.me)
 
-2013-06-11 于深圳
+## Fork from GitHub [wklken/k-vim](https://github.com/wklken/k-vim)
+LittleKey (code newbie)
 
+Email: LittleKeyRain@gmail.com
+
+GitHub: https://github.com/LittleKey
+
+Website: [http://www.LittleKey.me](http://www.LittleKey.me)
+
+
+# 下面是LittleKey fork后的修改
+
+* 主要写 Python C/C++ QtApplication MarkDown TeX Html/CSS [Javascript] [JAVA] [Ruby]
+
+## 自定义设置
+
+### 缩进设置
+
+    default 默认(所有文件)使用四个空格缩进
+    ruby    使用两个空格缩进
+    vimrc   使用两个空格缩进
+    python  使用四个空格缩进
+
+## 自定义快捷键
+
+> F1~F6 的设置请查看上面的介绍,或直接阅读vimrc
+
+    F7  切换Tab与Space模式, 具体操作会参照当时的Tab相关设置(Default: 'Space mode')
+    F9  TagBar开关
+    F10 运行python脚本
+    F11 编辑文件时光机(等价于 ,h)
+    ,jd 跳转到定义, 否则跳转到声明, 使用 CTRL + o 跳回调用处 (使用YCM)
+    ,gs gitgutter开关 (default: on)
+    ,a  ack搜索
+
+    H 跳到行首
+    L 跳到行尾
+
+## 插件
+
+   具体分类请参照vimrc.bundles
+
+### add plugin
+
+> 杂项
+
+1. #### [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
+
+   在gutter (sign column)上显示git的diff
+
+   在wklken的配置中已添加, 所以去掉这个...不过保持默认打开
+
+> 语言支持
+
+1. #### [jcf/vim-latex](https://github.com/jcf/vim-latex)
+
+   增强latex的显示（貌似没啥感觉啊
+
+2. #### [othree/html5.vim](https://github.com/othree/html5.vim)
+
+   Html5 支持(语法高亮, 自动缩进, etc)
+
+3. #### [cakebaker/scss-syntax.vim](https://github.com/cakebaker/scss-syntax.vim)
+
+   Sassy CSS 语法高亮
+
+4. #### [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
+
+   CSS 高亮色彩(美观)
+
+5. #### [roenewege/vim-less](https://github.com/groenewege/vim-less)
+
+   LESS(Dynamic CSS) 支持
+
+6. #### [mileszs/ack.vim](https://github.com/mileszs/ack.vim)
+
+   在VIM 下直接使用ack, 类似于grep
+
+
+## 新的安装方法
+
+   *不推荐用*
+
+#### build waf
+
+       git clone https://code.google.com/p/waf/
+       cd waf/
+       ./waf-light configure build
+
+#### start install
+
+       git clone https://github.com/LittleKey/k-vim.git
+       cp waf k-vim
+
+       ./waf configure  # 会打印一个不全的依赖表，至少请补全它们再继续安装，否则就请一直重复这一步吧
+       make
+       make clean
+
+###require:
+        python(2.x or 3.x)
+        make
+        and...configure will tell you...

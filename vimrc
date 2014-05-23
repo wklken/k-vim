@@ -1,11 +1,4 @@
 "==========================================
-" Author:  wklken
-" Version: 7
-" Email: wklken@yeah.net
-" BlogPost: http://wklken.me
-" ReadMe: README.md
-" Last_modify: 2014-03-15
-" Sections:
 "       -> Initial Plugin 加载插件
 "       -> General Settings 基础设置
 "       -> Display Settings 展示/排版等界面格式设置
@@ -13,6 +6,9 @@
 "       -> Others 其它配置
 "       -> HotKey Settings  自定义快捷键
 "       -> FileType Settings  针对文件类型的设置
+"       -> Theme Settings  主题设置
+"
+"       -> 插件配置和具体设置在vimrc.bundles中
 "       -> Theme Settings  主题设置
 "
 "       -> 插件配置和具体设置在vimrc.bundles中
@@ -45,6 +41,27 @@ filetype plugin indent on
 
 "以下配置有详细说明，一些特性不喜欢可以直接注解掉
 
+" 修改leader键
+let mapleader = ','
+let g:mapleader = ','
+
+" 开启语法高亮
+syntax on
+
+
+" install Vundle bundles
+if filereadable(expand("~/.vimrc.bundles"))
+    source ~/.vimrc.bundles
+endif
+
+" ensure ftdetect et al work by including this after the Vundle stuff
+filetype plugin indent on
+
+"==========================================
+" General Settings 基础设置
+"==========================================
+
+
 "set guifont=Monaco:h20          " 字体 && 字号
 
 " history存储容量
@@ -72,12 +89,11 @@ set nobackup
 " 关闭交换文件
 set noswapfile
 
-
 "create undo file
 set undolevels=1000         " How many undos
 set undoreload=10000        " number of lines to save for undo
 if v:version >= 730
-    set undofile                " keep a persistent backup file
+    set undofile                " keep a persistent backup file
     set undodir=/tmp/vimundo/
 endif
 
@@ -118,6 +134,7 @@ set magic
 set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
 
+
 "==========================================
 " Display Settings 展示/排版等界面格式设置
 "==========================================
@@ -141,13 +158,14 @@ set laststatus=2
 
 "显示行号：
 set number
-" 取消换行。
+" 取消换行
 set nowrap
 
 " 括号配对情况,跳转并高亮一下匹配的括号
 set showmatch
 " How many tenths of a second to blink when matching brackets
-set matchtime=2
+"set matchime=2
+set mat=2
 
 "设置文内智能搜索提示
 " 高亮search命中的文本。
@@ -178,12 +196,24 @@ set autoindent    " 打开自动缩进
 " never add copyindent, case error   " copy the previous indentation on autoindenting
 
 " tab相关变更
-set tabstop=4     " 设置Tab键的宽度        [等同的空格个数]
-set shiftwidth=4  " 每一次缩进对应的空格数
-set softtabstop=4 " 按退格键时可以一次删掉 4 个空格
+function! TAB(size)
+  " 设置Tab键的宽度        [等同的空格个数]
+  execute "set tabstop=".a:size
+  " 每一次缩进size个空格数
+  execute "set shiftwidth=".a:size
+  " 按退格键时可以一次删掉 size 个空格
+  execute "set softtabstop=".a:size
+endfunc
+
+autocmd FileType * :call TAB(4)     " default Tabsize
+autocmd FileType ruby :call TAB(2)  " ruby Tabsize
+autocmd FileType vim :call TAB(2)   " vimrc Tabsize
+"autocmd FileType c :call TAB(8)    "测试用
+
 set smarttab      " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
 set expandtab     " 将Tab自动转化成空格    [需要输入真正的Tab键时，使用 Ctrl+V + Tab]
-set shiftround    " 缩进时，取整 use multiple of shiftwidth when indenting with '<' and '>'
+set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
+
 
 " A buffer becomes hidden when it is abandoned
 set hidden
@@ -209,6 +239,18 @@ function! NumberToggle()
   endif
 endfunc
 nnoremap <C-n> :call NumberToggle()<cr>
+
+" 使用F7切换是否使用空格代替tab(或tab代替空格)
+function! TabToggle()
+  if(&expandtab == 1)
+    set noexpandtab
+    retab!
+  else
+    set expandtab
+    retab
+  endif
+endfunc
+nnoremap <F7> :call TabToggle()<CR>
 
 
 "==========================================
@@ -293,7 +335,7 @@ nnoremap gj j
 
 " I can type :help on my own, thanks.  Protect your fat fingers from the evils of <F1>
 noremap <F1> <Esc>"
-
+"
 ""为方便复制，用<F2>开启/关闭行号显示:
 function! HideNumber()
   if(&relativenumber == &number)
@@ -379,7 +421,6 @@ map <leader>tm :tabmove
 map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " ------- 选中及操作改键
-
 "Reselect visual block after indent/outdent.调整缩进后自动选中，方便再次操作
 vnoremap < <gv
 vnoremap > >gv
@@ -403,13 +444,13 @@ inoremap kj <Esc>
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
-
 "Jump to start and end of line using the home row keys
 nmap t o<ESC>k
 nmap T O<ESC>j
 
 " Quickly close the current window
 nnoremap <leader>q :q<CR>
+nmap T O<ESC>j
 
 " Swap implementations of ` and ' jump to markers
 " By default, ' jumps to the marked line, ` jumps to the marked line and
@@ -425,11 +466,12 @@ nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 "==========================================
-" FileType Settings  文件类型设置
+" FileType Settings 文件类型设置
 "==========================================
 
 " Python 文件的一般设置，比如不要 tab 等
-autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
+autocmd FileType python :call TAB(4)
+autocmd FileType python set expandtab ai
 
 " 保存python文件时删除多余空格
 " Delete trailing white space on save, useful for Python and CoffeeScript ;)
@@ -447,13 +489,11 @@ function! AutoSetFileHead()
     if &filetype == 'sh'
         call setline(1, "\#!/bin/bash")
     endif
-
     "如果文件类型为python
     if &filetype == 'python'
         call setline(1, "\#!/usr/bin/env python")
         call append(1, "\# encoding: utf-8")
     endif
-
     normal G
     normal o
     normal o
@@ -462,8 +502,9 @@ endfunc
 " F10 to run python script
 nnoremap <buffer> <F10> :exec '!python' shellescape(@%, 1)<cr>
 
+
 "==========================================
-" Theme Settings  主题设置
+" Theme Settings 主题设置
 "==========================================
 
 " Set extra options when running in GUI mode
@@ -502,4 +543,3 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
-

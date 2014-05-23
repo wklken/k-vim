@@ -22,6 +22,7 @@ lnif $CURRENT_DIR/vimrc $HOME/.vimrc
 lnif $CURRENT_DIR/vimrc.bundles $HOME/.vimrc.bundles
 lnif "$CURRENT_DIR/" "$HOME/.vim"
 
+
 echo "Step3: install vundle"
 if [ ! -e $CURRENT_DIR/bundle/vundle ]; then
     echo "Installing Vundle"
@@ -38,12 +39,19 @@ vim -u $HOME/.vimrc.bundles +BundleInstall! +BundleClean +qall
 export SHELL=$system_shell
 
 
+
 echo "Step5: compile YouCompleteMe"
 echo "It will take a long time, juse be patient!"
 echo "If error,you need to compile it yourself"
 echo "cd $CURRENT_DIR/bundle/YouCompleteMe/ && bash -x install.sh --clang-completer"
 cd $CURRENT_DIR/bundle/YouCompleteMe/
-bash -x install.sh --clang-completer
+bash -x install.sh --clang-completer #--system-libclang
+#echo "fix YouCompleteMe cpp/ycm/.ycm_extra_conf.py file"
+#echo "use hard link"
+#echo "back old file"
+#cd $CURRENT_DIR/bundle/YouCompleteMe/cpp/ycm/
+#mv .ycm_extra_conf.py _ycm_extra_conf.py_old
+#ln $CURRENT_DIR/others/YCM-Configure-File/_ycm_extra_conf.py .ycm_extra_conf
 
 #vim bk and undo dir
 if [ ! -d /tmp/vimbk ]
@@ -57,3 +65,5 @@ then
 fi
 
 echo "Install Done!"
+cd $CURRENT_DIR/
+touch two
