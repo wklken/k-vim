@@ -433,8 +433,6 @@ molokai主题
 
 1. ####位置跳转[Lokaltog/vim-easymotion](https://github.com/Lokaltog/vim-easymotion)
 
-1. ####位置跳转[Lokaltog/vim-easymotion](https://github.com/Lokaltog/vim-easymotion)
-
     必装，效率提升杀手锏，跳转到光标后任意位置
 
     配置(我的leader键配置 let g:mapleader = ',')

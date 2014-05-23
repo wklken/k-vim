@@ -16,7 +16,7 @@
 
 
 "==========================================
-"" Initial Plugin 加载插件
+" Initial Plugin 加载插件
 "==========================================
 
 " 修改leader键
@@ -136,7 +136,7 @@ set whichwrap+=<,>,h,l
 
 
 "==========================================
-" Display Settings 展示/排班等界面格式设置
+" Display Settings 展示/排版等界面格式设置
 "==========================================
 "
 "显示当前的行号列号：
@@ -191,7 +191,7 @@ set foldlevel=99
 
 " 缩进配置
 
-set smartindent   " Smart indent"
+set smartindent   " Smart indent
 set autoindent    " 打开自动缩进
 " never add copyindent, case error   " copy the previous indentation on autoindenting
 
@@ -310,7 +310,7 @@ endif
 " HotKey Settings  自定义快捷键设置
 "==========================================
 
-" 主要案件重定义
+" 主要按键重定义
 
 " 关闭方向键, 强迫自己用 hjkl
 map <Left> <Nop>
@@ -347,7 +347,6 @@ function! HideNumber()
   endif
   set number?
 endfunc
-nnoremap <F2> :call HideNumber()<CR>
 nnoremap <F2> :call HideNumber()<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
@@ -445,9 +444,6 @@ inoremap kj <Esc>
 nnoremap <C-e> 2<C-e>
 nnoremap <C-y> 2<C-y>
 
-nnoremap <C-e> 2<C-e>
-nnoremap <C-y> 2<C-y>
-
 "Jump to start and end of line using the home row keys
 nmap t o<ESC>k
 nmap T O<ESC>j
@@ -468,8 +464,6 @@ nnoremap U <C-r>
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
-
-"==========================================
 
 "==========================================
 " FileType Settings 文件类型设置

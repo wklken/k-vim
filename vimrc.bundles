@@ -13,11 +13,11 @@ set nocompatible
 filetype off " required! turn off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
- 
- 
+
+
 "################## 插件管理 ###################"
 
-"使用Vundle来管理Vundle
+"使用Vundle来管理插件
 " vim plugin bundle control, command model
 " :BundleInstall     install 安装配置的插件
 " :BundleInstall!    update  更新
@@ -454,7 +454,7 @@ Bundle 'othree/html5.vim'
 
 "for css color
 "not work in iterm2 which termianl selection is not xterm-256
-"Bundle 'ap/vim-css-color'  
+"Bundle 'ap/vim-css-color'
 
 Bundle 'gorodinskiy/vim-coloresque'
 
