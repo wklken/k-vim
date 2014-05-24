@@ -140,6 +140,22 @@ molokai主题
         sudo pip install pylint
         sudo pip install pep8
 
+        #使用javascript需要安装jshint和jslint,用于javascript语法检查
+        需要nodejs支持,各个系统安装见文档 https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
+
+        #ubuntu
+        sudo apt-get install nodejs
+        sudo npm install -g jslint
+        sudo npm install jshint -g
+
+        #mac
+        brew install node
+        npm install jshint -g
+        npm install jslint -g
+
+
+
+
 3. 安装插件
 
         cd k-vim/
@@ -554,7 +570,7 @@ molokai主题
 
     解决问题:使用tagbar当函数比较多的时候,移动耗时较长,使用快速搜索快很多
 
-        ,fu   进入当前文件函数搜索 
+        ,fu   进入当前文件函数搜索
         ,fU   搜索光标下单词对应函数
 
 
@@ -710,6 +726,12 @@ molokai主题
 4. ####HTML/JS/JQUERY/CSS
 
     [pangloss/vim-javascript](https://github.com/pangloss/vim-javascript) 偶尔会看看js,频率不高
+
+    [marijnh/tern_for_vim](https://github.com/marijnh/tern_for_vim) 配合ycm进行js/jquery自动补全,需要安装 tern_for_vim 并
+    配置文档  [ternjs](http://ternjs.net/)
+
+
+        cd ~/.vim/bundle/tern_for_vim && npm install
 
     [maksimr/vim-jsbeautify](https://github.com/maksimr/vim-jsbeautify)  js/html/css 格式化, 未配置
 
