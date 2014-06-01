@@ -410,7 +410,7 @@ let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
 
 " for javascript 自动补全,配合YCM,需要安装nodejs&npm
-Bundle "marijnh/tern_for_vim"
+"Bundle "marijnh/tern_for_vim"
 
 "for jquery
 Bundle 'nono/jquery.vim'
