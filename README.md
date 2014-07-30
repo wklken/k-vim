@@ -854,6 +854,8 @@ TODO:
 
 0. [vim资源汇总](http://u.memect.com/vim/)
 
+1. [VimAwesome](http://vimawesome.com/)
+
 1. [Google+](https://plus.google.com/communities/105049811056605918816)
 
 2. [vimbits](http://www.vimbits.com/bits?sort=top)
