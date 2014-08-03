@@ -1,0 +1,389 @@
+*xml-plugin.txt*  Help edit XML and SGML documents.                   v1.36
+
+				   XML Edit  ~
+
+A filetype plugin to help edit XML and SGML documents.
+
+This script provides some convenience when editing XML (and some SGML
+including HTML) formated documents. It allows you to jump to the
+beginning or end of the tag block your cursor is in. '%' will jump
+between '<' and '>' within the tag your cursor is in. When in insert
+mode and you finish a tag (pressing '>') the tag will be completed. If
+you press '>' twice it will place the cursor in the middle of the tags
+on it's own line (helps with nested tags).
+
+Usage: Place this file into your ftplugin directory. To add html support
+Sym-link or copy this file to html.vim in your ftplugin directory. To activte
+the script place 'filetype plugin on' in your |.vimrc| file. See |ftplugins|
+for more information on this topic.
+
+If the file edited is of type "html" and "xml_use_html" is  defined then
+the following tags will not auto complete: <img>, <input>, <param>,
+<frame>, <br>, <hr>, <meta>, <link>, <base>, <area>
+        
+If the file edited is of type 'html' and 'xml_use_xhtml' is defined the
+above tags will autocomplete the xml closing staying xhtml compatable.
+ex. <hr> becomes <hr /> (see |xml-plugin-settings|)
+
+Known Bugs {{{1 ~
+
+- < & > marks inside of a CDATA section are interpreted as actual XML tags
+  even if unmatched.
+- The script can not handle leading spaces such as < tag></ tag> it is
+  illegal XML syntax and considered very bad form.
+- Placing a literal `>' in an attribute value will auto complete despite that
+  the start tag isn't finished. This is poor XML anyway you should use
+  &gt; instead.
+
+
+------------------------------------------------------------------------------
+                                                         *xml-plugin-settings*
+Options {{{1
+
+(All options must be placed in your |.vimrc| prior to the |ftplugin|
+command.)
+
+xml_tag_completion_map
+	Use this setting to change the default mapping to auto complete a
+	tag. By default typing a literal `>' will cause the tag your editing
+	to auto complete; pressing twice will auto nest the tag. By using
+	this setting the `>' will be a literal `>' and you must use the new
+	mapping to perform auto completion and auto nesting. For example if
+	you wanted Control-L to perform auto completion inmstead of typing a
+	`>' place the following into your .vimrc: >
+            let xml_tag_completion_map = "<C-l>"
+<
+xml_no_auto_nesting (Not Working!!!!!)
+	This turns off the auto nesting feature. After a completion is made
+	and another `>' is typed xml-edit automatically will break the tag
+	accross multiple lines and indent the curser to make creating nested
+	tqags easier. This feature turns it off. Enter the following in your
+	.vimrc: >
+            let xml_no_auto_nesting = 1
+<
+xml_use_xhtml
+	When editing HTML this will auto close the short tags to make valid
+	XML like <hr/> and <br/>. Enter the following in your vimrc to
+	turn this option on: >
+            let xml_use_xhtml = 1
+	if the filetype is xhtml and g:xml_use_xhtml doesn't exists
+	the script defines it to be 1. (This also assumes that you have linked
+	xml.vim to xhtml.vim. Otherwise this item is moot)
+	For a file to be of xhtml type there need to be a doctype declaration!!
+	just naming a file something.xhtml doesn't make it type xhtml!
+<
+xml_no_html
+	This turns of the support for HTML specific tags. Place this in your
+        .vimrc: >
+            let xml_no_html = 1
+<
+------------------------------------------------------------------------------
+                                                        *xml-plugin-mappings*
+
+Mapings and their functions {{{1
+
+Typing '>' will start the tag closing routine.
+Typing (Where | means cursor position)
+           <para>|
+results in
+           <para>|</para>
+
+Typing
+           <para>>|</para>
+results in
+           <para>
+                |
+           </para>
+typing a lone '>' and no '<' in front of it accepts the '>' (But having
+lone '>' or '<' in a XML file is frown upon except in <!CDATA> sections,
+and that will throw of the plugin!!).
+
+Typing </tag> or <tag/> also results in na expanding. So when editing
+html type <input .... />
+
+The closing routing also ignores DTD tags '<!,,>' and processing
+instructions '<?....?>'. Thus typing these result in no expansion.
+
+
+<LocalLeader> is a setting in VIM that depicts a prefix for scripts and
+plugins to use. By default this is the backslash key `\'. See |mapleader|
+for details.
+
+;;              make element out previous word and close it         {{{2
+          - when typing a word;; wil create <word>|</word>
+						when word on its own line it will be
+						<word>
+               |
+						</word>
+            the suffix can be changed by setting 
+						let makeElementSuf = ',,,' in your .vimrc
+						Thanks to Bart van Deenen
+						(http://www.vim.org/scripts/script.php?script_id=632)
+						
+[ and ] mappings                            {{{2
+          <LocalLeader>[        Delete <![CDATA[ ]]> delimiters
+          <LocalLeader>{        Delete <![CDATA[ ]]> section
+          <LocalLeader>]        Delete <!-- -->      delimiters
+          <LocalLeader>}        Delete <!-- -->      section
+          [[        Goto to the previous open tag 
+          [[        Goto to the next open tag 
+          []        Goto to the previous close tag 
+          ][        Goto to the next  close tag 
+          ["        Goto to the next  comment
+          ]"        Goto the previous comment
+<LocalLeader>5  Jump to the matching tag.                           {{{2
+<LocalLeader>%  Jump to the matching tag.   
+
+
+<LocalLeader>c  Rename tag                                          {{{2
+
+<LocalLeader>C  Rename tag and remove attributes                    {{{2
+		Will ask for attributes
+
+<LocalLeader>d  Deletes the surrounding tags from the cursor.       {{{2
+            <tag1>outter <tag2>inner text</tag2> text</tag1>
+               |
+       Turns to: 
+            outter <tag2>inner text</tag2> text
+            |
+
+<LocalLeader>D  Deletes the tag and it contents                     {{{2
+        - and put it in register x.
+            <tag1>outter <tag2>inner text</tag2> text</tag1>
+                           |
+       Turns to: 
+            <tag1>outter text</tag1>
+
+<LocalLeader>e  provide endtag for open tags.                       {{{2
+        - provide endtag for open tags. Watch where de cursor is
+            <para><listitem>list item content
+                                            |
+        pressing \e twice produces
+            <para><listitem>list item content</para></listitem>
+
+<LocalLeader>f  fold the tag under the cursor                       {{{2
+          <para>
+            line 1
+            line 2
+            line 3
+          </para>
+        \f produces
+        +--  5 lines: <para>--------------------------
+
+
+<LocalLeader>F  all tags of name 'tag' will be fold.                {{{2
+      - If there isn't a tag under
+        the cursor you will be asked for one.
+                  
+<LocalLeader>g  Format (Vim's gq function)                          {{{2
+			- will make a visual block of tag under cursor and then format using gq
+
+                  
+<LocalLeader>G  Format all tags under cursor (Vim's gq function)    {{{2
+      - If there isn't a tag under
+        the cursor you will be asked for one.
+
+                  
+<LocalLeader>I  Indent all tags     {{{2
+      - will create a multiline layout every opening tag will be shifted out
+				and every closing tag will be shifted in. Be aware that the rendering
+				of the XML through XSLT and/or DSSSL, might be changed by this.
+				Be aware tha if the file is big, more than 1000 lines, the reformatting
+				takes a long time because vim has to make a big undo buffer.
+				For example using \I on the example below:
+        
+				<chapter><title>Indent</title><para>The documentation</para></chapter>
+
+			- Becomes
+
+				<chapter>
+					<title>
+						Indent
+					</title>
+					<para>
+						The documentation
+					</para>
+				</chapter>
+
+                  
+<LocalLeader>j  Joins two the SAME sections together.               {{{2
+      -  The sections must be next to each other. 
+			<para> This is line 1
+			 of a paragraph. </para>
+			<para> This is line 2
+			|
+			 of a paragraph. </para>
+		\j produces
+			<para> This is line 1
+			 of a paragraph. 
+			 This is line 2
+			 of a paragraph. </para>
+
+<LocalLeader>l  visual surround the block with listitem and para     {{{2 
+				When marking up docbook tekst you have the issue that listitems
+				consist of 2 item. This key combination inserts them both,
+
+        blaah
+          |
+        \l produces
+        <listitem>
+            <para>blaah</para>
+        </listitem>
+    
+<LocalLeader>o  Insert a tag inside the current one (like vim o)     {{{2
+				You are asked for tag and attributes.
+
+        <tag1><tag2><tag3>blaah</tag3></tag2></tag1>
+          |
+        \o produces
+        <tag1>
+            <aftertag><tag2><tag3>blaah</tag3></tag2></aftertag>
+        </tag1>
+    
+<LocalLeader>O  Insert a tag outside the current one (like vim O)     {{{2
+				You are asked for tag and attributes.
+        <tag1><tag2><tag3>blaah</tag3></tag2></tag1>
+          |
+    \O produces
+        <beforetag>
+          <tag1><tag2><tag3>blaah</tag3></tag2></tag1>
+        </beforetag>
+
+<LocalLeader>s  Insert an opening tag for an closing tag.           {{{2
+            list item content</para></listitem>
+            |
+        pressing \s twice produces
+            <para><listitem>list item content</para></listitem>
+
+<LocalLeader>[        Delete <![CDATA[ ]]> delimiters               {{{2
+								Removes Only <CDATA[ and ]]> 
+								handy when you want	to uncomment a section.
+								You need to stand in the tag and not on an other tag
+								<![CDATA[  <tag> ]]>
+								if you  cursor is outside <tag> but inside the
+								CDATA tag the delition works.
+<LocalLeader>{        Delete <![CDATA[ ]]> section                  {{{2
+								Removes everything tag and Content
+<LocalLeader>]        Delete <!-- -->      delimiters               {{{2
+								Uncommnet a block.
+<LocalLeader>}        Delete <!--  -->      section                  {{{2
+								Removes everything tag and Content
+<LocalLeader>>  shift right opening tag and closing tag.           {{{2
+                shift everything between the tags 1 shiftwide right
+<LocalLeader><  shift left opening tag and closing tag.           {{{2
+                shift everything between the tags 1 shiftwide left
+<LocalLeader>c  Visual Place a CDATA section around the selected text.  {{{2
+			Place Cdata section around the block
+<LocalLeader><  Visual Place a Comment around the selected text.  {{{2
+			Place comment around the block
+<LocalLeader>5  Extend the visual selection to the matching tag.  {{{2
+<LocalLeader>%  
+			Extend the visual selection to the matching tag. Make sure you are at
+			the start of the opening tag or the end of the closing tag.
+<LocalLeader>v  Visual Place a tag around the selected text.       {{{2
+        - You are asked for tag and attributes. You
+        need to have selected text in visual mode before you can use this
+        mapping. See |visual-mode| for details.
+        Be careful where you place the marks.
+        The top uses append
+        The bottom uses append
+        Useful when marking up a text file
+
+------------------------------------------------------------------------------
+                                                        *xml-plugin-callbacks*
+
+Callback Functions {{{2 ~
+
+A callback function is a function used to customize features on a per tag
+basis. For example say you wish to have a default set of attributs when you
+type an empty tag like this:
+    You type: <tag>
+    You get:  <tag default="attributes"></tag>
+
+This is for any script programmers who wish to add xml-plugin support to
+there own filetype plugins.
+
+Callback functions recive one attribute variable which is the tag name. The
+all must return either a string or the number zero. If it returns a string
+the plugin will place the string in the proper location. If it is a zero the
+plugin will ignore and continue as if no callback existed.
+
+The following are implemented callback functions:
+
+HtmlAttribCallback
+	This is used to add default attributes to html tag. It is intended
+	for HTML files only.
+
+XmlAttribCallback
+	This is a generic callback for xml tags intended to add attributes.
+
+							     *xml-plugin-html*
+Callback Example {{{2 ~
+
+The following is an example of using XmlAttribCallback in your .vimrc
+>
+        function XmlAttribCallback (xml_tag)
+            if a:xml_tag ==? "my-xml-tag"
+                return "attributes=\"my xml attributes\""
+            else
+                return 0
+            endif
+        endfunction
+<
+The following is a sample html.vim file type plugin you could use:
+>
+  " Vim script file                                       vim600:fdm=marker:
+  " FileType:   HTML
+  " Maintainer: Devin Weaver <vim (at) tritarget.com>
+  " Location:   http://www.vim.org/scripts/script.php?script_id=301
+
+  " This is a wrapper script to add extra html support to xml documents.
+  " Original script can be seen in xml-plugin documentation.
+
+  " Only do this when not done yet for this buffer
+  if exists("b:did_ftplugin")
+    finish
+  endif
+  " Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
+
+  let b:html_mode = 1
+
+  if !exists("*HtmlAttribCallback")
+  function HtmlAttribCallback( xml_tag )
+      if a:xml_tag ==? "table"
+          return "cellpadding=\"0\" cellspacing=\"0\" border=\"0\""
+      elseif a:xml_tag ==? "link"
+          return "href=\"/site.css\" rel=\"StyleSheet\" type=\"text/css\""
+      elseif a:xml_tag ==? "body"
+          return "bgcolor=\"white\""
+      elseif a:xml_tag ==? "frame"
+          return "name=\"NAME\" src=\"/\" scrolling=\"auto\" noresize"
+      elseif a:xml_tag ==? "frameset"
+          return "rows=\"0,*\" cols=\"*,0\" border=\"0\""
+      elseif a:xml_tag ==? "img"
+          return "src=\"\" width=\"0\" height=\"0\" border=\"0\" alt=\"\""
+      elseif a:xml_tag ==? "a"
+          if has("browse")
+	      " Look up a file to fill the href. Used in local relative file
+	      " links. typeing your own href before closing the tag with `>'
+	      " will override this.
+              let cwd = getcwd()
+              let cwd = substitute (cwd, "\\", "/", "g")
+              let href = browse (0, "Link to href...", getcwd(), "")
+              let href = substitute (href, cwd . "/", "", "")
+              let href = substitute (href, " ", "%20", "g")
+          else
+              let href = ""
+          endif
+          return "href=\"" . href . "\""
+      else
+          return 0
+      endif
+  endfunction
+  endif
+
+  " On to loading xml.vim
+  runtime ftplugin/xml.vim
+<
+
+ vim:tw=78:ts=8:fen:fdm=marker:ft=help:norl:

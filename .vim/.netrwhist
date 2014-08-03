@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/home/robbie/Working/mfld/hardware/intel/unipoint'
+let g:netrw_dirhist_2='/usr/share/vim/vim72/doc'
+let g:netrw_dirhist_3='/usr/share/vim/vim72'
+let g:netrw_dirhist_4='/usr/share/vim'
+let g:netrw_dirhist_5='/usr/share'
+let g:netrw_dirhist_6='/usr'
