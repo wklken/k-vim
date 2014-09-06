@@ -5,7 +5,7 @@
 
 "################### 包依赖 #####################
 "package dependence:  ctags
-"python dependence:  pep8, pyflake
+"python dependence:   pep8, pyflake
 "
 "非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
 set nocompatible
@@ -190,8 +190,6 @@ nnoremap <Leader>fu :CtrlPFunky<Cr>
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 let g:ctrlp_funky_syntax_highlight = 1
 
-
-
 let g:ctrlp_extensions = ['funky']
 
 
@@ -215,12 +213,6 @@ nnoremap <leader>h :GundoToggle<CR>
 "################### 显示增强 ###################
 
 "状态栏增强展示
-" 老的powerline配置
-"Bundle 'Lokaltog/vim-powerline'
-"if want to use fancy,need to add font patch -> git clone git://gist.github.com/1630581.git ~/.fonts/ttf-dejavu-powerline
-"let g:Powerline_symbols = 'fancy'
-"let g:Powerline_symbols = 'unicode'
-
 " 新的airline配置
 Bundle 'bling/vim-airline'
 if !exists('g:airline_symbols')
@@ -284,7 +276,6 @@ let g:solarized_visibility="normal"
 "主题 molokai
 Bundle 'tomasr/molokai'
 "let g:molokai_original = 1
-
 
 
 "################### 快速导航 ###################
@@ -353,39 +344,8 @@ let g:tagbar_type_go = {
 \ }
 
 
-" 去除ctags
+" 去除taglist
 " 原因: 使用tagbar和ctrlp-funky可以直接快速跳转函数和变量位置,taglist有些多余
-"标签导航 要装ctags
-"Bundle 'vim-scripts/taglist.vim'
-"set tags=tags;/
-""确认自己的ctags路径设置,有时候系统默认ctags和安装ctags不是同一个
-"let Tlist_Ctags_Cmd="/usr/bin/ctags"
-""or
-""let Tlist_Ctags_Cmd="/usr/local/bin/ctags"
-"nnoremap <silent> <F8> :TlistToggle<CR>
-"let Tlist_Auto_Highlight_Tag = 1
-"let Tlist_Auto_Open = 0
-"let Tlist_Auto_Update = 1
-"let Tlist_Close_On_Select = 0
-"let Tlist_Compact_Format = 0
-"let Tlist_Display_Prototype = 0
-"let Tlist_Display_Tag_Scope = 1
-"let Tlist_Enable_Fold_Column = 0
-"let Tlist_Exit_OnlyWindow = 1
-"let Tlist_File_Fold_Auto_Close = 0
-"let Tlist_GainFocus_On_ToggleOpen = 1
-"let Tlist_Hightlight_Tag_On_BufEnter = 1
-"let Tlist_Inc_Winwidth = 0
-"let Tlist_Max_Submenu_Items = 1
-"let Tlist_Max_Tag_Length = 30
-"let Tlist_Process_File_Always = 0
-"let Tlist_Show_Menu = 0
-"let Tlist_Show_One_File = 1
-"let Tlist_Sort_Type = "order"
-"let Tlist_Use_Horiz_Window = 0
-"let Tlist_Use_Right_Window = 0
-"let Tlist_WinWidth = 25
-
 
 "################### 语言相关 ###################
 
@@ -419,17 +379,25 @@ let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
 
 " for javascript 自动补全,配合YCM,需要安装nodejs&npm
-"Bundle "marijnh/tern_for_vim"
+"Bundle 'marijnh/tern_for_vim'
 
 "for jquery
 Bundle 'nono/jquery.vim'
+
+
+"###### emmet HTML complete #########
+"Bundle "mattn/emmet-vim"
+
+"###### vim.less : less 自动更新##########
+"Bundle 'groenewege/vim-less'
+"autocmd BufWritePost *.less :!lessc % > %:p:r.css
 
 "###### Jinja2 #########
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
 "for css color
 "not work in iterm2 which termianl selection is not xterm-256
-"Bundle 'ap/vim-css-color'  
+"Bundle 'ap/vim-css-color'
 
 Bundle 'gorodinskiy/vim-coloresque'
 
