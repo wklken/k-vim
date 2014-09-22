@@ -868,6 +868,8 @@ TODO:
 
 6. [vim genius](http://www.vimgenius.com/)
 
+7. [vim colors](http://vimcolors.com/)
+
 ------------------------
 
 ------------------------

@@ -399,7 +399,7 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 "not work in iterm2 which termianl selection is not xterm-256
 "Bundle 'ap/vim-css-color'
 
-Bundle 'gorodinskiy/vim-coloresque'
+"Bundle 'gorodinskiy/vim-coloresque'
 
 "###### nginx #########
 "Bundle 'evanmiller/nginx-vim-syntax'
