@@ -1,100 +1,56 @@
 k-vim
 =======================
 
-> VERSION: 7.0
+> VERSION: 8.0
 
-> LAST_UPDATE_TIME: 2014-05-08
+> LAST_UPDATE_TIME: 2014-10-02
 
-> PS: 年前答应的版本梳理完毕,拖延了，额，一个月....-_-#
+> 本次更新: 更为强大的tab操作/更全面的自动补全
 
 
-> 有任何问题提issues
+详细 [更新日志](https://github.com/wklken/k-vim/blob/master/UPDATE_LOG.md)
+
+
 
 # 目标
 
 > Just a Better Vim Config. Keep it Simple.
 
-    1.结构及配置划分良好
-    2.全中文注释
-    3.高度可配置修改
-    4.一键安装少折腾
-    5.保持简单
+    0. 保持简单
+    1. 结构划分良好, 中文注释
+    2. 高度可配置修改
+    3. 一键安装少折腾
+    4. 更加符合直觉的键位操作
 
 适用人群：
 
     有一定基础的 vimer
 
-### vim基本用法
 
-推荐: 耗子叔的 [简明vim练级攻略](http://coolshell.cn/articles/5426.html)
-
-或者,玩游戏 [vim大冒险](http://vim-adventures.com/)
-
-交互教程 入门[openvim](http://www.openvim.com/tutorial.html) 进阶[Vim Genius](http://www.vimgenius.com/)
-
-学习步骤:
-
-    1.进入退出，模式切换，插入删除复制粘贴等基本操作
-
-    2.学会快速移动跳转
-
-    3.学会如何进行选中
-
-    4.学会进行文本对象操作
-
-    5.学会批量重复操作
-
-    6.学会vim批量替换
-
-    ------------
-    6.学会使用插件，完成补全，注释，文本快速录入操作等
-
-    7.学会宏 []
 
 ### k-vim使用说明
 
-1. 能熟练使用原生vim,最好先熟悉了再来使用插件扩展
+1. 最好能熟练使用原生vim各类操作之后, 再来使用插件扩展
 
-2. 插件配置
+2. `fork`一份(需要的话顺带`star`关注更新), 然后参照安装步骤进行安装, 可以根据自身习惯进行自定义修改
 
-        1.可以在vimrc.bundles中查看到每个插件的配置
-        2.所列插件默认安装的，需要针对自身需求，增加或删除配置
-        3.本README.md仅介绍插件简单功能和用法，可以在github中搜索查看详细的用法和配置
-        4.每个插件配置后面跟了一些键位修改的配置[用法在下面介绍中]，可以根据自己习惯修改
+3. 目前主要关注后端`python`, `golang`以及将要入坑的`ruby`, 偶尔写写`js/jquery`, 但是主体配置基本是通用的. 可以根据语言体系自己加配置(vimrc.bundles)
 
-        ps.平时用python/golang多些，其他语言根据自身需求添加到 vimrc.bundles->语言相关中
+4. 插件不是越多越好, 二八定律
 
-3. `fork`一份, 然后参照安装步骤进行安装
-
-    根据自己使用语言和自身习惯，对配置进行自定义修改
-
-    之后，维护自身配置，后续可以在任意地方安装，`一库在手，天下我有 `，:)
-
-    要关注`k-vim`的更新，github点`Star`，thx a lot!
-
-4. 建议
-
-        1.插件不是越多越好，多了可能会拖慢vim打开速度
-
-            可以尝试注掉所有插件，根据使用需求逐一加入
-            需要多思考自己使用过程中的不便之处，寻找对应解决方案
-
-        2.二八定律
-
-            关注可以最大提升自己生产力的20%插件，具体要亲自实践
-            有什么问题,先看插件文档说明->代码选项->github上的issues->google it
-            你遇到的问题,一定别人也遇到了,大部分可解决,少部分无解….
+5. 欢迎大家推荐好用的资源, 不限于插件/主题/ppt/文章/视频等, 也希望大家能一起完善这份配置
 
 
-        3.不要复杂化vim
+## 疑问解决步骤
 
-   文章: [不要复杂化vim](http://www.kunli.info/2013/08/13/vim/)|[七个高效文本编辑习惯](http://blog.jobbole.com/44891/)
+你遇到的问题,一定别人也遇到了
 
+1. 首先明确问题, 可以用`二分法`排查出问题的插件或配置语句
+2. 确认按照文档步骤执行的操作
+3. 如果是对应插件的问题, 请到插件github主页查看文档及issues
+4. google大法
+5. 提issues
 
-
-欢迎推荐好用更酷的插件配置:)
-
-我的配置也会不定期更新，thx
 
 后面图片有点多，展示有点慢，截得不是很专业，耐心看完:)
 
@@ -124,6 +80,8 @@ molokai主题
 
 2. 安装依赖包
 
+        2.1 系统依赖
+
         # ubuntu
         sudo apt-get install ctags
         sudo apt-get install build-essential cmake python-dev  #编译YCM自动补全插件依赖
@@ -135,13 +93,15 @@ molokai主题
         # mac
         #brew install ctags
 
-        #使用python需要
+
+        2.2 使用Python
         sudo pip install pyflakes
         sudo pip install pylint
         sudo pip install pep8
 
-        #使用javascript需要安装jshint和jslint,用于javascript语法检查
-        需要nodejs支持,各个系统安装见文档 https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
+        2.3 使用Javascript
+        # 安装jshint和jslint,用于javascript语法检查
+        # 需要nodejs支持,各个系统安装见文档 https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 
         #ubuntu
         sudo apt-get install nodejs
@@ -156,32 +116,37 @@ molokai主题
 
 
 
-3. 安装插件
+3. 安装
+
+        3.1 进入目录
+        # 注意原先装过的童鞋, 重装时，不要到~/.vim下执行(这是软连接指向k-vim真是目录)，必须到k-vim原生目录执行
 
         cd k-vim/
-        #注意原先装过重装时，不要到~/.vim下执行(这是软连接指向k-vim真是目录)，必须到k-vim原生目录执行
+
+        3.2 执行安装
+        # 会进入安装插件的列表，目前30+个插件，一一安装是从github clone的，完全取决于网速, 之后会自动编译 YCM, 编译失败的话需要手动编译, 见第4步
 
         sh -x install.sh
 
-        #会进入安装插件的列表，目前30+个插件，一一安装是从github clone的，完全取决于网速
-
-        #安装完插件后，会自动编译YCM，注意，可能编译失败（缺少某些依赖包,暂不支持mac osx 10.9）
-        失败的话手动编译吧，看第4步 编译自动补全YouCompleteMe （这步耗时也有点长，但绝对值得）
-
-        install.sh
-        本质上做的事情
-        1.将vimrc/vim文件夹软链接到$HOME，编程系统vim配置
-        2.git clone安装vundle（clone到bundle目录下）
-        3.通过vundle安装其他所有插件（相当于进入vimrc, 命令行执行:BundleInstall）,从github全部搞到本地
-        4.编译需要手动编译的插件，eg.YCM
 
 4. 可能遇到的问题:
 
-    - 编译自动补全YouCompleteMe
 
-    [文档](https://github.com/Valloric/YouCompleteMe)
+
+
+    - 编译自动补全YouCompleteMe(耗时略长, 但绝对值得)
+
+
+            cd ~/.vim/bundle/YouCompleteMe
+            ./install.sh --clang-completer
+
+
+
+    有任何问题见YCM[文档](https://github.com/Valloric/YouCompleteMe)
 
     这个插件需要Vim 7.3.584,所以,如果vim版本太低,需要[编译安装](https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source)
+
+
 
     - 相对行号
 
@@ -195,65 +160,53 @@ molokai主题
 
     想要修改终端配色为solarized可以参考 [这里](https://github.com/sigurdga/gnome-terminal-colors-solarized)
 
-5. 安装/卸载/更新插件：
+    - Go语言不能自动补全/tagbar
 
-    可以自定义安装某些插件，或者删除对自己无用的插件(插件太多可能导致vim打开过慢)
+    依赖 [gotags](https://github.com/jstemmer/gotags)和 [gocode](https://github.com/nsf/gocode), 需要安装配置好, 并-> `$GOPATH` -> `$PATH`, `which`命令能正确返回
+
+        which gotags
+        which gocode
+    - Javascript不能自动补全
+    `vimrc.bundles`中`marijnh/tern_for_vim`默认没有打开, 需要打开安装插件, 需要依赖nodejs&npm, 具体见文档 [tern_for_vim](https://github.com/marijnh/tern_for_vim)
+
+    - Macvim
+
+            安装最新mac vim ,可以正常打开
+
+            需要sudo
+            mv /usr/bin/vim /usr/bin/vim.bk
+            ln -s /usr/local/bin/mvim /usr/bin/vim
+
+            在.bashrc/.bash_profile中加入
+                alias vi='mvim -v'
+                alias vim='mvim -v'
+
+
+    - 其他问题: 键位/展现等存在问题, 使用`二分法`缩小范围, 排查到问题根源, 修改配置
+
+
+
+5. 安装/卸载/更新插件：
 
     安装新插件
 
-        1. vimrc.bundles中配置对应插件 bundle
-            Bundle 'fholgado/minibufexpl.vim'
+        1. vimrc.bundles中配置对应插件
+            Bundle 'xxx/xxxx'
         2. 命令行模式，执行:
             :BundleInstall
 
-    更新插件
+    更新插件(注意如果YCM更新, 可能需要重编译, 否则自动补全可能失效)
 
         命令行模式，执行:
         :BundleUpdate
 
     删除插件
 
-        1. vimrc.bundles中注释或删除对应插件bundle配置行(行首加一个双引号),保存退出即可
-            "Bundle 'fholgado/minibufexpl.vim'
-
-        物理上删除插件，第一步执行保存退出后，再次进入vim
+        1. vimrc.bundles中注释或删除对应插件bundle配置行(行首加一个双引号)
         2.命令行模式，执行: (会物理上删除插件文件)
             :BundleClean
 
-6. 给mac用户
 
-   可以使用mac vim
-
-   首先，安装最新mac vim ,可以正常打开
-
-   然后(需要sudo)
-
-        mv /usr/bin/vim /usr/bin/vim.bk
-        ln -s /usr/local/bin/mvim /usr/bin/vim
-
-   最后，在.bashrc/.bash_profile中加入
-
-        alias vi='mvim -v'
-        alias vim='mvim -v'
-
-   配置完成
-
-7. 冲突和问题排查
-
-    插件很多，并且其默认快捷键或者配置可能发生冲突
-
-    当加入新插件发现有冲突或者展现有问题
-
-    请排除法进行排查：注掉所有插件或配置，然后二分法逐一恢复，可以定位到出现问题的插件或配置,修改其配置或键位即可
-
-8. 旧版本用户
-
-    旧版本用户更新代码后需执行
-
-        1.bash install.sh [多了一个软连接.vimrc.bundles]
-          or
-          ln -s PATH-TO-k-vim/vimrc.bundles ~/.vimrc.bundles
-        2.插件安装和更新 :BundleInstall 和 :BundleUpdate
 
 ---------------------------------
 
@@ -291,18 +244,35 @@ molokai主题
     <space> 空格，进入搜索状态
     /       同上
     ,/      去除匹配高亮
+
     (交换了#/* 号键功能)
     #       正向查找光标下的词
     *       反向查找光标下的词
 
-    6. buffer/tab相关
-    <- / -> 前后buffer
+    6. tab操作(重点推)
+    ctrl+t 新建一个tab
 
-    , + tn  新tab
-    , + to  tabonly
-    , + tc  close
-    , + tm  tab move
-    , + te  new tab edit
+    (hjkl)
+    ,th    切第1个tab
+    ,tl    切最后一个tab
+    ,tj    下一个tab
+    ,tk    前一个tab
+
+    ,tn    下一个tab(next)
+    ,tp    前一个tab(previous)
+
+    ,td    关闭tab
+    ,te    tabedit
+    ,tm    tabm
+
+    ,1     切第1个tab
+    ,2     切第2个tab
+    ...
+    ,9     切第9个tab
+    ,0     切最后一个tab
+
+    ctrl+l 最近使用两个tab之间切换
+
 
     7. 按键修改
     Y   =y$   复制到行尾
@@ -310,8 +280,7 @@ molokai主题
     , + sa    select all,全选
     , + v     选中段落
     kj        代替<Esc>，不用到角落去按esc了
-    t         新起一行，下面，不进入插入模式
-    T         新起一行，上面
+
     , + q     :q，退出vim
 
 
@@ -323,6 +292,11 @@ molokai主题
     5. <和> 代码缩进后自动再次选中
     6. 对py文件，保存自动去行尾空白，打开自动加行首代码
     7. 交换#/*号功能,#号为正向查找,*反向
+    8. `w!!`强制保存, 即使readonly
+
+    废弃:
+    t         新起一行，下面，不进入插入模式
+    T         新起一行，上面
 
 
 ---------------------------------
@@ -358,12 +332,6 @@ molokai主题
 
     必装，强烈推荐(YCM是我目前用到的最好的自动补全插件)
 
-    需要编译这个插件(见github文档)
-
-    这个需要自己去看官方的配置方式,演示在官方github有
-
-    需要Vim 7.3.584 以上版本([如何编译vim](https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source))
-
     这个插件包含了以下几个插件功能,所以不需要装下面:
 
         clang_complete
@@ -372,20 +340,31 @@ molokai主题
         neocomplcache
         jedi(对python的补全)
 
+    敲两个字符后弹出提示, 支持各语言标准库补全
+
     快捷键:
 
+        ctrl+n 选择下一个补全
+        ctrl+p 选择上一个补全
+        回车    选中
         ,gd  跳到声明位置, 仅 filetypes: c, cpp, objc, objcpp, python 有效
+
+    演示(官方截图)
+
+    ![ycm](https://camo.githubusercontent.com/1f3f922431d5363224b20e99467ff28b04e810e2/687474703a2f2f692e696d6775722e636f6d2f304f50346f6f642e676966)
+
 
 
 2. ####代码片段快速插入 [SirVer/ultisnips](https://github.com/SirVer/ultisnips) +[honza/vim-snippets](https://github.com/honza/vim-snippets)
 
-    注意：如果是之前安装的k-vim，更新后发现报错，是ultisnips版本问题 执行:BundleUpdate即可
+    必装，效率杀手锏，快速插入自定义的代码片段, 高效必备
 
-    必装，效率杀手锏，快速插入自定义的代码片段
+    YCM 自动补全会弹提示
 
-    代码片段集合，有缺陷
-
-    自动补全加这个,高效必备, 针对各种语言已经带了一份配置了，可以到安装目录下查看具体，我有针对性补全一份，在snippets目录下，可自行修改
+        ctrl+n 上一个
+        ctrl+p 下一个
+        <tab>  使用片段
+        ,us    编辑对应文件类型的代码片段
 
     演示
 
@@ -412,11 +391,13 @@ molokai主题
 
 2. ####快速注释 [scrooloose/nerdcommenter](https://github.com/scrooloose/nerdcommenter)
 
-    必装，另一个大大提升效率的地方，快速批量加减注释
+    必装，另一个大大提升效率的地方，快速批量加减注释[会自动补一个空格]
 
         [d] shift+v+方向键选中(默认当前行)
-            ->  ,cc  加上注释
-            -> ,cu 解开注释
+            -> ,cc      加上注释
+            -> ,cu      解开注释
+            -> ,c<space> 加上/解开注释
+            -> ,cy      先复制再注解, p可以黏贴未注释前的代码
 
     演示
 
@@ -439,6 +420,8 @@ molokai主题
         "Hello world!" -> Hello world!
         ysiw"
         Hello -> "Hello"
+        yss"
+        Hello world -> "Hello world"
 
     演示
 
@@ -451,13 +434,19 @@ molokai主题
 
         [sd] ,空格    去掉当前行末尾空格
 
-4. ####赋值语句代码对齐 [godlygeek/tabular](https://github.com/godlygeek/tabular)
+4. ####赋值语句代码对齐 [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align)
 
-    将代码,或者json等,进行对齐,具体见 [tabular-vim](http://vimcasts.org/episodes/aligning-text-with-tabular-vim/)
+    将代码,或者json等, 根据表达式符号进行对齐,具体见例子 [examples](https://github.com/junegunn/vim-easy-align/blob/master/EXAMPLES.md)
 
         [sd]  可以选中多行,不选中默认操作当前行
-            ,a= 对齐等号表达式
+            ,a= 对齐等号表达
             ,a: 对齐冒号表达式(json/map等)
+            ,a<space>  首个空格对齐
+            ,a2<space> 第二个空格对齐
+            ,a*<space> 所有空格依次对齐
+
+
+    同类插件 [tabular](https://github.com/godlygeek/tabular)
 
 > 快速移动
 
@@ -476,12 +465,21 @@ molokai主题
 
 2. ####符号匹配跳转[vim-scripts/matchit.zip](https://github.com/vim-scripts/matchit.zip)
 
-    选装
+    必装
 
     % 匹配成对的标签，跳转
 
 3. ####mark跳转 [kshenoy/vim-signature](https://github.com/kshenoy/vim-signature)
 
+    必装, 快速打标签, 随时跳回标签位置(修复python自动去除空白函数和该插件冲突的问题)
+
+
+        m[a-zA-Z]   打标签
+        '[a-zA-Z]   跳转到标签位置
+        '. 最后一次变更的地方
+        '' 跳回来的地方
+
+        m<space>    去除所有标签
 
 > 快速选中
 
@@ -547,6 +545,8 @@ molokai主题
         dae
         yae
         cie
+
+
 
 > 功能相关
 
@@ -664,18 +664,35 @@ molokai主题
 
     ![thenerdtree](https://github.com/wklken/gallery/blob/master/vim/thenerdtree.gif?raw=true)
 
-2. ####Buffer [fholgado/minibufexpl.vim](https://github.com/fholgado/minibufexpl.vim)
+2. ####目录树tab增强 [jistr/vim-nerdtree-tabs](https://github.com/jistr/vim-nerdtree-tabs)
 
-    必装，buffer管理, 可以查找其他同类插件
+    选装, 多个tab时, 保持nerdtree一致
 
-        [sd]
-            <Tab>  切换buffer
-            左右方向键  切换buffer
-            ,bn   切到后一个
-            ,bp   切到前一个
-            ,bd   关闭当前buffer
+    Just one NERDTree
 
-2. ####Tag [majutsushi/tagbar](https://github.com/majutsushi/tagbar)
+3. ####tab/buffer导航增强 [vim-ctrlspace](https://github.com/szw/vim-ctrlspace)
+
+    必装, 多buffer/多tab, 方便的查看列表, 操作, 切换, 与nerdtree/tabs完美配合
+
+    注意: 有些人的ctrl+space被占用的, 配一个leader快捷键
+    vim-
+          ctrl+<space> 得到当前tab的buffer列表
+          j/k     上下移动
+          回车     跳转到
+          l       展示/关闭tab列表
+              j/k 或 [/] 上下移动
+              =   给tab命名
+              -   Move the current tab to the left (decrease its number)
+              +   Move the current tab to the right (increase its number)
+              Backspace Go back to Buffer List
+
+          L   Jump to Tab List in Search Mode
+
+          esc/q   close the list
+
+
+
+4. ####Tag [majutsushi/tagbar](https://github.com/majutsushi/tagbar)
 
     必装,标签导航,纬度和taglist不同, taglist的替代者
 
@@ -725,11 +742,10 @@ molokai主题
 
 4. ####HTML/JS/JQUERY/CSS
 
-    [pangloss/vim-javascript](https://github.com/pangloss/vim-javascript) 偶尔会看看js,频率不高
+    [jelera/vim-javascript-syntax](https://github.com/jelera/vim-javascript-syntax) js语法高亮
+    [pangloss/vim-javascript](https://github.com/pangloss/vim-javascript) 缩进等
 
-    [marijnh/tern_for_vim](https://github.com/marijnh/tern_for_vim) 配合ycm进行js/jquery自动补全,需要安装 tern_for_vim 并
-    配置文档  [ternjs](http://ternjs.net/)
-
+    [marijnh/tern_for_vim](https://github.com/marijnh/tern_for_vim) 配合ycm进行js/jquery自动补全,需要安装 tern_for_vim 并配置, 文档  [ternjs](http://ternjs.net/)
 
         cd ~/.vim/bundle/tern_for_vim && npm install
 
@@ -772,37 +788,6 @@ molokai主题
 
     [evanmiller/nginx-vim-syntax](https://github.com/evanmiller/nginx-vim-syntax) 未配置
 
-> 其他
-
-1. ####平滑滚动
-
-    [yonchu/accelerated-smooth-scroll](https://github.com/yonchu/accelerated-smooth-scroll) 未配置
-
-    [terryma/vim-smooth-scroll](https://github.com/terryma/vim-smooth-scroll) 未配置
-
-2. ####多人协作，结对编程
-
-    [FredKSchott/CoVim](https://github.com/FredKSchott/CoVim) 未配置
-
-3. ####单行多行变换
-
-    [AndrewRadev/splitjoin.vim](https://github.com/AndrewRadev/splitjoin.vim) 未配置
-
-4. ####TODO关键字列表
-
-    [vim-scripts/TaskList.vim](https://github.com/vim-scripts/TaskList.vim) 未配置
-
-5. ####substitute替换增强
-
-    [tpope/vim-abolish.vim](https://github.com/tpope/vim-abolish) 未配置
-
-6. ####剪贴板复用增强
-
-    [vim-scripts/YankRing.vim](https://github.com/vim-scripts/YankRing.vim) 未配置
-
-7. ####写作模式
-
-    [junegunn/goyo.vim](https://github.com/junegunn/goyo.vim)  未配置
 
 ---------------------------------
 
@@ -810,35 +795,61 @@ molokai主题
 
 ### Update Log
 
-2013-06-11 创建:
+2014-10-02
 
-    vim配置
+version: 8.0
 
-2014-03-15更新：
+    1. 修复YCM不能自动提示Ultisnips代码片段的问题
+       重大问题, 生产力得到再次提升:)
+       注意: 自定义snippets, 写错一个, 就会导致YCM不提示所有的snippets
 
-    1.更全的注释
-    2.更合理文件结构和配置布局
-    3.分离插件配置到vimrc.bundles
-    4.更强大的代码补全
-    5.去掉一些无用信息
+    2. tab增强
+       2.1 新增tab操作快捷键, 详见文档
+       2.2 增加插件 `jistr/vim-nerdtree-tabs`, 所有tab使用同一个nerdtree
+       2.3 增加插件 `szw/vim-ctrlspace`, 更强大的buffer/tab操作-切换
+       由于tab增强带来的影响:
+       - 去掉了t/T新增一行的快捷键(低频操作, 后续可以考虑配置到其他键位)
 
-2014-05-07/08更新:
+    3. 去除`minibuffer`插件
+       配置还留着, 需要的自己解开, 但是ctrlspace其实可以完爆这个功能
 
-    1.增加文本对象扩展
-    2.去除taglist
-    3.增加 ctrlp插件 ctrlp-funky用于快速函数搜索跳转
-    4.切换powerline为airline
+    4. 优化`scrooloose/nerdcommenter`配置
+       注解加空格, 以及新增键位
 
-TODO:
+    5. 增加插件 `kshenoy/vim-signature`
+       mark-跳转更加方便, 修复与保存自动去行尾空白功能的冲突
 
-    1.更便捷易用的buffer/tab/window管理切换
-    2.在 vim 中执行shell
-      https://github.com/Shougo/vimshell.vim
-      http://code.hootsuite.com/vimshell/
-      https://github.com/vim-scripts/Conque-Shell
-    3.vim compile/run/debug code[好奇而已.....目前习惯用终端]
-      https://github.com/jaredly/vim-debug/
-    4.现有插件-二八原则对具体用法仔细梳理
+    6. 对齐插件变更, 使用`junegunn/vim-easy-align` 替换掉 `godlygeek/tabular`
+
+    7. 增加插件 `jelera/vim-javascript-syntax`
+       更丰富的javascript语法高亮
+
+    8. 去除插件 `gorodinskiy/vim-coloresque`
+       这货有坑, 使用频率低 see issue https://github.com/wklken/k-vim/issues/49
+
+    9. 新增自定义snippets
+       位置 ~/.vim/UltiSnips/
+
+    10. 重写README
+
+### Contributors
+
+thx a lot. 可以给我提pull request:)
+
+- [wklken](https://github.com/wklken)
+
+- [fangwentong](https://github.com/fangwentong)
+
+- [Garnel](https://github.com/Garnel)
+
+- [spacewander](https://github.com/spacewander)
+
+- [ruanyl](https://github.com/ruanyl)
+
+- [memoryboxes](https://github.com/memoryboxes)
+
+查看详情 [git-contributors](https://github.com/wklken/k-vim/graphs/contributors)
+
 
 ### Inspire
 
@@ -850,28 +861,17 @@ TODO:
 
 3. 自动补全 [YCM](https://github.com/Valloric/YouCompleteMe)
 
+4. 插件挑选 [VimAwesome](http://vimawesome.com/)
+
 ### Resources
 
-0. [vim资源汇总](http://u.memect.com/vim/)
+待增加blog[]
 
-1. [VimAwesome](http://vimawesome.com/)
+### Donation
 
-1. [Google+](https://plus.google.com/communities/105049811056605918816)
-
-2. [vimbits](http://www.vimbits.com/bits?sort=top)
-
-3. [Learning vim the hard way](http://learnvimscriptthehardway.stevelosh.com/)
-
-4. [Seven habits of effective text editing](http://www.moolenaar.net/habits.html)
-
-5. [openvim tutorial](http://www.openvim.com/tutorial.html)
-
-6. [vim genius](http://www.vimgenius.com/)
-
-7. [vim colors](http://vimcolors.com/)
+You can Buy me a coffee:)  [link](http://www.wklken.me/pages/donation.html)
 
 ------------------------
-
 ------------------------
 
 The End!

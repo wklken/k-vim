@@ -1,10 +1,11 @@
 "==========================================
 " Author:  wklken
-" Version: 7
+" Version: 8.0
 " Email: wklken@yeah.net
 " BlogPost: http://wklken.me
 " ReadMe: README.md
-" Last_modify: 2014-03-15
+" Donation: http://www.wklken.me/pages/donation.html
+" Last_modify: 2014-10-02
 " Sections:
 "       -> Initial Plugin 加载插件
 "       -> General Settings 基础设置
@@ -17,8 +18,7 @@
 "
 "       -> 插件配置和具体设置在vimrc.bundles中
 "==========================================
-
-
+ 
 "==========================================
 " Initial Plugin 加载插件
 "==========================================
@@ -366,17 +366,63 @@ noremap <silent><leader>/ :nohls<CR>
 " --------tab/buffer相关
 
 "Use arrow key to change buffer"
+" TODO: 如何跳转到确定的buffer?
+" :b1 :b2   :bf :bl
+nnoremap [b :bprevious<cr>
+nnoremap ]b :bnext<cr>
 noremap <left> :bp<CR>
 noremap <right> :bn<CR>
 
-map <leader>tn :tabnew<cr>
-map <leader>to :tabonly<cr>
-map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
 
-" Opens a new tab with the current buffer's path
-" Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+" tab 操作
+" TODO: ctrl + n 变成切换tab的方法
+" http://vim.wikia.com/wiki/Alternative_tab_navigation
+" http://stackoverflow.com/questions/2005214/switching-to-a-particular-tab-in-vim
+"map <C-2> 2gt
+map <leader>th :tabfirst<cr>
+map <leader>tl :tablast<cr>
+
+map <leader>tj :tabnext<cr>
+map <leader>tk :tabprev<cr>
+map <leader>tn :tabnext<cr>
+map <leader>tp :tabprev<cr>
+
+map <leader>te :tabedit<cr>
+map <leader>td :tabclose<cr>
+map <leader>tm :tabm<cr>
+
+
+" 新建tab  Ctrl+t
+nnoremap <C-t>     :tabnew<CR>
+inoremap <C-t>     <Esc>:tabnew<CR>
+" TODO: 配置成功这里, 切换更方便, 两个键
+" nnoremap <C-S-tab> :tabprevious<CR>
+" nnoremap <C-tab>   :tabnext<CR>
+" inoremap <C-S-tab> <Esc>:tabprevious<CR>i
+" inoremap <C-tab>   <Esc>:tabnext<CR>i
+" nnoremap <C-Left> :tabprevious<CR>
+" nnoremap <C-Right> :tabnext<CR>
+
+" normal模式下切换到确切的tab
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
+
+" Toggles between the active and last active tab "
+" The first tab is always 1 "
+let g:last_active_tab = 1
+" nnoremap <leader>gt :execute 'tabnext ' . g:last_active_tab<cr>
+nnoremap <silent> <c-l> :execute 'tabnext ' . g:last_active_tab<cr>
+vnoremap <silent> <c-l> :execute 'tabnext ' . g:last_active_tab<cr>
+autocmd TabLeave * let g:last_active_tab = tabpagenr()
+
 
 " ------- 选中及操作改键
 
@@ -405,8 +451,9 @@ nnoremap <C-y> 2<C-y>
 
 
 "Jump to start and end of line using the home row keys
-nmap t o<ESC>k
-nmap T O<ESC>j
+" 增强tab操作, 导致这个会有问题, 考虑换键
+"nmap t o<ESC>k
+"nmap T O<ESC>j
 
 " Quickly close the current window
 nnoremap <leader>q :q<CR>
@@ -432,13 +479,14 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
 
 " 保存python文件时删除多余空格
-" Delete trailing white space on save, useful for Python and CoffeeScript ;)
-func! DeleteTrailingWS()
-  exe "normal mz"
-  %s/\s\+$//ge
-  exe "normal `z"
-endfunc
-autocmd BufWrite *.py :call DeleteTrailingWS()
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+autocmd FileType c,cpp,java,php,ruby,python autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+
 
 " 定义函数AutoSetFileHead，自动插入文件头
 autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
@@ -505,4 +553,5 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
+
 
