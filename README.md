@@ -675,7 +675,7 @@ molokai主题
     必装, 多buffer/多tab, 方便的查看列表, 操作, 切换, 与nerdtree/tabs完美配合
 
     注意: 有些人的ctrl+space被占用的, 配一个leader快捷键
-    vim-
+
           ctrl+<space> 得到当前tab的buffer列表
           j/k     上下移动
           回车     跳转到
