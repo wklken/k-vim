@@ -937,7 +937,7 @@ thx a lot. 可以给我提pull request:)
 
 ### Resources
 
-待增加blog[]
+[链接](http://www.wklken.me/posts/2014/10/03/vim-resources.html)
 
 ### Donation
 
