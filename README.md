@@ -316,6 +316,7 @@ molokai主题
         9. 去掉错误输入提示
         10. 交换`和', '能跳转到准确行列位置
         11. python/ruby 等, 保存时自动去行尾空白
+        12. 统一所有分屏打开的操作位v/s[nerdtree/ctrlspace] (特殊ctrlp ctrl+v/x)
 
     废弃:
     t         新起一行，下面，不进入插入模式
@@ -433,19 +434,26 @@ molokai主题
 
 3. ####快速编辑 [tpope/vim-surround](https://github.com/tpope/vim-surround) +[tpope/vim-repeat](https://github.com/tpope/vim-repeat)
 
-    必装，很给力的功能，快速给词加环绕符号,例如引号
+    必装，很给力的功能，快速给词加环绕符号,例如引号, 注意(括号, 左括号会加空格, 右括号不会)
 
-    repeat进行增强,'.'可以重复命令
+    repeat进行增强,'.'可以重复使用命令
 
         [d]
-        cs"' [inside]
+        cs"'
         "Hello world!" -> 'Hello world!'
+
         ds"
         "Hello world!" -> Hello world!
+
         ysiw"
         Hello -> "Hello"
+
         yss"
         Hello world -> "Hello world"
+
+        cst"
+        <a>abc</a>  -> "abc"
+
 
     演示
 
@@ -582,7 +590,7 @@ molokai主题
         [sd] ,f  相当于mru功能，show recently opened files
 
         ctrl + j/k 进行上下移动
-        ctrl + x/v 分屏打开该文件
+        ctrl + x/v 分屏打开该文件 [重要**]
         ctrl + t   在新tab中打开该文件
 
     演示
@@ -678,8 +686,10 @@ molokai主题
             J.......最后一个节点
 
             o.......Open files, directories and bookmarks
-            i.......split上下分屏
-            s.......vsplit左右分屏
+
+            s.......split上下分屏[原来是i, 改键]
+            v.......vsplit左右分屏[原来是s, 改键]
+
             c.......将当前目录设为根节点
             q.......关闭
 
