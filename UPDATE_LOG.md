@@ -43,6 +43,8 @@ version: 8.0
 
     11. 重写README
 
+    12. easymothion
+        增加快速hjkl移动快捷键
 
 ## 2014-05-07/08
 
