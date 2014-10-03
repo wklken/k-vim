@@ -370,8 +370,8 @@ molokai主题
         ctrl+n 选择下一个补全
         ctrl+p 选择上一个补全
         回车    选中
-        ,jd  跳转到函数定义, 分屏打开一个buffer(非常有用)
-        ,gd  跳到声明位置, 仅 filetypes: c, cpp, objc, objcpp, python 有效
+        ,jd  跳转到函数定义, 分屏打开一个buffer(非常有用!!!!!!!!!)
+        ,gd  跳到声明位置, 仅 filetypes: c, cpp, objc, objcpp, python 有效(比较少用)
 
     演示(官方截图)
 
