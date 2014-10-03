@@ -38,7 +38,10 @@ version: 8.0
     9. 新增自定义snippets
        位置 ~/.vim/UltiSnips/
 
-    10. 重写README
+    10. 修复YCM不能跳转到函数/类等定义处的问题
+       ,jd/,gd
+
+    11. 重写README
 
 
 ## 2014-05-07/08
