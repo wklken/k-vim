@@ -214,12 +214,18 @@ molokai主题
 
 # 自定义快捷键
 
+    注意, 以下 `,` 代表<leader>
     1. 可以自己修改vimrc中配置，决定是否开启鼠标
 
     set mouse-=a           " 鼠标暂不启用, 键盘党....
     set mouse=a            " 开启鼠标
 
-    2. 可以自己修改vimrc决定是否使用方向键进行上下左右移动，默认打开，可以注解
+    2. 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 如果不需要可以关掉
+       好处：误删什么的，如果以前屏幕打开，可以找回....惨痛的经历
+
+    set t_ti= t_te=
+
+    3. 可以自己修改vimrc决定是否使用方向键进行上下左右移动，默认打开，可以注解
     hjkl  上下左右
 
     map <Left> <Nop>
@@ -227,7 +233,7 @@ molokai主题
     map <Up> <Nop>
     map <Down> <Nop>
 
-    3. 上排F功能键
+    4. 上排F功能键
 
     F1 废弃这个键,防止调出系统帮助
     F2 set nu/nonu,行号开关，用于鼠标复制代码用
@@ -236,20 +242,25 @@ molokai主题
     F5 set paste/nopaste,粘贴模式paste_mode开关,用于有格式的代码粘贴
     F6 syntax on/off,语法开关，关闭语法可以加快大文件的展示
 
-    4. 分屏移动
+    F9 tagbar
+    F10 运行当前python
 
-    ctrl + jkhl 进行上下左右窗口跳转,不需要ctrl+w+jkhl
+    5. 分屏移动
 
-    5. 搜索
+    ctrl + j/k/h/l   进行上下左右窗口跳转,不需要ctrl+w+jkhl
+
+    6. 搜索
     <space> 空格，进入搜索状态
     /       同上
     ,/      去除匹配高亮
 
-    (交换了#/* 号键功能)
+    (交换了#/* 号键功能, 更符合直觉, 其实是离左手更近)
     #       正向查找光标下的词
     *       反向查找光标下的词
 
-    6. tab操作(重点推)
+    优化搜索保证结果在屏幕中间
+
+    7. tab操作(重点推)
     ctrl+t 新建一个tab
 
     (hjkl)
@@ -273,26 +284,38 @@ molokai主题
 
     ctrl+l 最近使用两个tab之间切换
 
+    8. buffer操作(不建议, 建议使用ctrlspace插件来操作)
+    [b    前一个buffer
+    ]b    后一个buffer
+    <-    前一个buffer
+    ->    后一个buffer
 
-    7. 按键修改
-    Y   =y$   复制到行尾
-    U   =Ctrl-r
-    , + sa    select all,全选
-    , + v     选中段落
+
+    9. 按键修改
+    Y         =y$   复制到行尾
+    U         =Ctrl-r
+    ,sa       select all,全选
+    ,v        选中段落
     kj        代替<Esc>，不用到角落去按esc了
 
-    , + q     :q，退出vim
+    ,q     :q，退出vim
+
+    ctrl+n    相对/绝对行号切换
+    <enter>   normal模式下回车选中当前项
 
 
-    优化:
-    1. j/k 对于换行展示移动更友好
-    2. HL 修改成 ^$, 更方便在同行移动
-    3. ; 修改成 : ，一键进入命令行模式，不需要按shift
-    4. 命令行模式 ctrl+a/e 到开始结尾
-    5. <和> 代码缩进后自动再次选中
-    6. 对py文件，保存自动去行尾空白，打开自动加行首代码
-    7. 交换#/*号功能,#号为正向查找,*反向
-    8. `w!!`强制保存, 即使readonly
+    更多优化:
+        1. j/k 对于换行展示移动更友好
+        2. HL 修改成 ^$, 更方便在同行移动
+        3. ; 修改成 : ，一键进入命令行模式，不需要按shift
+        4. 命令行模式 ctrl+a/e 到开始结尾
+        5. <和> 代码缩进后自动再次选中, 方便多次缩进, esc退出
+        6. 对py文件，保存自动去行尾空白，打开自动加行首代码
+        7. 交换#/*号功能,#号为正向查找,*反向
+        8. `w!!`强制保存, 即使readonly
+        9. 去掉错误输入提示
+        10. 交换`和', '能跳转到准确行列位置
+        11. python/ruby 等, 保存时自动去行尾空白
 
     废弃:
     t         新起一行，下面，不进入插入模式
@@ -659,6 +682,7 @@ molokai主题
             c.......将当前目录设为根节点
             q.......关闭
 
+    nerdtree配合tab非常赞, i/s 可以在右侧分屏打开
 
     演示
 
@@ -672,13 +696,20 @@ molokai主题
 
 3. ####tab/buffer导航增强 [vim-ctrlspace](https://github.com/szw/vim-ctrlspace)
 
-    必装, 多buffer/多tab, 方便的查看列表, 操作, 切换, 与nerdtree/tabs完美配合
+    必装, 多buffer/多tab, 方便的查看列表, 操作, 切换, 与nerdtree/tabs完美配合, 很强大, 目前只使用基础功能, 后续根据需要再完善
 
-    注意: 有些人的ctrl+space被占用的, 配一个leader快捷键
+    注意: 有些人的ctrl+space被占用的, 配一个leader快捷键(下面是默认配置)
+
+          let g:ctrlspace_default_mapping_key="<C-Space>"
+
+    (同时可以看看文档前面部分针对tab的快捷键)
 
           ctrl+<space> 得到当前tab的buffer列表
           j/k     上下移动
           回车     跳转到
+          v/V     vsp分屏打开, v会进入对应文件, V会保留在ctrlspace区域
+          s/S     sp分屏打开
+
           l       展示/关闭tab列表
               j/k 或 [/] 上下移动
               =   给tab命名
@@ -689,6 +720,20 @@ molokai主题
           L   Jump to Tab List in Search Mode
 
           esc/q   close the list
+
+    演示
+
+    ![ctrlspace](https://github.com/wklken/gallery/blob/master/vim/ctrlspace.gif?raw=true)
+
+    官方视频
+
+<p align="center">
+<a href="https://www.youtube.com/watch?v=U1hbGJm3J0g">
+<img alt="Vim-CtrlSpace 4.0 Demo"
+src="https://raw.github.com/szw/vim-ctrlspace/master/gfx/screen_small.png" />
+</a>
+</p>
+
 
 
 
@@ -795,6 +840,8 @@ molokai主题
 
 ### Update Log
 
+详细 [更新日志](https://github.com/wklken/k-vim/blob/master/UPDATE_LOG.md)
+
 2014-10-02
 
 version: 8.0
@@ -831,6 +878,8 @@ version: 8.0
        位置 ~/.vim/UltiSnips/
 
     10. 重写README
+
+
 
 ### Contributors
 
