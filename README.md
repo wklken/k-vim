@@ -422,7 +422,7 @@ molokai主题
             -> ,cc      加上注释
             -> ,cu      解开注释
             -> ,c<space> 加上/解开注释
-            -> ,cy      先复制再注解, p可以黏贴未注释前的代码
+            -> ,cy      先复制再注解, p可以粘贴未注释前的代码
 
     演示
 
@@ -554,7 +554,7 @@ molokai主题
 
    后面几个扩展对象的依赖
 
-   更多其他扩展,建 [wiki](https://github.com/kana/vim-textobj-user/wiki)
+   更多其他扩展,见 [wiki](https://github.com/kana/vim-textobj-user/wiki)
 
    PS: 特希望有一个扩展支持 '' "" [] {} ()
 
