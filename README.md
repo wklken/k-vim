@@ -104,7 +104,7 @@ molokai主题
         # 需要nodejs支持,各个系统安装见文档 https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 
         #ubuntu
-        sudo apt-get install nodejs
+        sudo apt-get install nodejs npm
         sudo npm install -g jslint
         sudo npm install jshint -g
 
