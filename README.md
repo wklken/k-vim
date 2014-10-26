@@ -8,6 +8,7 @@ k-vim
 > 本次更新: 更为强大的tab操作/更全面的自动补全
 
 
+
 详细 [更新日志](https://github.com/wklken/k-vim/blob/master/UPDATE_LOG.md)
 
 
@@ -26,8 +27,6 @@ k-vim
 
     有一定基础的 vimer
 
-
-
 ### k-vim使用说明
 
 1. 最好能熟练使用原生vim各类操作之后, 再来使用插件扩展
@@ -40,6 +39,7 @@ k-vim
 
 5. 欢迎大家推荐好用的资源, 不限于插件/主题/ppt/文章/视频等, 也希望大家能一起完善这份配置
 
+PS: 服务器端不带插件`k-vim`的简化版本, 有需要可以直接安装[vim-for-server](https://github.com/wklken/vim-for-server)
 
 ## 疑问解决步骤
 
@@ -368,6 +368,9 @@ molokai主题
 
     快捷键:
 
+        ctrl+j 选择下一个补全
+        ctrl+k 选择上一个补全
+
         ctrl+n 选择下一个补全
         ctrl+p 选择上一个补全
         回车    选中
@@ -386,9 +389,12 @@ molokai主题
 
     YCM 自动补全会弹提示
 
+        ctrl+j 上一个
+        ctrl+k 下一个
+
         ctrl+n 上一个
         ctrl+p 下一个
-        <tab>  使用片段
+        <tab>  使用片段 -> expand to codes
         ,us    编辑对应文件类型的代码片段
 
     演示
@@ -453,6 +459,9 @@ molokai主题
 
         cst"
         <a>abc</a>  -> "abc"
+
+        ys$" 当前到行尾, 引号引住
+
 
 
     演示
@@ -770,6 +779,8 @@ src="https://raw.github.com/szw/vim-ctrlspace/master/gfx/screen_small.png" />
 > 语言相关- 需要自定义编辑确认是否保留(默认打开)
 
 1. ####Python
+
+    Vim as a Python IDE, but much more than that!
 
     语法高亮[python-syntax](https://github.com/hdima/python-syntax)
 
