@@ -27,6 +27,8 @@ k-vim
 
     有一定基础的 vimer
 
+PS: 服务器端不带插件`k-vim`的简化版本(curl直接设置vimrc即可), 有需要可以直接安装[vim-for-server](https://github.com/wklken/vim-for-server)
+
 ### k-vim使用说明
 
 1. 最好能熟练使用原生vim各类操作之后, 再来使用插件扩展
@@ -39,7 +41,6 @@ k-vim
 
 5. 欢迎大家推荐好用的资源, 不限于插件/主题/ppt/文章/视频等, 也希望大家能一起完善这份配置
 
-PS: 服务器端不带插件`k-vim`的简化版本, 有需要可以直接安装[vim-for-server](https://github.com/wklken/vim-for-server)
 
 ## 疑问解决步骤
 
@@ -282,7 +283,8 @@ molokai主题
     ,9     切第9个tab
     ,0     切最后一个tab
 
-    ctrl+l 最近使用两个tab之间切换
+    ,tt 最近使用两个tab之间切换
+    (可修改配置位 ctrl+o,  但是ctrl+o/i为系统光标相关快捷键, 故不采用)
 
     8. buffer操作(不建议, 建议使用ctrlspace插件来操作)
     [b    前一个buffer
@@ -849,6 +851,9 @@ src="https://raw.github.com/szw/vim-ctrlspace/master/gfx/screen_small.png" />
     可以参考tpope的插件列表,很多跟ruby相关
 
     [tpope/vim-rails](https://github.com/tpope/vim-rails) 未配置
+    [nelstrom/vim-textobj-rubyblock](https://github.com/nelstrom/vim-textobj-ruby)
+
+    这个有坑, 暂未搞定
     [tpope/vim-endwise](https://github.com/tpope/vim-endwise) 未配置,自动加end
 
 7. ####PHP

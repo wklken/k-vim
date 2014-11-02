@@ -45,6 +45,7 @@ highlight SyntasticErrorSign guifg=white guibg=black
 
 " 代码自动补全
 "迄今为止用到的最好的自动VIM自动补全插件
+"重启 :YcmRestartServer
 Bundle 'Valloric/YouCompleteMe'
 "youcompleteme  默认tab  s-tab 和自动补全冲突
 "let g:ycm_key_list_select_completion=['<c-n>']
@@ -57,11 +58,15 @@ let g:ycm_use_ultisnips_completer = 1 "提示UltiSnips
 let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串中的文字也会被收入补全
 let g:ycm_collect_identifiers_from_tags_files = 1
 
+" let g:ycm_autoclose_preview_window_after_completion = 1
+" let g:ycm_autoclose_preview_window_after_insertion = 1
 
 " 跳转到定义处, 分屏打开
 let g:ycm_goto_buffer_command = 'horizontal-split'
-nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+" nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
+
 
 "let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
 
@@ -76,7 +81,7 @@ if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_
 endif
 
 " 直接触发自动补全 insert模式下
-let g:ycm_key_invoke_completion = '<C-Space>'
+" let g:ycm_key_invoke_completion = '<C-Space>'
 " 黑名单,不启用
 let g:ycm_filetype_blacklist = {
       \ 'tagbar' : 1,
@@ -90,28 +95,31 @@ Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 
 let g:UltiSnipsExpandTrigger       = "<tab>"
-let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+" let g:UltiSnipsJumpForwardTrigger  = "<tab>"
+" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 let g:UltiSnipsSnippetDirectories  = ['UltiSnips']
 let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
 " 定义存放代码片段的文件夹 .vim/UltiSnips下，使用自定义和默认的，将会的到全局，有冲突的会提示
 " 进入对应filetype的snippets进行编辑
 map <leader>us :UltiSnipsEdit<CR>
-function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res == 0
-        if pumvisible()
-            return "\<C-n>"
-        else
-            call UltiSnips#JumpForwards()
-            if g:ulti_jump_forwards_res == 0
-               return "\<TAB>"
-            endif
-        endif
-    endif
-    return ""
+
+" ctrl+j/k 进行选择
+func! g:jInYCM()
+    if pumvisible()
+        return "\<C-n>"
+    else
+        return "\<c-j>"
 endfunction
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+
+func! g:kInYCM()
+    if pumvisible()
+        return "\<C-p>"
+    else
+        return "\<c-k>"
+endfunction
+inoremap <c-j> <c-r>=g:jInYCM()<cr>
+au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:kInYCM()<cr>"
+let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 
 
 " 自动补全单引号，双引号等
@@ -197,7 +205,8 @@ let g:multi_cursor_quit_key='<Esc>'
 "################### 功能相关 ###################
 
 " 文件搜索
-Bundle 'kien/ctrlp.vim'
+" change to https://github.com/ctrlpvim/ctrlp.vim
+Bundle 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
 map <leader>f :CtrlPMRU<CR>
@@ -439,6 +448,14 @@ let python_highlight_all = 1
 Bundle 'Blackrush/vim-gocode'
 "Bundle 'fatih/vim-go.git'
 
+"###### Ruby #########
+" Bundle 'vim-ruby/vim-ruby'
+" Bundle 'nelstrom/vim-textobj-rubyblock'
+
+" 有bug, 和当前有冲突, 尚未解决, 不要打开
+" Bundle 'tpope/vim-endwise'
+
+
 "###### Markdown #########
 Bundle 'plasticboy/vim-markdown'
 let g:vim_markdown_folding_disabled=1
@@ -460,27 +477,27 @@ let g:html_indent_style1 = "inc"
 "for jquery
 Bundle 'nono/jquery.vim'
 
-
 "###### emmet HTML complete #########
 "Bundle "mattn/emmet-vim"
 
 "###### vim.less : less 自动更新##########
-"Bundle 'groenewege/vim-less'
-"autocmd BufWritePost *.less :!lessc % > %:p:r.css
+" Bundle 'groenewege/vim-less'
+" autocmd BufWritePost *.less :!lessc % > %:p:r.css
 
 "###### Jinja2 #########
 Bundle 'Glench/Vim-Jinja2-Syntax'
 
 "for css color
 "not work in iterm2 which termianl selection is not xterm-256
-"Bundle 'ap/vim-css-color'
- 
+" Bundle 'ap/vim-css-color'
+
 " 这个有坑, see issue https://github.com/wklken/k-vim/issues/49
 "Bundle 'gorodinskiy/vim-coloresque'
 
 "###### nginx #########
-"Bundle 'evanmiller/nginx-vim-syntax'
+" Bundle 'evanmiller/nginx-vim-syntax'
 
+" 待审查
 " Bundle "thinca/vim-quickrun"
 " nnoremap <F10> :QuickRun<cr>
 
