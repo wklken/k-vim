@@ -104,21 +104,23 @@ let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
 map <leader>us :UltiSnipsEdit<CR>
 
 " ctrl+j/k 进行选择
-func! g:jInYCM()
+func! g:JInYCM()
     if pumvisible()
         return "\<C-n>"
     else
         return "\<c-j>"
+    endif
 endfunction
 
-func! g:kInYCM()
+func! g:KInYCM()
     if pumvisible()
         return "\<C-p>"
     else
         return "\<c-k>"
+    endif
 endfunction
-inoremap <c-j> <c-r>=g:jInYCM()<cr>
-au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:kInYCM()<cr>"
+inoremap <c-j> <c-r>=g:JInYCM()<cr>
+au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
 let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 
 
