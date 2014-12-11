@@ -16,6 +16,11 @@ if has('win32') || has('win64')
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" pathogen
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call pathogen#infect()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set to auto read when a file is changed from the outside
@@ -64,12 +69,15 @@ set mat=2
 " Imediately show the search result
 set is
 
-" Highlight current line
+" Highlight the current line
 set cursorline
-" Highlight background color of current line
-hi cursorline guibg=#333333
-" Highlight cursor
+hi cursorline   guibg=#333333
+hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+" Highlight the current column
+set cursorcolumn
 hi CursorColumn guibg=#333333
+hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+nnoremap <Leader>hl :set cursorline! cursorcolumn!<CR>
 
 if has('cmdline_info')
 	" Show the ruler
@@ -87,7 +95,6 @@ if has('statusline')
 	set statusline=
 	set statusline+=%<%f\                    " Filename
 	set statusline+=%w%h%m%r                 " Options
-	set statusline+=%{fugitive#statusline()} " Git
 	set statusline+=\[%{&ff}/%Y]             " Filetype
 	set statusline+=%=%-14.(%l,%c%V%)\%p%%   " Right aligned file nav info
 endif
@@ -116,9 +123,9 @@ set gdefault                    " The /g flag on :s substitutions by default
 set nowrap                      " Not wrap long lines, 'set wrap' if need
 set autoindent                  " Auto indent
 set smartindent                 " Smart indent
-set tabstop=8                   " Set <Tab> to 8 spaces
-set noexpandtab                 " Tabs are tabs, not spaces
-set shiftwidth=8                " Use indents of 8 spaces
+set tabstop=4                   " Set <Tab> to 4 spaces
+set expandtab                   " Expand <Tab> to spaces
+set shiftwidth=4                " Use indents of 4 spaces
 set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
 
 " Only effective when 'encoding' is 'utf-8' or another Unicode encoding
@@ -252,19 +259,6 @@ nmap <Leader>tt   :TrinityToggleNERDTree<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VCSCommand
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let b:VCSCommandMapPrefix=',v'
-" let b:VCSCommandVCSType='git'
-nmap <Leader>vs :VCSStatus<CR>
-nmap <Leader>vc :VCSCommit<CR>
-nmap <Leader>vb :VCSBlame<CR>
-nmap <Leader>va :VCSAdd<CR>
-nmap <Leader>vd :VCSVimDiff<CR>
-nmap <Leader>vl :VCSLog<CR>
-nmap <Leader>vu :VCSUpdate<CR>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Buffer Explorer
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap <Leader>b :BufExplorer<CR>
@@ -353,6 +347,79 @@ map <Leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " For ctags, let it can find the 'tags' file even not in current directory
 set tags=tags;/
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" clang-format
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" BS_Attach     (in configuration: Attach) Always attach braces to surrounding context.
+" BS_Linux      (in configuration: Linux) Like Attach, but break before braces on function, 
+"               namespace and class definitions.
+" BS_Stroustrup (in configuration: Stroustrup) Like Attach, but break before function 
+"               definitions, and .else..
+" BS_Allman     (in configuration: Allman) Always break before braces.
+" BS_GNU        (in configuration: GNU) Always break before braces and add an extra level 
+"               of indentation to braces of control statements, not to those of class, 
+"               function or other definitions.
+let g:clang_format#style_options = {
+            \ "BasedOnStyle" : "WebKit",
+            \ "AccessModifierOffset" : -4,
+            \ "UseTab" : "Never",
+            \ "IndentWidth" : 4,
+            \ "TabWidth" : 4,
+            \ "ColumnLimit" : 0,
+            \ "AlignTrailingComments" : "true",
+            \ "AllowShortIfStatementsOnASingleLine" : "false",
+            \ "AllowShortLoopsOnASingleLine" : "false",
+            \ "AlwaysBreakTemplateDeclarations" : "true",
+            \ "BreakBeforeBraces" : "Allman",
+            \ "SpaceBeforeAssignmentOperators" : "true",
+            \ "IndentCaseLabels" : "true",
+            \ "Standard" : "Auto"}
+
+" map to <Leader>cf in C++ code
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+" if you install vim-operator-user
+" autocmd FileType c,cpp,objc map <buffer><Leader>x <Plug>(operator-clang-format)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Better Rainbow Parentheses
+" https://github.com/kien/rainbow_parentheses.vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" delimit mate
+" https://github.com/Raimondi/delimitMate
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let delimitMate_expand_cr = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-easymotion
+" https://github.com/Lokaltog/vim-easymotion
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" let g:EasyMotion_do_mapping = 0 " Disable default mappings
+
+" Bi-directional find motion
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap s <Plug>(easymotion-s)
+" or
+" `s{char}{char}{label}`
+" Need one more keystroke, but on average, it may be more comfortable.
+nmap s <Plug>(easymotion-s2)
+
+nmap <Leader><Leader>s <Plug>(easymotion-sn)
+
+" Turn on case sensitive feature
+let g:EasyMotion_smartcase = 1
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Misc
