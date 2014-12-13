@@ -1,0 +1,18 @@
+[submodule ".vim/bundle/delimitMate"]
+	path = .vim/bundle/delimitMate
+	url = git@github.com:Raimondi/delimitMate.git
+[submodule ".vim/bundle/Vundle.vim"]
+	path = .vim/bundle/Vundle.vim
+	url = git@github.com:gmarik/Vundle.vim.git
+[submodule ".vim/bundle/rainbow_parentheses.vim"]
+	path = .vim/bundle/rainbow_parentheses.vim
+	url = git@github.com:kien/rainbow_parentheses.vim.git
+[submodule ".vim/bundle/tabular"]
+	path = .vim/bundle/tabular
+	url = git@github.com:godlygeek/tabular.git
+[submodule ".vim/bundle/vim-easymotion"]
+	path = .vim/bundle/vim-easymotion
+	url = git@github.com:Lokaltog/vim-easymotion.git
+[submodule ".vim/bundle/vim-trailing-whitespace"]
+	path = .vim/bundle/vim-trailing-whitespace
+	url = git@github.com:bronson/vim-trailing-whitespace.git
