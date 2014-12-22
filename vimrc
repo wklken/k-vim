@@ -89,7 +89,7 @@ set cursorline          " 突出显示当前行
 
 "设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制
 "好处：误删什么的，如果以前屏幕打开，可以找回
-"set t_ti= t_te=
+set t_ti= t_te=
 
 
 "- 则点击光标不会换,用于复制
@@ -141,10 +141,6 @@ set scrolloff=7
 set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P
 " Always show the status line - use 2 lines for the status bar
 set laststatus=2
-
-" highlight current line
-set cursorline cursorcolumn
-
 
 "显示行号：
 set number
@@ -357,11 +353,11 @@ nnoremap / /\v
 vnoremap / /\v
 
 "Keep search pattern at the center of the screen."
-"nnoremap <silent> n nzz
-"nnoremap <silent> N Nzz
-"nnoremap <silent> * *zz
-"nnoremap <silent> # #zz
-"nnoremap <silent> g* g*zz
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
 
 " switch # *
 nnoremap # *
@@ -483,6 +479,7 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 "==========================================
 " FileType Settings  文件类型设置
 "==========================================
+
 " Python 文件的一般设置，比如不要 tab 等
 autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
 autocmd FileType ruby set tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
@@ -544,11 +541,9 @@ endif
 set background=dark
 colorscheme solarized
 set t_Co=256
-set colorcolumn=120
 
 "colorscheme molokai
 "colorscheme desert
-colorscheme Tomorrow-Night-Bright
 
 "设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr
@@ -566,5 +561,3 @@ highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
 
-" 设置python 文件编码快捷键
-iab  #//        #!/bin/env python<CR># -*- coding: utf-8 -*-<CR>#Filename:<Tab><C-R>=expand("%:t")<CR><Esc>o#Date:<Tab><Tab><C-R>=strftime("%Y-%m-%d")<CR>
