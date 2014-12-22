@@ -1,0 +1,63 @@
+snippet pa
+package main
+
+func main(){
+    ${1}
+}
+endsnippet
+
+snippet fu
+func ${1}(${2}) ${3} {
+    ${4}
+}
+endsnippet
+
+snippet pr
+println(${1})
+endsnippet
+
+snippet ty
+type ${1} struct {
+    ${2}
+}
+endsnippet
+
+snippet t
+true${1}
+endsnippet
+
+snippet f
+false${1}
+endsnippet
+
+snippet r
+return${1}
+endsnippet
+
+snippet s
+string${1}
+endsnippet
+
+snippet fpl
+fmt.Println("${1}")
+endsnippet
+
+snippet fpf
+fmt.Printf("${1}", ${2})
+endsnippet
+
+snippet err
+if err != nil {
+    ${1}
+}
+endsnippet
+
+snippet /*
+/*
+${1}
+
+
+*/
+endsnippet
+
+
