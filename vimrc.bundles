@@ -504,18 +504,18 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 " nnoremap <F10> :QuickRun<cr>
 
 " pydoc
-Bundle 'pydoc.vim'
+"Bundle 'pydoc.vim'
 
 " 画图
-Bundle 'DrawIt'
+"Bundle 'DrawIt'
 
 " 纵向编辑
-Bundle 'VisIncr'
+"Bundle 'VisIncr'
 
 " 指定范围批量替换
-Bundle 'vis'
+"Bundle 'vis'
 
 " 文字搜索,ack
-Bundle 'mileszs/ack.vim'
+"Bundle 'mileszs/ack.vim'
 
 "------------------------------------------- end of configs --------------------------------------------
