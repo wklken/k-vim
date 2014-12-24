@@ -503,4 +503,19 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 " Bundle "thinca/vim-quickrun"
 " nnoremap <F10> :QuickRun<cr>
 
+" pydoc
+Bundle 'pydoc.vim'
+
+" 画图
+Bundle 'DrawIt'
+
+" 纵向编辑
+Bundle 'VisIncr'
+
+" 指定范围批量替换
+Bundle 'vis'
+
+" 文字搜索,ack
+Bundle 'mileszs/ack.vim'
+
 "------------------------------------------- end of configs --------------------------------------------
