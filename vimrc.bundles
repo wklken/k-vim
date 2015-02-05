@@ -27,6 +27,9 @@ Bundle 'gmarik/vundle'
 
 "################### 自动补全 ###################
 
+Bundle 'vim-scripts/a.vim'
+map <leader>a :A<CR>
+
 " " 代码自动补全
 " "迄今为止用到的最好的自动VIM自动补全插件
 " "重启 :YcmRestartServer
