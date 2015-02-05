@@ -29,6 +29,11 @@ Bundle 'gmarik/vundle'
 
 Bundle 'vim-scripts/a.vim'
 map <leader>a :A<CR>
+map <leader>as :AS<CR>
+map <leader>av :AV<CR>
+map <leader>g :IH<CR>
+map <leader>gs :IHS<CR>
+map <leader>gv :IHV<CR>
 
 " " 代码自动补全
 " "迄今为止用到的最好的自动VIM自动补全插件
@@ -165,7 +170,8 @@ Bundle 'airblade/vim-gitgutter'
 let g:gitgutter_map_keys = 0
 let g:gitgutter_enabled = 0
 let g:gitgutter_highlight_lines = 1
-nnoremap <leader>gs :GitGutterToggle<CR>
+
+nnoremap <leader>git :GitGutterToggle<CR>
 
 "################### 显示增强 ###################
 
