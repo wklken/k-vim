@@ -25,17 +25,30 @@ call vundle#rc()
 "     :BundleClean       remove plugin not in list 删除本地无用插件
 Bundle 'gmarik/vundle'
 
-"################### 自动补全 ###################
-
+"################### 文件跳转 ###################
 Bundle 'vim-scripts/a.vim'
+" 头文件和实现文件之间跳转
 map <leader>a :A<CR>
 map <leader>as :AS<CR>
 map <leader>av :AV<CR>
+" 当前路径中搜索光标下文件路径 默认vim打开时的路径 or :set path=
 map <leader>g :IH<CR>
 map <leader>gs :IHS<CR>
 map <leader>gv :IHV<CR>
 
-" " 代码自动补全
+
+Bundle 'fholgado/minibufexpl.vim'
+map <leader>1 :b1<CR>
+map <leader>2 :b2<CR>
+map <leader>3 :b3<CR>
+map <leader>4 :b4<CR>
+map <leader>5 :b5<CR>
+map <leader>6 :b6<CR>
+map <leader>7 :b7<CR>
+map <leader>8 :b8<CR>
+map <leader>9 :b9<CR>
+
+"################### 代码自动补全 ###################
 " "迄今为止用到的最好的自动VIM自动补全插件
 " "重启 :YcmRestartServer
 " Bundle 'Valloric/YouCompleteMe'
@@ -116,21 +129,18 @@ au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger
 let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 
 
-" 自动补全单引号，双引号等
+"################# 自动补全 括号等 可以增加单双引号 ##############
 Bundle 'Raimondi/delimitMate'
-"" for python docstring ",优化输入
-au FileType python let b:delimitMate_nesting_quotes = ['"']
+let g:delimitMate_matchpairs = '(:)'
+
 
 "################### 快速编码 ###################
 
-" 快速注释
+" 快速注释 ,cc [,c+<Space>]
 Bundle 'scrooloose/nerdcommenter'
-let g:NERDSpaceDelims=1
+let g:NERDSpaceDelims=1 " 让注释符与语句之间留一个空格 "
+let g:NERDCompactSexyComs=1   " 多行注释时样子更好看 "
 
-
-" 快速去行尾空格 [, + <Space>]
-Bundle 'bronson/vim-trailing-whitespace'
-map <leader><space> :FixWhitespace<cr>
 
 "################### 功能相关 ###################
 
@@ -139,22 +149,21 @@ map <leader><space> :FixWhitespace<cr>
 Bundle 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
-map <leader>f :CtrlPMRU<CR>
+
 "set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux"
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
     \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz)$',
     \ }
 "\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-let g:ctrlp_working_path_mode=0
+let g:ctrlp_working_path_mode='r'
 let g:ctrlp_match_window_bottom=1
 let g:ctrlp_max_height=15
 let g:ctrlp_match_window_reversed=0
 let g:ctrlp_mruf_max=500
 let g:ctrlp_follow_symlinks=1
 
-
-" ctrlp插件1 - 不用ctag进行函数快速跳转
+" ctrlp插件1 - 不用ctag进行函数快速跳转// 函数查找
 Bundle 'tacahiroy/ctrlp-funky'
 nnoremap <Leader>fu :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
@@ -230,6 +239,7 @@ Bundle 'tomasr/molokai'
 "################### 快速导航 ###################
 "目录导航
 Bundle 'scrooloose/nerdtree'
+autocmd vimenter * NERDTree
 map <leader>n :NERDTreeToggle<CR>
 map <leader>m :NERDTreeFind<CR>
 let NERDTNERDTreeTogglereeHighlightCursorline=1
@@ -242,7 +252,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 let g:NERDTreeMapOpenSplit = 's'
 let g:NERDTreeMapOpenVSplit = 'v'
 
-
+"
 Bundle 'jistr/vim-nerdtree-tabs'
 map <Leader>n <plug>NERDTreeTabsToggle<CR>
 " 关闭同步
@@ -251,82 +261,10 @@ let g:nerdtree_tabs_synchronize_focus=0
 " 自动开启nerdtree
 "let g:nerdtree_tabs_open_on_console_startup=1
 
-
-" Vim Workspace Controller
-Bundle "szw/vim-ctrlspace"
-let g:airline_exclude_preview = 0
-hi CtrlSpaceSelected guifg=#586e75 guibg=#eee8d5 guisp=#839496 gui=reverse,bold ctermfg=10 ctermbg=7 cterm=reverse,bold
-hi CtrlSpaceNormal   guifg=#839496 guibg=#021B25 guisp=#839496 gui=NONE ctermfg=12 ctermbg=0 cterm=NONE
-hi CtrlSpaceSearch   guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
-hi CtrlSpaceStatus   guifg=#839496 guibg=#002b36 gui=reverse term=reverse cterm=reverse ctermfg=12 ctermbg=8
-
-
-"for minibufferexpl 去掉, 有需要同学的自己解开
-" Bundle 'fholgado/minibufexpl.vim'
-" let g:miniBufExplMapWindowNavVim = 1
-" let g:miniBufExplMapWindowNavArrows = 1
-" let g:miniBufExplMapCTabSwitchBufs = 1
-" let g:miniBufExplModSelTarget = 1
-" " 解决FileExplorer窗口变小问题
-" let g:miniBufExplForceSyntaxEnable = 1
-" let g:miniBufExplorerMoreThanOne=2
-" let g:miniBufExplCycleArround=1
-" " 默认方向键左右可以切换buffer
-" nnoremap <TAB> :MBEbn<CR>
-" noremap <leader>bn :MBEbn<CR>
-" noremap <leader>bp :MBEbp<CR>
-" noremap <leader>bd :MBEbd<CR>
-
-
-" 标签导航
+" 标签导航 右侧函数列表
 Bundle 'majutsushi/tagbar'
 nmap <F9> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
-
-" for ruby
-let g:tagbar_type_ruby = {
-    \ 'kinds' : [
-        \ 'm:modules',
-        \ 'c:classes',
-        \ 'd:describes',
-        \ 'C:contexts',
-        \ 'f:methods',
-        \ 'F:singleton methods'
-    \ ]
-\ }
-
-" go语言的tagbar配置
-" 1.install gotags 'go get -u github.com/jstemmer/gotags'
-" 2.make sure `gotags` in you shell PATH, you can call check it with `which gotags`
-" for gotags. work with tagbar
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-
 
 
 " 去除taglist =>原因: 使用tagbar和ctrlp-funky可以直接快速跳转函数和变量位置,taglist有些多余

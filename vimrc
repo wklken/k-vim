@@ -18,7 +18,7 @@
 "
 "       -> 插件配置和具体设置在vimrc.bundles中
 "==========================================
- 
+
 "==========================================
 " Initial Plugin 加载插件
 "==========================================
@@ -304,94 +304,16 @@ map <C-l> <C-W>l
 " Go to home and end using capitalized directions
 noremap H ^
 noremap L $
-nnoremap <silent> K 3<C-y>
-nnoremap <silent> J 3<C-e>
-
-"Map ; to : and save a million keystrokes
-" ex mode commands made easy 用于快速进入命令行
-nnoremap ; :
-
+nnoremap <silent> K 4<C-y>
+nnoremap <silent> J 4<C-e>
 
 " 搜索相关
 " 进入搜索Use sane regexes"
 nnoremap / /\v
 vnoremap / /\v
 
-"Keep search pattern at the center of the screen."
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
-nnoremap <silent> * *zz
-nnoremap <silent> # #zz
-nnoremap <silent> g* g*zz
-
-" switch # *
-nnoremap # *
-nnoremap * #
-
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
-
-" --------tab/buffer相关
-
-"Use arrow key to change buffer"
-" TODO: 如何跳转到确定的buffer?
-" :b1 :b2   :bf :bl
-nnoremap [b :bprevious<cr>
-nnoremap ]b :bnext<cr>
-noremap <left> :bp<CR>
-noremap <right> :bn<CR>
-
-
-" tab 操作
-" TODO: ctrl + n 变成切换tab的方法
-" http://vim.wikia.com/wiki/Alternative_tab_navigation
-" http://stackoverflow.com/questions/2005214/switching-to-a-particular-tab-in-vim
-"map <C-2> 2gt
-map <leader>th :tabfirst<cr>
-map <leader>tl :tablast<cr>
-
-map <leader>tj :tabnext<cr>
-map <leader>tk :tabprev<cr>
-map <leader>tn :tabnext<cr>
-map <leader>tp :tabprev<cr>
-
-map <leader>te :tabedit<cr>
-map <leader>td :tabclose<cr>
-map <leader>tm :tabm<cr>
-
-
-" 新建tab  Ctrl+t
-nnoremap <C-t>     :tabnew<CR>
-inoremap <C-t>     <Esc>:tabnew<CR>
-" TODO: 配置成功这里, 切换更方便, 两个键
-" nnoremap <C-S-tab> :tabprevious<CR>
-" nnoremap <C-tab>   :tabnext<CR>
-" inoremap <C-S-tab> <Esc>:tabprevious<CR>i
-" inoremap <C-tab>   <Esc>:tabnext<CR>i
-" nnoremap <C-Left> :tabprevious<CR>
-" nnoremap <C-Right> :tabnext<CR>
-
-" normal模式下切换到确切的tab
-noremap <leader>1 1gt
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
-noremap <leader>0 :tablast<cr>
-
-" Toggles between the active and last active tab "
-" The first tab is always 1 "
-let g:last_active_tab = 1
-" nnoremap <leader>gt :execute 'tabnext ' . g:last_active_tab<cr>
-" nnoremap <silent> <c-o> :execute 'tabnext ' . g:last_active_tab<cr>
-" vnoremap <silent> <c-o> :execute 'tabnext ' . g:last_active_tab<cr>
-nnoremap <silent> <leader>tt :execute 'tabnext ' . g:last_active_tab<cr>
-vnoremap <silent> <leader>tt :execute 'tabnext ' . g:last_active_tab<cr>
-autocmd TabLeave * let g:last_active_tab = tabpagenr()
 
 
 " ------- 选中及操作改键
@@ -406,29 +328,16 @@ map Y y$
 " select all
 map <Leader>sa ggVG"
 
-" select block
-nnoremap <leader>v V`}
-
-" w!! to sudo & write a file
-cmap w!! w !sudo tee >/dev/null %
-
 " kj 替换 Esc
 inoremap kj <Esc>
 
 " remap U to <C-r> for easier redo
 nnoremap U <C-r>
 
-" Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 "==========================================
 " FileType Settings  文件类型设置
 "==========================================
-
-" Python 文件的一般设置，比如不要 tab 等
-autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
-autocmd FileType ruby set tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
 
 " 保存python文件时删除多余空格
 fun! <SID>StripTrailingWhitespaces()
@@ -437,7 +346,7 @@ fun! <SID>StripTrailingWhitespaces()
     %s/\s\+$//e
     call cursor(l, c)
 endfun
-autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+autocmd FileType c,cc,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 
 
 " 定义函数AutoSetFileHead，自动插入文件头
@@ -503,7 +412,7 @@ highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
- 
+
 augroup filetype
     autocmd! BufRead,BufNewFile BUILD set filetype=blade
 augroup end
