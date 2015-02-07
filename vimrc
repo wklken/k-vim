@@ -245,10 +245,6 @@ endif
 "==========================================
 
 " 主要按键重定义
-
-" " 关闭方向键, 强迫自己用 hjkl
-" map <Left> <Nop>
-" map <Right> <Nop>
 " map <Up> <Nop>
 " map <Down> <Nop>
 "
