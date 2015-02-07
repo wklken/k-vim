@@ -246,11 +246,15 @@ endif
 
 " 主要按键重定义
 
-" 关闭方向键, 强迫自己用 hjkl
-map <Left> <Nop>
-map <Right> <Nop>
-map <Up> <Nop>
-map <Down> <Nop>
+" " 关闭方向键, 强迫自己用 hjkl
+" map <Left> <Nop>
+" map <Right> <Nop>
+" map <Up> <Nop>
+" map <Down> <Nop>
+"
+" 设置ctrl+左右键切换缓冲区
+nnoremap <right> :bnext<cr>
+nnoremap <left> :bNext<cr>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳

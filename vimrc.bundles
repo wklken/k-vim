@@ -239,7 +239,6 @@ Bundle 'tomasr/molokai'
 "################### 快速导航 ###################
 "目录导航
 Bundle 'scrooloose/nerdtree'
-autocmd vimenter * NERDTree
 map <leader>n :NERDTreeToggle<CR>
 map <leader>m :NERDTreeFind<CR>
 let NERDTNERDTreeTogglereeHighlightCursorline=1
