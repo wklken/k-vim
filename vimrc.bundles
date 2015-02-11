@@ -37,7 +37,7 @@ map <leader>gs :IHS<CR>
 map <leader>gv :IHV<CR>
 
 
-Bundle 'fholgado/minibufexpl.vim'
+" Bundle 'fholgado/minibufexpl.vim'
 map <leader>1 :b1<CR>
 map <leader>2 :b2<CR>
 map <leader>3 :b3<CR>
@@ -189,19 +189,19 @@ Bundle 'kien/rainbow_parentheses.vim'
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
     \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['gray',    'DarkOrchid3'],
+    \ ['green',   'firebrick3'],
+    \ ['cyan',    'RoyalBlue3'],
+    \ ['red',     'SeaGreen3'],
+    \ ['magenta', 'DarkOrchid3'],
     \ ['brown',       'firebrick3'],
     \ ['gray',        'RoyalBlue3'],
     \ ['black',       'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['magenta', 'DarkOrchid3'],
     \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
+    \ ['green',   'RoyalBlue3'],
+    \ ['cyan',    'SeaGreen3'],
+    \ ['red',     'DarkOrchid3'],
     \ ['red',         'firebrick3'],
     \ ]
 let g:rbpt_max = 40
@@ -224,7 +224,7 @@ au Syntax * RainbowParenthesesLoadBraces
 
 "################### 显示增强-主题 ###################"
 
-"主题 solarized
+" 主题 solarized
 Bundle 'altercation/vim-colors-solarized'
 "let g:solarized_termcolors=256
 let g:solarized_termtrans=1
@@ -233,7 +233,7 @@ let g:solarized_visibility="normal"
 
 "主题 molokai
 Bundle 'tomasr/molokai'
-"let g:molokai_original = 1
+let g:molokai_original = 1
 
 
 "################### 快速导航 ###################

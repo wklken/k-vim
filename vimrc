@@ -271,17 +271,7 @@ nnoremap gj j
 noremap <F1> <Esc>"
 
 ""为方便复制，用<F2>开启/关闭行号显示:
-function! HideNumber()
-  if(&relativenumber == &number)
-    set relativenumber! number!
-  elseif(&number)
-    set number!
-  else
-    set relativenumber!
-  endif
-  set number?
-endfunc
-nnoremap <F2> :call HideNumber()<CR>
+nnoremap <F2> :set number! number?<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
               "set paste
@@ -389,12 +379,12 @@ if has("gui_running")
     set t_Co=256
 endif
 
-" theme主题
-set background=dark
+"theme主题
+"set background=dark
 "colorscheme solarized
-set t_Co=256
+"set t_Co=256
 
-"colorscheme molokai
+" colorscheme molokai
 colorscheme desert
 
 "设置标记一列的背景颜色和数字一行颜色一致
