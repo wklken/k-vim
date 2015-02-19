@@ -360,8 +360,8 @@ nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
 
 " switch # *
-nnoremap # *
-nnoremap * #
+" nnoremap # *
+" nnoremap * #
 
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
@@ -375,7 +375,11 @@ nnoremap [b :bprevious<cr>
 nnoremap ]b :bnext<cr>
 noremap <left> :bp<CR>
 noremap <right> :bn<CR>
+noremap :b :buffer
 
+" Add :E as :Explore and :Te as Texplore in commandline mode for open new tab in explorer
+cnoremap :E :Explore
+cnoremap :Te :Texplore
 
 " tab 操作
 " TODO: ctrl + n 变成切换tab的方法
@@ -439,7 +443,7 @@ vnoremap > >gv
 map Y y$
 
 " select all
-map <Leader>sa ggVG"
+map <leader>sa ggVG"
 
 " select block
 nnoremap <leader>v V`}
@@ -475,6 +479,12 @@ nnoremap U <C-r>
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+" 设置快捷键将选中文本块复制至系统剪贴板
+vnoremap <leader>y "+y
+" 设置快捷键将系统剪贴板内容粘贴至 vim
+nmap <leader>p "+p"
+ 
 
 "==========================================
 " FileType Settings  文件类型设置
