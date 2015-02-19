@@ -68,7 +68,7 @@ set shortmess=atI       " 启动的时候不显示那个援助索马里儿童的
 "set backupdir=/tmp/vimbk/
 
 " 取消备份。 视情况自己改
-set nobackup
+" set nobackup
 " 关闭交换文件
 set noswapfile
 
@@ -375,6 +375,7 @@ nnoremap [b :bprevious<cr>
 nnoremap ]b :bnext<cr>
 noremap <left> :bp<CR>
 noremap <right> :bn<CR>
+noremap :b :buffer
 
 
 " tab 操作
@@ -439,7 +440,7 @@ vnoremap > >gv
 map Y y$
 
 " select all
-map <Leader>sa ggVG"
+map <leader>sa ggVG"
 
 " select block
 nnoremap <leader>v V`}
@@ -475,6 +476,12 @@ nnoremap U <C-r>
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+" 设置快捷键将选中文本块复制至系统剪贴板
+vnoremap <leader>y "+y
+" 设置快捷键将系统剪贴板内容粘贴至 vim
+nmap <leader>p "+p"
+ 
 
 "==========================================
 " FileType Settings  文件类型设置
