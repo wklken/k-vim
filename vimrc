@@ -68,7 +68,7 @@ set shortmess=atI       " 启动的时候不显示那个援助索马里儿童的
 "set backupdir=/tmp/vimbk/
 
 " 取消备份。 视情况自己改
-" set nobackup
+set nobackup
 " 关闭交换文件
 set noswapfile
 
@@ -360,8 +360,8 @@ nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
 
 " switch # *
-nnoremap # *
-nnoremap * #
+" nnoremap # *
+" nnoremap * #
 
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
@@ -377,6 +377,9 @@ noremap <left> :bp<CR>
 noremap <right> :bn<CR>
 noremap :b :buffer
 
+" Add :E as :Explore and :Te as Texplore in commandline mode for open new tab in explorer
+cnoremap :E :Explore
+cnoremap :Te :Texplore
 
 " tab 操作
 " TODO: ctrl + n 变成切换tab的方法
