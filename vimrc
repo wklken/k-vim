@@ -366,6 +366,7 @@ nnoremap * #
 " for # indent, #号注释不切回行首
 autocmd BufRead *.py inoremap # X<c-h>#
 
+
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
 
