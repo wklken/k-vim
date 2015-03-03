@@ -363,6 +363,9 @@ nnoremap <silent> g* g*zz
 nnoremap # *
 nnoremap * #
 
+" for # indent, #号注释不切回行首
+autocmd BufRead *.py inoremap # X<c-h>#
+
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
 
@@ -551,7 +554,9 @@ set background=dark
 colorscheme solarized
 set t_Co=256
 
-"colorscheme molokai
+" colorscheme molokai
+" let g:molokai_original = 1
+" let g:rehash256 = 1
 "colorscheme desert
 
 "设置标记一列的背景颜色和数字一行颜色一致
