@@ -363,8 +363,8 @@ nnoremap <silent> g* g*zz
 nnoremap # *
 nnoremap * #
 
-" for # indent, #号注释不切回行首
-autocmd BufRead *.py inoremap # X<c-h>#
+" for # indent, python文件中输入新行时#号注释不切回行首
+autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
 
 
 " 去掉搜索高亮
