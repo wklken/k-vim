@@ -48,7 +48,7 @@ filetype plugin indent on
 "set guifont=Monaco:h20          " 字体 && 字号
 
 " history存储容量
-set history=2000
+set history=5000
 
 "检测文件类型
 filetype on
@@ -89,7 +89,7 @@ set cursorline          " 突出显示当前行
 
 "设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制
 "好处：误删什么的，如果以前屏幕打开，可以找回
-set t_ti= t_te=
+"set t_ti= t_te=
 
 
 "- 则点击光标不会换,用于复制
@@ -274,10 +274,10 @@ endif
 " 主要按键重定义
 
 " 关闭方向键, 强迫自己用 hjkl
-map <Left> <Nop>
-map <Right> <Nop>
-map <Up> <Nop>
-map <Down> <Nop>
+"map <Left> <Nop>
+"map <Right> <Nop>
+"map <Up> <Nop>
+"map <Down> <Nop>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -315,6 +315,10 @@ nnoremap <F4> :set wrap! wrap?<CR>
 set pastetoggle=<F5>            "    when in insert mode, press <F5> to go to
                                 "    paste mode, where you can paste mass data
                                 "    that won't be autoindented
+
+nmap <F11> :!find . -iname '*.c' -o -iname '*.cpp' -o -iname "*.cc" -o -iname '*.h' -o -iname '*.hpp' -o -iname "*.js" -o -iname "*.java" > cscope.files; 
+            \:!cscope -b -i cscope.files -f cscope.out<CR> 
+            \:cs kill -1<CR>:cs add cscope.out<CR>
 
 " disbale paste mode when leaving insert mode
 au InsertLeave * set nopaste
@@ -377,8 +381,8 @@ noremap <silent><leader>/ :nohls<CR>
 " :b1 :b2   :bf :bl
 nnoremap [b :bprevious<cr>
 nnoremap ]b :bnext<cr>
-noremap <left> :bp<CR>
-noremap <right> :bn<CR>
+"noremap <left> :bp<CR>
+"noremap <right> :bn<CR>
 
 
 " tab 操作
@@ -386,6 +390,7 @@ noremap <right> :bn<CR>
 " http://vim.wikia.com/wiki/Alternative_tab_navigation
 " http://stackoverflow.com/questions/2005214/switching-to-a-particular-tab-in-vim
 "map <C-2> 2gt
+map <leader>tN :tabnew<cr>
 map <leader>th :tabfirst<cr>
 map <leader>tl :tablast<cr>
 
@@ -400,8 +405,8 @@ map <leader>tm :tabm<cr>
 
 
 " 新建tab  Ctrl+t
-nnoremap <C-t>     :tabnew<CR>
-inoremap <C-t>     <Esc>:tabnew<CR>
+" nnoremap <C-t>     :tabnew<CR>
+" inoremap <C-t>     <Esc>:tabnew<CR>
 " TODO: 配置成功这里, 切换更方便, 两个键
 " nnoremap <C-S-tab> :tabprevious<CR>
 " nnoremap <C-tab>   :tabnext<CR>
@@ -487,6 +492,7 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 " Python 文件的一般设置，比如不要 tab 等
 autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
 autocmd FileType ruby set tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
+autocmd FileType javascript set tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
 
 " 保存python文件时删除多余空格
 fun! <SID>StripTrailingWhitespaces()
@@ -555,9 +561,7 @@ set background=dark
 colorscheme solarized
 set t_Co=256
 
-" colorscheme molokai
-" let g:molokai_original = 1
-" let g:rehash256 = 1
+"colorscheme molokai
 "colorscheme desert
 
 "设置标记一列的背景颜色和数字一行颜色一致
@@ -576,3 +580,83 @@ highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
 
+"cscope 
+if has("cscope")
+ set csprg=/usr/bin/cscope
+ set csto=0
+ set cst 
+ set nocsverb
+ " add any database in current directory
+ if filereadable("cscope.out")
+    cs add cscope.out
+ " else add database pointed to by environment
+    elseif $CSCOPE_DB != ""
+ cs add $CSCOPE_DB
+ endif
+ set csverb
+endif
+
+
+map <C-c> :cstag <C-R>=expand("<cword>")<CR><CR>
+:nnoremap <silent> <Leader>cs :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+:nnoremap <silent> <Leader>cg :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+:nnoremap <silent> <Leader>cc :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+:nnoremap <silent> <Leader>ct :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+:nnoremap <silent> <Leader>ce :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+:nnoremap <silent> <Leader>cf :cs find f <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+:nnoremap <silent> <Leader>ci :cs find i <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+:nnoremap <silent> <Leader>cd :cs find d <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+
+"nmap <slient> <leader>au :!cscope -b<CR>:cs reset<CR><CR>
+
+"command-t
+
+">>>>>>>>>>Options>>>>>>>>>>>>>>>
+"
+"Command-T Options
+let g:CommandTMaxFiles=500000
+let g:CommandTMaxDepth=50
+let g:CommandTMaxCachedDirectories=1
+let g:CommandTMaxHeight=50
+let g:CommandTInputDebounce=50	"milliseconds
+let g:CommandTFileScan0ner='watchman'
+
+let g:CommandTTraverseSCM='file'
+let g:CommandTSCMDirectories='.git,.hg,.svn'	"Only useful when CommandTTraverseSCM be set as 'file' or 'dir'
+
+let g:CommandTMinHeight=0
+
+let g:CommandTAlwaysShowDotFiles=0
+let g:CommandTNeverShowDotFiles=0
+let g:CommandTScanDotDirectories=0	"Do NOT scan dot dir at scan time
+
+let g:CommandTMatchWindowAtTop=0
+let g:CommandTMatchWindowReverse=0
+let g:CommandTTagIncludeFilenames=0
+""let g:CommandTHighlightColor
+let g:CommandTIgnoreCase=1
+""let g:CommandTSmartCase
+
+""let g:CommandTWildIgnore=&wildignore . "*.o,*.obj,**/test/*,test/**,**/docs/*"	"Ignore specific file or specific files in such dir
+let g:CommandTWildIgnore=&wildignore . "*.o,*.obj"
+
+""""""commands
+:nnoremap <silent> <Leader>t :CommandT<CR>		 "Default & can be remapped as you want
+:nnoremap <silent> <Leader>b :CommandTBuffer<CR> "Default & can be remapped as you want
+:nnoremap <silent> <leader>b :CommandTMRU<CR>	 "Matches will show in MRU(most recently used) order
+:nnoremap <silent> <leader>p :CommandTJump<CR>	 "Bring up the jump list window, jumps can persist across vim sessions
+:nnoremap <silent> <leader>f :CommandTFlush<CR>	 "Causing the dir to be rescanned for newly added/deleted paths 
+
+
+"fix . as keyword issue
+"https://github.com/wklken/k-vim/issues/49
+au BufWinEnter set isk -=.
