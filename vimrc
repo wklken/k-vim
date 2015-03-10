@@ -294,8 +294,8 @@ map <C-l> <C-W>l
 " Go to home and end using capitalized directions
 noremap H ^
 noremap L $
-nnoremap <silent> K 4<C-y>
-nnoremap <silent> J 4<C-e>
+nnoremap <silent> K 5<C-y>
+nnoremap <silent> J 5<C-e>
 
 " 搜索相关
 " 进入搜索Use sane regexes"
@@ -380,12 +380,22 @@ if has("gui_running")
 endif
 
 "theme主题
-"set background=dark
+" colorscheme solarized
+" set t_Co=256
+" if has('gui_running')
+    " set background=light
+" else
+    " set background=dark
+" endif
+
+" 配色方案
 "colorscheme solarized
+"colorscheme molokai
+"colorscheme phd
 "set t_Co=256
 
 " colorscheme molokai
-colorscheme desert
+" colorscheme desert
 
 "设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr

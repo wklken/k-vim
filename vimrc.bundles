@@ -226,15 +226,15 @@ au Syntax * RainbowParenthesesLoadBraces
 
 " 主题 solarized
 Bundle 'altercation/vim-colors-solarized'
-"let g:solarized_termcolors=256
+let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 let g:solarized_contrast="normal"
 let g:solarized_visibility="normal"
 
-"主题 molokai
-Bundle 'tomasr/molokai'
-let g:molokai_original = 1
-
+" "主题 molokai
+" Bundle 'tomasr/molokai'
+" let g:molokai_original = 1
+" let g:rehash256 = 1
 
 "################### 快速导航 ###################
 "目录导航
