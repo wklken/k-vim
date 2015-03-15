@@ -517,8 +517,41 @@ function! AutoSetFileHead()
     normal o
 endfunc
 
-" F10 to run python script
-nnoremap <buffer> <F10> :exec '!python' shellescape(@%, 1)<cr>
+"C，C++, shell, python, javascript, ruby...等按F10运行
+map <F10> :call CompileRun()<CR>
+func! CompileRun()
+    exec "w"
+    if &filetype == 'c'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+        exec "!rm ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+        exec "!rm ./%<"
+    elseif &filetype == 'java'
+        exec "!javac %"
+        exec "!time java %<"
+        exec "!rm ./%<.class"
+    elseif &filetype == 'sh'
+        exec "!time bash %"
+    elseif &filetype == 'python'
+        exec "!time python %"
+    elseif &filetype == 'html'
+        exec "!chrome % &"
+    elseif &filetype == 'go'
+        exec "!go build %<"
+        exec "!time go run %"
+    elseif &filetype == 'mkd' "MarkDown 解决方案为VIM + Chrome浏览器的MarkDown Preview Plus插件，保存后实时预览
+        exec "!chrome % &"
+    elseif &filetype == 'javascript'
+        exec "!time node %"
+    elseif &filetype == 'coffee'
+        exec "!time coffee %"
+    elseif &filetype == 'ruby'
+        exec "!time ruby %"
+    endif
+endfunc
 
 " set some keyword to highlight
 if has("autocmd")
@@ -537,7 +570,7 @@ endif
 if has("gui_running")
     set guifont=Monaco:h14
     if has("gui_gtk2")   "GTK2
-        set guifont=Monaco\ 12, Monospace\ 12
+        set guifont=Monaco\ 12,Monospace\ 12
     endif
     set guioptions-=T
     set guioptions+=e
