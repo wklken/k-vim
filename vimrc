@@ -72,16 +72,7 @@ set shortmess=atI       " 启动的时候不显示那个援助索马里儿童的
 set nobackup
 " 关闭交换文件
 set noswapfile
-
-
-"create undo file
-if has('persistent_undo')
-  set undolevels=1000         " How many undos
-  set undoreload=10000        " number of lines to save for undo
-  set undofile                " So is persistent undo ...
-  set undodir=/tmp/vimundo/
-endif
-
+ 
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 "- 则点击光标不会换,用于复制
@@ -188,6 +179,22 @@ set ttyfast
 " 00x增减数字时使用十进制
 set nrformats=
 
+" 相对行号      行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
+set relativenumber number
+au FocusLost * :set norelativenumber number
+au FocusGained * :set relativenumber
+" 插入模式下用绝对行号, 普通模式下用相对
+autocmd InsertEnter * :set norelativenumber number
+autocmd InsertLeave * :set relativenumber
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set norelativenumber number
+  else
+    set relativenumber
+  endif
+endfunc
+nnoremap <C-n> :call NumberToggle()<cr>
+
 "==========================================
 " FileEncode Settings 文件编码,格式
 "==========================================
@@ -240,18 +247,10 @@ inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
-
+  
 "==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
-
-" 主要按键重定义
-" map <Up> <Nop>
-" map <Down> <Nop>
-"
-" 设置ctrl+左右键切换缓冲区
-nnoremap <right> :bnext<cr>
-nnoremap <left> :bNext<cr>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -272,8 +271,19 @@ set wrap
 " I can type :help on my own, thanks.  Protect your fat fingers from the evils of <F1>
 noremap <F1> <Esc>
 
-
-nnoremap <F2> :set number! number?<CR>
+""为方便复制，用<F2>开启/关闭行号显示:
+function! HideNumber()
+  if(&relativenumber == &number)
+    set relativenumber! number!
+  elseif(&number)
+    set number!
+  else
+    set relativenumber!
+  endif
+  set number?
+endfunc
+nnoremap <F2> :call HideNumber()<CR>
+" nnoremap <F2> :set number! number?<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
               "set paste
@@ -296,13 +306,8 @@ map <C-l> <C-W>l
 " Go to home and end using capitalized directions
 noremap H ^
 noremap L $
-nnoremap <silent> K 5<C-y>
-nnoremap <silent> J 5<C-e>
-
-" 搜索相关
-" 进入搜索Use sane regexes"
-nnoremap / /\v
-vnoremap / /\v
+nnoremap <C-e> 5<C-e>
+nnoremap <C-y> 5<C-y>
 
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
@@ -313,12 +318,6 @@ noremap <silent><leader>/ :nohls<CR>
 "Reselect visual block after indent/outdent.调整缩进后自动选中，方便再次操作
 vnoremap < <gv
 vnoremap > >gv
-
-" y$ -> Y Make Y behave like other capitals
-map Y y$
-
-" select all
-map <Leader>sa ggVG"
 
 " kj 替换 Esc
 inoremap kj <Esc>
@@ -422,7 +421,17 @@ augroup end
 function! Blade(...)
   let l:old_makeprg = &makeprg setlocal makeprg=blade execute "make " . join(a:000) let &makeprg=old_makeprg
 endfunction
+
 command! -complete=dir -nargs=* Blade call Blade('<args>')
 
 set t_ti= t_te=
+
+" " Condition should identify terminal in question so "
+" " that it won't change anything for terminals without this problem "
+" for [key, code] in [["<F1>", "\eOP"],
+                    " \["<F2>", "\eOQ"],
+                    " \["<F5>", "\e[15~"],
+                    " \]
+    " execute "set" key."=".code
+" endfor
 
