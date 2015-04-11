@@ -179,21 +179,21 @@ set ttyfast
 " 00x增减数字时使用十进制
 set nrformats=
 
-" 相对行号      行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
-set relativenumber number
-au FocusLost * :set norelativenumber number
-au FocusGained * :set relativenumber
-" 插入模式下用绝对行号, 普通模式下用相对
-autocmd InsertEnter * :set norelativenumber number
-autocmd InsertLeave * :set relativenumber
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set norelativenumber number
-  else
-    set relativenumber
-  endif
-endfunc
-nnoremap <C-n> :call NumberToggle()<cr>
+" " 相对行号      行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
+" set relativenumber number
+" au FocusLost * :set norelativenumber number
+" au FocusGained * :set relativenumber
+" " 插入模式下用绝对行号, 普通模式下用相对
+" autocmd InsertEnter * :set norelativenumber number
+" autocmd InsertLeave * :set relativenumber
+" function! NumberToggle()
+  " if(&relativenumber == 1)
+    " set norelativenumber number
+  " else
+    " set relativenumber
+  " endif
+" endfunc
+" nnoremap <C-n> :call NumberToggle()<cr>
 
 "==========================================
 " FileEncode Settings 文件编码,格式
@@ -272,18 +272,18 @@ set wrap
 noremap <F1> <Esc>
 
 ""为方便复制，用<F2>开启/关闭行号显示:
-function! HideNumber()
-  if(&relativenumber == &number)
-    set relativenumber! number!
-  elseif(&number)
-    set number!
-  else
-    set relativenumber!
-  endif
-  set number?
-endfunc
-nnoremap <F2> :call HideNumber()<CR>
-" nnoremap <F2> :set number! number?<CR>
+" function! HideNumber()
+  " if(&relativenumber == &number)
+    " set relativenumber! number!
+  " elseif(&number)
+    " set number!
+  " else
+    " set relativenumber!
+  " endif
+  " set number?
+" endfunc
+" nnoremap <F2> :call HideNumber()<CR>
+nnoremap <F2> :set number! number?<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
               "set paste
