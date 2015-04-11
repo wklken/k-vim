@@ -306,8 +306,8 @@ map <C-l> <C-W>l
 " Go to home and end using capitalized directions
 noremap H ^
 noremap L $
-nnoremap <C-e> 5<C-e>
-nnoremap <C-y> 5<C-y>
+nnoremap K 5<C-y>
+nnoremap J 5<C-e>
 
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
@@ -390,13 +390,13 @@ endif
 " endif
 
 " 配色方案
-"colorscheme solarized
+" colorscheme solarized
 "colorscheme molokai
 "colorscheme phd
 "set t_Co=256
 
 " colorscheme molokai
-" colorscheme desert
+colorscheme desert
 
 "设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr
