@@ -1,3 +1,4 @@
+
 "==========================================
 " Author:  wklken
 " Version: 8.0
@@ -266,11 +267,12 @@ nnoremap gj j
 " F4 换行开关
 " F5 粘贴模式paste_mode开关,用于有格式的代码粘贴
 " F6 语法开关，关闭语法可以加快大文件的展示
+set wrap
 
 " I can type :help on my own, thanks.  Protect your fat fingers from the evils of <F1>
-noremap <F1> <Esc>"
+noremap <F1> <Esc>
 
-""为方便复制，用<F2>开启/关闭行号显示:
+
 nnoremap <F2> :set number! number?<CR>
 nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
