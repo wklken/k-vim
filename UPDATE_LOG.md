@@ -1,6 +1,52 @@
 更新日志
 ================================
 
+## 2015-05-02
+
+version: 9.0
+
+    1. 新增依赖ag(the_silver_searcher)
+
+    安装 [the_silver_searcher](https://github.com/ggreer/the_silver_searcher#installing)
+
+    具体见文档
+
+    2. 引入 thinca/vim-quickrun
+
+        2.1 以message的方式展示, 同原先的F10行为, 按回车过掉消息
+        2.2    F10 运行 / ,r  运行
+
+    2. 引入dyng/ctrlsf.vim, 类似 sublimetext的全局搜索
+
+        2.1 依赖于ag的全局搜索
+        2.2 将光标挪到单词, 快捷键\  - 进入全局搜索, 移入分屏界面, o/t/T/q操作
+
+
+    3. 代码折叠
+
+        3.1 <leader>zz 折叠/打开所有代码toggle(本次新增配置)
+        3.2 za 当前光标所在区域折叠toggle(vim默认的)
+
+    4. syntastic语法检查
+
+        4.1 修正语法检查错误高亮, 精确到具体错误单词
+        4.2 开启python的pep8, 允许忽略某些warning, vimrc.bundles: line 40
+        4.3 <leader>s  打开当前文件所有语法错误列表(新增配置)
+
+    5.  easymotion
+
+        5.1 <leader><leader>.  重复上一次easymotion命令, 更高效(新增配置)
+
+    6. 修改RainbowParentheses, 防止黑色括号出现
+
+    7. 修改vim-expand-region快捷键
+
+        7.1 v 扩增选中范围
+        7.2 V 缩小选中范围
+
+    8. 新增主题tomorrow
+
+
 注: 8.0后面将开始使用小版本号
 
 ## 2014-10-02

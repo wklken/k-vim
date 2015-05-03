@@ -1,17 +1,14 @@
 k-vim
 =======================
 
-> VERSION: 8.0
+> VERSION: 9.0
 
-> LAST_UPDATE_TIME: 2014-10-02
+> LAST_UPDATE_TIME: 2015-05-02
 
-> 本次更新: 更为强大的tab操作/更全面的自动补全
-
+> 本次更新: 更强大的搜索, 快速运行等
 
 
 详细 [更新日志](https://github.com/wklken/k-vim/blob/master/UPDATE_LOG.md)
-
-
 
 # 目标
 
@@ -21,7 +18,7 @@ k-vim
     1. 结构划分良好, 中文注释
     2. 高度可配置修改
     3. 一键安装少折腾
-    4. 更加符合直觉的键位操作
+    4. 更加符合直觉的键位操作(*)
 
 适用人群：
 
@@ -53,8 +50,6 @@ PS: 服务器端不带插件`k-vim`的简化版本(curl直接设置vimrc即可),
 5. 提issues
 
 
-后面图片有点多，展示有点慢，截得不是很专业，耐心看完:)
-
 ---------------------------------
 
 ---------------------------------
@@ -81,18 +76,24 @@ molokai主题
 
 2. 安装依赖包
 
+        # ctags, ag(the_silver_searcher)
+
         2.1 系统依赖
 
         # ubuntu
         sudo apt-get install ctags
         sudo apt-get install build-essential cmake python-dev  #编译YCM自动补全插件依赖
+        sudo apt-get install silversearcher-ag
 
         # centos
         sudo yum install python-devel.x86_64
         sudo yum groupinstall 'Development Tools'
+        sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+        sudo yum install the_silver_searcher
 
         # mac
-        #brew install ctags
+        brew install ctags
+        brew install the_silver_searcher
 
 
         2.2 使用Python
@@ -100,7 +101,7 @@ molokai主题
         sudo pip install pylint
         sudo pip install pep8
 
-        2.3 使用Javascript
+        2.3 如果使用Javascript, 不需要的跳过
         # 安装jshint和jslint,用于javascript语法检查
         # 需要nodejs支持,各个系统安装见文档 https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 
@@ -113,8 +114,6 @@ molokai主题
         brew install node
         npm install jshint -g
         npm install jslint -g
-
-
 
 
 3. 安装
@@ -133,8 +132,6 @@ molokai主题
 4. 可能遇到的问题:
 
 
-
-
     - 编译自动补全YouCompleteMe(耗时略长, 但绝对值得)
 
 
@@ -142,11 +139,9 @@ molokai主题
             ./install.sh --clang-completer
 
 
-
     有任何问题见YCM[文档](https://github.com/Valloric/YouCompleteMe)
 
     这个插件需要Vim 7.3.584,所以,如果vim版本太低,需要[编译安装](https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source)
-
 
 
     - 相对行号
@@ -167,6 +162,7 @@ molokai主题
 
         which gotags
         which gocode
+
     - Javascript不能自动补全
     `vimrc.bundles`中`marijnh/tern_for_vim`默认没有打开, 需要打开安装插件, 需要依赖nodejs&npm, 具体见文档 [tern_for_vim](https://github.com/marijnh/tern_for_vim)
 
@@ -184,7 +180,6 @@ molokai主题
 
 
     - 其他问题: 键位/展现等存在问题, 使用`二分法`缩小范围, 排查到问题根源, 修改配置
-
 
 
 5. 安装/卸载/更新插件：
@@ -244,7 +239,7 @@ molokai主题
     F6 syntax on/off,语法开关，关闭语法可以加快大文件的展示
 
     F9 tagbar
-    F10 运行当前python
+    F10 运行当前文件(quickrun)
 
     5. 分屏移动
 
@@ -306,6 +301,7 @@ molokai主题
     <enter>   normal模式下回车选中当前项
 
 
+
     更多优化:
         1. j/k 对于换行展示移动更友好
         2. HL 修改成 ^$, 更方便在同行移动
@@ -319,11 +315,7 @@ molokai主题
         10. 交换`和', '能跳转到准确行列位置
         11. python/ruby 等, 保存时自动去行尾空白
         12. 统一所有分屏打开的操作位v/s[nerdtree/ctrlspace] (特殊ctrlp ctrl+v/x)
-
-    废弃:
-    t         新起一行，下面，不进入插入模式
-    T         新起一行，上面
-
+        13. `,zz`       代码折叠toggle
 
 ---------------------------------
 
@@ -348,9 +340,12 @@ molokai主题
 
     修改了下标记一列的背景色,原有的背景色在solarized下太难看了…..
 
+        ,s  列出/隐藏当前文件所有错误列表
+
     演示
 
     ![syntastic](https://github.com/wklken/gallery/blob/master/vim/syntastic.png?raw=true)
+
 
 > 自动补全
 
@@ -444,7 +439,7 @@ molokai主题
 
     必装，很给力的功能，快速给词加环绕符号,例如引号, 注意(括号, 左括号会加空格, 右括号不会)
 
-    repeat进行增强,'.'可以重复使用命令
+    repeat进行增强,'.'可以重复使用命令 (ys=you surround)
 
         [d]
         cs"'
@@ -462,6 +457,9 @@ molokai主题
         cst"
         <a>abc</a>  -> "abc"
 
+        veeS"
+        hello world -> "hello world"
+
         ys$" 当前到行尾, 引号引住
 
 
@@ -469,6 +467,10 @@ molokai主题
     演示
 
     ![surround](https://github.com/wklken/gallery/blob/master/vim/surround.gif?raw=true)
+
+4. ####快速运行 [vim-quickrun](https://github.com/thinca/vim-quickrun)
+
+        F10或<leader>r  快速运行当前文件
 
 
 3. ####去行尾空格 [bronson/vim-trailing-whitespace](https://github.com/bronson/vim-trailing-whitespace)
@@ -507,6 +509,7 @@ molokai主题
         ,,k      快速移动到上面哪行
         ,,l      本行, 向后快速移动
         ,,h      本行, 向前快速移动
+        ,,.      重复上一次easymotion命令
 
     演示
 
@@ -537,8 +540,8 @@ molokai主题
     视图模式下可伸缩选中部分，用于快速选中某些块
 
         [sd]
-        + 增加选中范围(+/=按键)
-        _ 减少选中范围(_/-按键)
+        v 增加选中范围
+        V 减少选中范围
 
     演示（直接取链到其github图)
 
@@ -622,6 +625,18 @@ molokai主题
         ,fu   进入当前文件函数搜索
         ,fU   搜索光标下单词对应函数
 
+2. ####全局搜索插件(类sumlimetext) [dyng/ctrlsf.vim](https://github.com/dyng/ctrlsf.vim)
+
+    解决了重构代码时需要修改多处的问题
+
+        光标移动到单词, 按\ 进入全局搜索
+
+        进入左侧后的操作:
+
+                    回车/o, 打开
+                    t - 在tab中打开(建议)
+                    T - Like t but focus CtrlSF window instead of opened new tab.
+                    q - Quit CtrlSF window.
 
 
 2. ####git 常用操作 [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
@@ -678,6 +693,10 @@ molokai主题
 5. ####[tomasr/molokai](https://github.com/tomasr/molokai)
 
    用sublime text2的同学应该很熟悉, 另一个主题,可选,偶尔换换味道
+
+6. ####[chriskempson/vim-tomorrow-theme](https://github.com/chriskempson/vim-tomorrow-theme)
+
+   另一款经典主题
 
 默认值提供solarized和molokai主题，其他主题需自行配置安装
 
@@ -768,6 +787,8 @@ src="https://raw.github.com/szw/vim-ctrlspace/master/gfx/screen_small.png" />
 4. ####Tag [majutsushi/tagbar](https://github.com/majutsushi/tagbar)
 
     必装,标签导航,纬度和taglist不同, taglist的替代者
+
+    tagbar针对而一些语言的文档https://github.com/majutsushi/tagbar/wiki
 
     注意:之前版本有装taglist,决定用tagbar替代,taglist的配置注解未删除,需要的自行打开
 
@@ -875,66 +896,56 @@ src="https://raw.github.com/szw/vim-ctrlspace/master/gfx/screen_small.png" />
 
 详细 [更新日志](https://github.com/wklken/k-vim/blob/master/UPDATE_LOG.md)
 
-2014-10-02
+version: 9.0
 
-version: 8.0
+    1. 新增依赖ag(the_silver_searcher)
 
-    1. 修复YCM不能自动提示Ultisnips代码片段的问题
-       重大问题, 生产力得到再次提升:)
-       注意: 自定义snippets, 写错一个, 就会导致YCM不提示所有的snippets
+    安装 [the_silver_searcher](https://github.com/ggreer/the_silver_searcher#installing)
 
-    2. tab增强
-       2.1 新增tab操作快捷键, 详见文档
-       2.2 增加插件 `jistr/vim-nerdtree-tabs`, 所有tab使用同一个nerdtree
-       2.3 增加插件 `szw/vim-ctrlspace`, 更强大的buffer/tab操作-切换
-       由于tab增强带来的影响:
-       - 去掉了t/T新增一行的快捷键(低频操作, 后续可以考虑配置到其他键位)
+    具体见文档
 
-    3. 去除`minibuffer`插件
-       配置还留着, 需要的自己解开, 但是ctrlspace其实可以完爆这个功能
+    2. 引入 thinca/vim-quickrun
 
-    4. 优化`scrooloose/nerdcommenter`配置
-       注解加空格, 以及新增键位
+        2.1 以message的方式展示, 同原先的F10行为, 按回车过掉消息
+        2.2    F10 运行 / ,r  运行
 
-    5. 增加插件 `kshenoy/vim-signature`
-       mark-跳转更加方便, 修复与保存自动去行尾空白功能的冲突
+    2. 引入dyng/ctrlsf.vim, 类似 sublimetext的全局搜索
 
-    6. 对齐插件变更, 使用`junegunn/vim-easy-align` 替换掉 `godlygeek/tabular`
-
-    7. 增加插件 `jelera/vim-javascript-syntax`
-       更丰富的javascript语法高亮
-
-    8. 去除插件 `gorodinskiy/vim-coloresque`
-       这货有坑, 使用频率低 see issue https://github.com/wklken/k-vim/issues/49
-
-    9. 新增自定义snippets
-       位置 ~/.vim/UltiSnips/
-
-    10. 修复YCM不能跳转到函数/类等定义处的问题
-       ,jd/,gd
-
-    11. 重写README
-
-    12. easymothion
-        增加快速hjkl移动快捷键
+        2.1 依赖于ag的全局搜索
+        2.2 将光标挪到单词, 快捷键\  - 进入全局搜索, 移入分屏界面, o/t/T/q操作
 
 
+    3. 代码折叠
+
+        3.1 <leader>zz 折叠/打开所有代码toggle(本次新增配置)
+        3.2 za 当前光标所在区域折叠toggle(vim默认的)
+
+    4. syntastic语法检查
+
+        4.1 修正语法检查错误高亮, 精确到具体错误单词
+        4.2 开启python的pep8, 允许忽略某些warning, vimrc.bundles: line 40
+        4.3 <leader>s  打开当前文件所有语法错误列表(新增配置)
+
+    5.  easymotion
+
+        5.1 <leader><leader>.  重复上一次easymotion命令, 更高效(新增配置)
+
+    6. 修改RainbowParentheses, 防止黑色括号出现
+
+    7. 修改vim-expand-region快捷键
+
+        7.1 v 扩增选中范围
+        7.2 V 缩小选中范围
+
+    8. 新增主题tomorrow
+
+### TODO
+
+1. 语言插件集合, 语法增强 https://github.com/sheerun/vim-polyglot
 
 ### Contributors
 
 thx a lot. 可以给我提pull request:)
-
-- [wklken](https://github.com/wklken)
-
-- [fangwentong](https://github.com/fangwentong)
-
-- [Garnel](https://github.com/Garnel)
-
-- [spacewander](https://github.com/spacewander)
-
-- [ruanyl](https://github.com/ruanyl)
-
-- [memoryboxes](https://github.com/memoryboxes)
 
 查看详情 [git-contributors](https://github.com/wklken/k-vim/graphs/contributors)
 
@@ -957,7 +968,9 @@ thx a lot. 可以给我提pull request:)
 
 ### Donation
 
-You can Buy me a coffee:)  [link](http://www.wklken.me/pages/donation.html)
+如果你认为对你有所帮助, You can Buy me a coffee:)
+
+![donation](https://raw.githubusercontent.com/wklken/gallery/master/donation/donation.png)
 
 ------------------------
 ------------------------

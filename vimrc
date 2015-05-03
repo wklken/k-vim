@@ -1,11 +1,11 @@
 "==========================================
 " Author:  wklken
-" Version: 8.0
+" Version: 8.1
 " Email: wklken@yeah.net
-" BlogPost: http://wklken.me
+" BlogPost: http://www.wklken.me
 " ReadMe: README.md
 " Donation: http://www.wklken.me/pages/donation.html
-" Last_modify: 2014-10-02
+" Last_modify: 2015-05-02
 " Sections:
 "       -> Initial Plugin 加载插件
 "       -> General Settings 基础设置
@@ -18,7 +18,7 @@
 "
 "       -> 插件配置和具体设置在vimrc.bundles中
 "==========================================
- 
+
 "==========================================
 " Initial Plugin 加载插件
 "==========================================
@@ -173,6 +173,18 @@ set foldenable
 " marker    使用标记进行折叠, 默认标记是 {{{ 和 }}}
 set foldmethod=indent
 set foldlevel=99
+" 代码折叠自定义快捷键
+let g:FoldMethod = 0
+map <leader>zz :call ToggleFold()<cr>
+fun! ToggleFold()
+    if g:FoldMethod == 0
+        exe "normal! zM"
+        let g:FoldMethod = 1
+    else
+        exe "normal! zR"
+        let g:FoldMethod = 0
+    endif
+endfun
 
 " 缩进配置
 
@@ -517,41 +529,6 @@ function! AutoSetFileHead()
     normal o
 endfunc
 
-"C，C++, shell, python, javascript, ruby...等按F10运行
-map <F10> :call CompileRun()<CR>
-func! CompileRun()
-    exec "w"
-    if &filetype == 'c'
-        exec "!g++ % -o %<"
-        exec "!time ./%<"
-        exec "!rm ./%<"
-    elseif &filetype == 'cpp'
-        exec "!g++ % -o %<"
-        exec "!time ./%<"
-        exec "!rm ./%<"
-    elseif &filetype == 'java'
-        exec "!javac %"
-        exec "!time java %<"
-        exec "!rm ./%<.class"
-    elseif &filetype == 'sh'
-        exec "!time bash %"
-    elseif &filetype == 'python'
-        exec "!time python %"
-    elseif &filetype == 'html'
-        exec "!chrome % &"
-    elseif &filetype == 'go'
-        exec "!go build %<"
-        exec "!time go run %"
-    elseif &filetype == 'mkd' "MarkDown 解决方案为VIM + Chrome浏览器的MarkDown Preview Plus插件，保存后实时预览
-        exec "!chrome % &"
-    elseif &filetype == 'javascript'
-        exec "!time node %"
-    elseif &filetype == 'coffee'
-        exec "!time coffee %"
-    elseif &filetype == 'ruby'
-        exec "!time ruby %"
-    endif
-endfunc
 
 " set some keyword to highlight
 if has("autocmd")
@@ -585,13 +562,14 @@ endif
 
 " theme主题
 set background=dark
-colorscheme solarized
 set t_Co=256
-
+colorscheme solarized
 " colorscheme molokai
-" let g:molokai_original = 1
-" let g:rehash256 = 1
-"colorscheme desert
+" colorscheme Tomorrow-Night
+" colorscheme Tomorrow-Night-Bright
+" colorscheme desert
+
+
 
 "设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr
