@@ -434,4 +434,15 @@ set t_ti= t_te=
                     " \]
     " execute "set" key."=".code
 " endfor
+"
+" highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+" match OverLength /\%81v.\+/
+
+"""""" copy to buffer
+vmap <C-c> :w! ~/.vimbuffer<CR>
+nmap <C-c> :.w! ~/.vimbuffer<CR>
+
+" paste from buffer
+map <C-p> :r ~/.vimbuffer<CR>
+
 
