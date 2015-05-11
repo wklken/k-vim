@@ -561,6 +561,8 @@ if has("gui_running")
 endif
 
 " theme主题
+
+let g:solarized_termcolors=256
 set background=dark
 set t_Co=256
 colorscheme solarized
