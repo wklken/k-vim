@@ -48,85 +48,9 @@ map <leader>7 :b7<CR>
 map <leader>8 :b8<CR>
 map <leader>9 :b9<CR>
 
-"################### 代码自动补全 ###################
-" "迄今为止用到的最好的自动VIM自动补全插件
-" "重启 :YcmRestartServer
-" Bundle 'Valloric/YouCompleteMe'
-" "youcompleteme  默认tab  s-tab 和自动补全冲突
-" "let g:ycm_key_list_select_completion=['<c-n>']
-" let g:ycm_key_list_select_completion = ['<Down>']
-" "let g:ycm_key_list_previous_completion=['<c-p>']
-" let g:ycm_key_list_previous_completion = ['<Up>']
-" let g:ycm_complete_in_comments = 1  "在注释输入中也能补全
-" let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
-" let g:ycm_use_ultisnips_completer = 1 "提示UltiSnips
-" let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串中的文字也会被收入补全
-" let g:ycm_collect_identifiers_from_tags_files = 1
 
-" " let g:ycm_autoclose_preview_window_after_completion = 1
-" " let g:ycm_autoclose_preview_window_after_insertion = 1
-
-" " 跳转到定义处, 分屏打开
-" let g:ycm_goto_buffer_command = 'horizontal-split'
-" " nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
-" nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-" nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
-
-
-" "let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
-
-" " 引入，可以补全系统，以及python的第三方包 针对新老版本YCM做了兼容
-" " old version
-" if !empty(glob("~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"))
-    " let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"
-" endif
-" " new version
-" if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"))
-    " let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
-" endif
-
-" 直接触发自动补全 insert模式下
-" let g:ycm_key_invoke_completion = '<C-Space>'
-" 黑名单,不启用
-let g:ycm_filetype_blacklist = {
-      \ 'tagbar' : 1,
-      \ 'gitcommit' : 1,
-      \}
-
-
-" " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
-" Bundle 'SirVer/ultisnips'
-" " Snippets are separated from the engine. Add this if you want them:
-" Bundle 'honza/vim-snippets'
-
-" let g:UltiSnipsExpandTrigger       = "<tab>"
-" let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-" let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-" let g:UltiSnipsSnippetDirectories  = ['UltiSnips']
-" let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
-" " 定义存放代码片段的文件夹 .vim/UltiSnips下，使用自定义和默认的，将会的到全局，有冲突的会提示
-" " 进入对应filetype的snippets进行编辑
-" map <leader>us :UltiSnipsEdit<CR>
-
-" " ctrl+j/k 进行选择
-" func! g:JInYCM()
-    " if pumvisible()
-        " return "\<C-n>"
-    " else
-        " return "\<c-j>"
-    " endif
-" endfunction
-
-" func! g:KInYCM()
-    " if pumvisible()
-        " return "\<C-p>"
-    " else
-        " return "\<c-k>"
-    " endif
-" endfunction
-" inoremap <c-j> <c-r>=g:JInYCM()<cr>
-au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
-let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
+" au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
+" let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 
 
 "################# 自动补全 括号等 可以增加单双引号 ##############
@@ -135,7 +59,6 @@ let g:delimitMate_matchpairs = '(:)'
 
 
 "################### 快速编码 ###################
-
 " 快速注释 ,cc [,c+<Space>]
 Bundle 'scrooloose/nerdcommenter'
 let g:NERDSpaceDelims=1 " 让注释符与语句之间留一个空格 "
@@ -143,7 +66,6 @@ let g:NERDCompactSexyComs=1   " 多行注释时样子更好看 "
 
 
 "################### 功能相关 ###################
-
 " 文件搜索
 " change to https://github.com/ctrlpvim/ctrlp.vim
 Bundle 'ctrlpvim/ctrlp.vim'
@@ -173,17 +95,7 @@ let g:ctrlp_funky_syntax_highlight = 1
 let g:ctrlp_extensions = ['funky']
 
 
-" 同git diff,实时展示文件中修改的行
-" 只是不喜欢除了行号多一列, 默认关闭,gs时打开
-Bundle 'airblade/vim-gitgutter'
-let g:gitgutter_map_keys = 0
-let g:gitgutter_enabled = 0
-let g:gitgutter_highlight_lines = 1
-
-nnoremap <leader>git :GitGutterToggle<CR>
-
 "################### 显示增强 ###################
-
 "括号显示增强
 Bundle 'kien/rainbow_parentheses.vim'
 let g:rbpt_colorpairs = [
@@ -211,25 +123,14 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
-" 代码缩进
-" https://github.com/nathanaelkane/vim-indent-guides
-"Bundle 'nathanaelkane/vim-indent-guides'
-"let g:indent_guides_auto_colors = 0
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
-"hi IndentGuidesOdd  guibg=red   ctermbg=3
-"hi IndentGuidesEven guibg=green ctermbg=4
-"hi IndentGuidesOdd  ctermbg=black
-"hi IndentGuidesEven ctermbg=darkgrey
 
 "################### 显示增强-主题 ###################"
-
-" 主题 solarized
-Bundle 'altercation/vim-colors-solarized'
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-let g:solarized_contrast="normal"
-let g:solarized_visibility="normal"
+" " 主题 solarized
+" Bundle 'altercation/vim-colors-solarized'
+" let g:solarized_termcolors=256
+" let g:solarized_termtrans=1
+" let g:solarized_contrast="normal"
+" let g:solarized_visibility="normal"
 
 " "主题 molokai
 " Bundle 'tomasr/molokai'
@@ -252,11 +153,11 @@ let g:NERDTreeMapOpenSplit = 's'
 let g:NERDTreeMapOpenVSplit = 'v'
 
 "
-Bundle 'jistr/vim-nerdtree-tabs'
-map <Leader>n <plug>NERDTreeTabsToggle<CR>
-" 关闭同步
-let g:nerdtree_tabs_synchronize_view=0
-let g:nerdtree_tabs_synchronize_focus=0
+" Bundle 'jistr/vim-nerdtree-tabs'
+" map <Leader>n <plug>NERDTreeTabsToggle<CR>
+" " 关闭同步
+" let g:nerdtree_tabs_synchronize_view=0
+" let g:nerdtree_tabs_synchronize_focus=0
 " 自动开启nerdtree
 "let g:nerdtree_tabs_open_on_console_startup=1
 
@@ -271,7 +172,6 @@ let g:tagbar_autofocus = 1
 "################### 语言相关 ###################
 
 "###### Python #########
-
 " python fly check, 弥补syntastic只能打开和保存才检查语法的不足
 Bundle 'kevinw/pyflakes-vim'
 let g:pyflakes_use_quickfix = 0

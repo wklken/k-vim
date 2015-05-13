@@ -127,8 +127,8 @@ set laststatus=2
 
 "显示行号：
 set number
-" 取消换行。
-set nowrap
+" 默认换行。
+set wrap
 
 " 括号配对情况,跳转并高亮一下匹配的括号
 set showmatch
@@ -145,20 +145,7 @@ set ignorecase
 " 有一个或以上大写字母时仍大小写敏感
 set smartcase     " ignore case if search pattern is all lowercase, case-sensitive otherwise
 
-" 代码折叠
-set foldenable
-" 折叠方法
-" manual    手工折叠
-" indent    使用缩进表示折叠
-" expr      使用表达式定义折叠
-" syntax    使用语法定义折叠
-" diff      对没有更改的文本进行折叠
-" marker    使用标记进行折叠, 默认标记是 {{{ 和 }}}
-set foldmethod=indent
-set foldlevel=99
-
 " 缩进配置
-
 set smartindent   " Smart indent
 set autoindent    " 打开自动缩进
 " never add copyindent, case error   " copy the previous indentation on autoindenting
@@ -176,24 +163,6 @@ set hidden
 set wildmode=list:longest
 set ttyfast
 
-" 00x增减数字时使用十进制
-set nrformats=
-
-" " 相对行号      行号变成相对，可以用 nj  nk   进行跳转 5j   5k 上下跳5行
-" set relativenumber number
-" au FocusLost * :set norelativenumber number
-" au FocusGained * :set relativenumber
-" " 插入模式下用绝对行号, 普通模式下用相对
-" autocmd InsertEnter * :set norelativenumber number
-" autocmd InsertLeave * :set relativenumber
-" function! NumberToggle()
-  " if(&relativenumber == 1)
-    " set norelativenumber number
-  " else
-    " set relativenumber
-  " endif
-" endfunc
-" nnoremap <C-n> :call NumberToggle()<cr>
 
 "==========================================
 " FileEncode Settings 文件编码,格式
@@ -223,35 +192,10 @@ set formatoptions+=B
 "==========================================
 autocmd! bufwritepost .vimrc source % " vimrc文件修改之后自动加载。 linux。
 
-" 自动补全配置
-"让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
-set completeopt=longest,menu
-
-" 增强模式中的命令行自动完成操作
-set wildmenu
-" Ignore compiled files
-set wildignore=*.o,*~,*.pyc,*.class
-
-"离开插入模式后自动关闭预览窗口
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-"回车即选中当前项
-" inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
-
-"上下左右键的行为 会显示其他信息
-inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
-inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
-inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
-inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
-
-" if this not work ,make sure .viminfo is writable for you
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-endif
   
 "==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
-
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
 nnoremap k gk
@@ -259,32 +203,8 @@ nnoremap gk k
 nnoremap j gj
 nnoremap gj j
 
-" F1 - F6 设置
-" F1 废弃这个键,防止调出系统帮助
-" F2 行号开关，用于鼠标复制代码用
-" F3 显示可打印字符开关
 " F4 换行开关
 " F5 粘贴模式paste_mode开关,用于有格式的代码粘贴
-" F6 语法开关，关闭语法可以加快大文件的展示
-set wrap
-
-" I can type :help on my own, thanks.  Protect your fat fingers from the evils of <F1>
-noremap <F1> <Esc>
-
-""为方便复制，用<F2>开启/关闭行号显示:
-" function! HideNumber()
-  " if(&relativenumber == &number)
-    " set relativenumber! number!
-  " elseif(&number)
-    " set number!
-  " else
-    " set relativenumber!
-  " endif
-  " set number?
-" endfunc
-" nnoremap <F2> :call HideNumber()<CR>
-nnoremap <F2> :set number! number?<CR>
-nnoremap <F3> :set list! list?<CR>
 nnoremap <F4> :set wrap! wrap?<CR>
               "set paste
 set pastetoggle=<F5>            "    when in insert mode, press <F5> to go to
@@ -294,26 +214,24 @@ set pastetoggle=<F5>            "    when in insert mode, press <F5> to go to
 " disbale paste mode when leaving insert mode
 au InsertLeave * set nopaste
 
-nnoremap <F6> :set cursorline! list?<CR>
-
-
 "Smart way to move between windows 分屏窗口移动
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
+nnoremap <C-y> 5<C-y>
+nnoremap <C-e> 5<C-e>
+
 
 " Go to home and end using capitalized directions
 noremap H ^
 noremap L $
-nnoremap K 5<C-y>
-nnoremap J 5<C-e>
 
 " 去掉搜索高亮
 noremap <silent><leader>/ :nohls<CR>
 
 
-" ------- 选中及操作改键
+   " ------- 选中及操作改键
 
 "Reselect visual block after indent/outdent.调整缩进后自动选中，方便再次操作
 vnoremap < <gv
@@ -326,18 +244,19 @@ inoremap kj <Esc>
 nnoremap U <C-r>
 
 
+
 "==========================================
 " FileType Settings  文件类型设置
 "==========================================
 
-" 保存python文件时删除多余空格
-fun! <SID>StripTrailingWhitespaces()
-    let l = line(".")
-    let c = col(".")
-    %s/\s\+$//e
-    call cursor(l, c)
-endfun
-autocmd FileType c,cc,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+" " 保存python文件时删除多余空格
+" fun! <SID>StripTrailingWhitespaces()
+    " let l = line(".")
+    " let c = col(".")
+    " %s/\s\+$//e
+    " call cursor(l, c)
+" endfun
+" autocmd FileType c,cc,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 
 
 " 定义函数AutoSetFileHead，自动插入文件头
@@ -380,23 +299,6 @@ if has("gui_running")
     set t_Co=256
 endif
 
-"theme主题
-" colorscheme solarized
-" set t_Co=256
-" if has('gui_running')
-    " set background=light
-" else
-    " set background=dark
-" endif
-
-" 配色方案
-" colorscheme solarized
-"colorscheme molokai
-"colorscheme phd
-"set t_Co=256
-
-" colorscheme molokai
-colorscheme desert
 
 "设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr
@@ -445,4 +347,7 @@ nmap <C-c> :.w! ~/.vimbuffer<CR>
 " paste from buffer
 map <C-p> :r ~/.vimbuffer<CR>
 
+" 进入搜索Use sane regexes"
+nnoremap / /\v
+vnoremap / /\v
 
