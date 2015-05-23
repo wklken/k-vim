@@ -156,6 +156,8 @@ molokai主题
 
     想要修改终端配色为solarized可以参考 [这里](https://github.com/sigurdga/gnome-terminal-colors-solarized)
 
+    如果是mac原生terminal, 可以参考这里的配置 [issue104](https://github.com/wklken/k-vim/issues/104)
+
     - Go语言不能自动补全/tagbar
 
     依赖 [gotags](https://github.com/jstemmer/gotags)和 [gocode](https://github.com/nsf/gocode), 需要安装配置好, 并-> `$GOPATH` -> `$PATH`, `which`命令能正确返回
