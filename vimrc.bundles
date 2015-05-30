@@ -35,9 +35,22 @@ let g:syntastic_warning_symbol='>'
 let g:syntastic_check_on_open=1
 let g:syntastic_check_on_wq=0
 let g:syntastic_enable_highlighting=1
-let g:syntastic_python_checkers=['pyflakes', 'pep8'] " 使用pyflakes,速度比pylint快
+
+" 最轻量
+" let g:syntastic_python_checkers=['pyflakes'] " 使用pyflakes
+
+" 中等
 " error code: http://pep8.readthedocs.org/en/latest/intro.html#error-codes
+let g:syntastic_python_checkers=['pyflakes', 'pep8'] " 使用pyflakes,速度比pylint快
 let g:syntastic_python_pep8_args='--ignore=E501,E225'
+
+" 重量级, 但是足够强大, 定制完成后相当个性化
+" pylint codes: http://pylint-messages.wikidot.com/all-codes
+" let g:syntastic_python_checkers=['pyflakes', 'pylint'] " 使用pyflakes,速度比pylint快
+" let g:syntastic_python_checkers=['pylint'] " 使用pyflakes,速度比pylint快
+" let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
+
+
 let g:syntastic_javascript_checkers = ['jsl', 'jshint']
 let g:syntastic_html_checkers=['tidy', 'jshint']
 " 修改高亮的背景色, 适应主题
@@ -249,12 +262,12 @@ let g:ctrlp_match_window_reversed=0
 let g:ctrlp_mruf_max=500
 let g:ctrlp_follow_symlinks=1
 " 如果安装了ag, 使用ag
-if executable('ag')
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-endif
+" if executable('ag')
+  " " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  " " ag is fast enough that CtrlP doesn't need to cache
+  " let g:ctrlp_use_caching = 0
+" endif
 
 
 " ctrlp插件1 - 不用ctag进行函数快速跳转
@@ -277,6 +290,20 @@ nmap \ <Plug>CtrlSFCwordPath<CR>
 " let g:ctrlsf_position = 'below'
 " let g:ctrlsf_winsize = '30%'
 let g:ctrlsf_auto_close = 0
+let g:ctrlsf_confirm_save = 0
+" Note: cannot use <CR> or <C-m> for open
+" Use : <sapce> or <tab>
+let g:ctrlsf_mapping = {
+    \ "open"  : "<Space>",
+    \ "openb" : "O",
+    \ "tab"   : "t",
+    \ "tabb"  : "T",
+    \ "prevw" : "p",
+    \ "quit"  : "q",
+    \ "next"  : "<C-J>",
+    \ "prev"  : "<C-K>",
+    \ "pquit" : "q",
+    \ }
 
 
 " git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
@@ -359,6 +386,7 @@ Bundle 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=1
 let g:solarized_contrast="normal"
 let g:solarized_visibility="normal"
+" let g:solarized_termcolors=256
 
 " 主题 molokai
 Bundle 'tomasr/molokai'
@@ -509,6 +537,13 @@ Bundle 'Blackrush/vim-gocode'
 Bundle 'plasticboy/vim-markdown'
 let g:vim_markdown_folding_disabled=1
 
+" https://github.com/suan/vim-instant-markdown
+" npm -g install instant-markdown-d
+" Bundle 'suan/vim-instant-markdown'
+" let g:instant_markdown_slow = 1
+" let g:instant_markdown_autostart = 0
+" map <F12> :InstantMarkdownPreview<CR>
+
 " ###### HTML/JS/JQUERY/CSS #########
 
 " for javascript  注意: syntax这个插件要放前面
@@ -547,4 +582,16 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 " Bundle 'evanmiller/nginx-vim-syntax'
 
 
+" ####### temp #######
+" python code format
+" autocmd FileType python nnoremap <leader>y :0,$!yapf --stdout-encoding=utf-8<Cr>
+" autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
+" Bundle 'mindriot101/vim-yapf'
+" scriptencoding utf-8
+" let g:yapf_style = "google"
+" let g:yapf_style = "pep8"
+" setenv PYTHONIOENCODING UTF-8
+" nnoremap <leader>y :call Yapf()<cr>
+
+" Bundle 'amoffat/snake'
 "------------------------------------------- end of configs --------------------------------------------
