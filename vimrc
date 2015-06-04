@@ -51,7 +51,7 @@ set cinoptions=h1,l1,g1,t0,i2,+2,(2,w1,W4
 set indentexpr=GoogleCppIndent()
 let b:undo_indent = "setl sw< ts< sts< et< tw< wrap< cin< cino< inde<"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+set fileencodings=uutf-8 ",cs-bom,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 set fenc=utf-8
 set encoding=utf-8
 set nocp
@@ -160,38 +160,35 @@ inoremap kj <Esc>
 " remap U to <C-r> for easier redo
 nnoremap U <C-r>
 
+"检测文件类型
+filetype on
 " 保存python文件时删除多余空格
 fun! <SID>StripTrailingWhitespaces()
- " let l = line(".")
- " let c = col(".")
- " %s/\s\+$//e
- " call cursor(l, c)
+  let l = line(".")
+  let c = col(".")
+  %s/\s\+$//e
+  call cursor(l, c)
 endfun
 autocmd FileType c,cc,cpp,.thrift,py autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 
 " 定义函数AutoSetFileHead，自动插入文件头
 autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
 function! AutoSetFileHead()
-  " "如果文件类型为.sh文件
-  " if &filetype == 'sh'
-      " call setline(1, "\#!/bin/bash")
-  " endif
+  "如果文件类型为.sh文件
+  if &filetype == 'sh'
+    call setline(1, "\#!/bin/bash")
+  endif
 
-  " "如果文件类型为python
-  " if &filetype == 'python'
-      " call setline(1, "\#!/usr/bin/env python")
-      " call append(1, "\# encoding: utf-8")
-  " endif
+  "如果文件类型为python
+  if &filetype == 'python'
+    call setline(1, "\#!/usr/bin/env python")
+    call append(1, "\# encoding: utf-8")
+  endif
 
-  " normal G
-  " normal o
-  " normal o
+  normal G
+  normal o
+  normal o
 endfunc
-
-function! Blade(...)
-" let l:old_makeprg = &makeprg setlocal makeprg=blade execute "make " . join(a:000) let &makeprg=old_makeprg
-endfunction
-command! -complete=dir -nargs=* Blade call Blade('<args>')
 
 " set t_ti= t_te=
 
@@ -205,4 +202,3 @@ command! -complete=dir -nargs=* Blade call Blade('<args>')
 " 进入搜索Use sane regexes"
 nnoremap / /\v
 vnoremap / /\v
-

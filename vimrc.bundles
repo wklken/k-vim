@@ -11,7 +11,6 @@
 "非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
 " configure Vundle
 set nocompatible
-filetype off " required! turn off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
