@@ -94,6 +94,7 @@ set autochdir
 set list
 set listchars=tab:>-,trail:-
 set ignorecase
+" 关闭交换文件
 set noswapfile
 
 
@@ -202,3 +203,11 @@ endfunc
 " 进入搜索Use sane regexes"
 nnoremap / /\v
 vnoremap / /\v
+augroup filetype
+    autocmd! BufRead,BufNewFile BUILD set filetype=blade
+augroup end
+
+" A buffer becomes hidden when it is abandoned
+set hidden
+set wildmode=list:longest
+set ttyfast
