@@ -491,16 +491,31 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 
 "for css color
 "not work in iterm2 which termianl selection is not xterm-256
-" Bundle 'ap/vim-css-color'
+Bundle 'ap/vim-css-color'
 
 " 这个有坑, see issue https://github.com/wklken/k-vim/issues/49
-"Bundle 'gorodinskiy/vim-coloresque'
+Bundle 'gorodinskiy/vim-coloresque'
 
 "###### nginx #########
-" Bundle 'evanmiller/nginx-vim-syntax'
+Bundle 'evanmiller/nginx-vim-syntax'
 
 " 待审查
 " Bundle "thinca/vim-quickrun"
 " nnoremap <F10> :QuickRun<cr>
 
+"Cscope
+"Bundle 'vim-scripts/cscope.vim'
+
+"command-t
+Bundle 'wincent/command-t'
+
+"program lanuage
+Bundle 'c.vim'
+Bundle 'sh.vim'
+Bundle 'cpp.vim'
+Bundle 'perl.vim'
+Bundle 'java.vim'
+Bundle 'facebook/watchman'
+
 "------------------------------------------- end of configs --------------------------------------------
+
