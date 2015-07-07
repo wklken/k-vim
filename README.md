@@ -24,7 +24,7 @@ k-vim
 
     有一定基础的 vimer
 
-PS: 服务器端不带插件`k-vim`的简化版本(curl直接设置vimrc即可), 有需要可以直接安装[vim-for-server](https://github.com/wklken/vim-for-server)
+**PS**: 服务器端无插件`k-vim`简化版本, 有需要可以安装(curl直接设置vimrc即可)[vim-for-server](https://github.com/wklken/vim-for-server)
 
 ### k-vim使用说明
 
@@ -298,6 +298,7 @@ molokai主题
     kj        代替<Esc>，不用到角落去按esc了
 
     ,q     :q，退出vim
+    ,w     :w, 保存当前文件
 
     ctrl+n    相对/绝对行号切换
     <enter>   normal模式下回车选中当前项
