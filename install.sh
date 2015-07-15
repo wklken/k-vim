@@ -25,10 +25,10 @@ lnif "$CURRENT_DIR/" "$HOME/.vim"
 echo "Step3: install vundle"
 if [ ! -e $CURRENT_DIR/bundle/vundle ]; then
     echo "Installing Vundle"
-    git clone https://github.com/gmarik/vundle.git $CURRENT_DIR/bundle/vundle
+    git clone https://github.com/VundleVim/Vundle.vim.git $CURRENT_DIR/bundle/Vundle.vim
 else
     echo "Upgrade Vundle"
-    cd "$HOME/.vim/bundle/vundle" && git pull origin master
+    cd "$HOME/.vim/bundle/Vundle.vim" && git pull origin master
 fi
 
 echo "Step4: update/install plugins using Vundle"
