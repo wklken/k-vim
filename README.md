@@ -899,6 +899,13 @@ src="https://raw.github.com/szw/vim-ctrlspace/master/gfx/screen_small.png" />
 
 详细 [更新日志](https://github.com/wklken/k-vim/blob/master/UPDATE_LOG.md)
 
+
+version 9.1 [待发布]
+
+    1. 增加 leader+w 保存文件
+
+    2. 解决在insert mode粘贴代码缩进错乱问题(以前需要:set paste . 即k-vim中F5快捷键)
+
 version: 9.0
 
     1. 新增依赖ag(the_silver_searcher)
@@ -941,6 +948,7 @@ version: 9.0
         7.2 V 缩小选中范围
 
     8. 新增主题tomorrow
+
 
 ### TODO
 
