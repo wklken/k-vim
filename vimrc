@@ -616,3 +616,5 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
+highlight CursorLine cterm=underline ctermbg=NONE ctermfg=green guibg=darkred guifg=white
+highlight CursorColumn cterm=NONE ctermbg=gray ctermfg=blue guibg=darkred guifg=white
