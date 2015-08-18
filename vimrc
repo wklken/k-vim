@@ -105,7 +105,7 @@ set noswapfile
   inoremap ) <c-r>=ClosePair(')')<CR>
   inoremap { {<CR>}<ESC>kA<CR>
   inoremap } <c-r>=ClosePair('}')<CR>
-  inoremap [ []<ESC>i
+  " inoremap [ []<ESC>i
   inoremap ] <c-r>=ClosePair(']')<CR>
   " inoremap < <><ESC>i
   inoremap > <c-r>=ClosePair('>')<CR>
@@ -133,6 +133,8 @@ endif
 
 " F5 粘贴模式paste_mode开关,用于有格式的代码粘贴
 set pastetoggle=<F5>
+" disbale paste mode when leaving insert mode
+au InsertLeave * set nopaste
 
 "Smart way to move between windows 分屏窗口移动
 map <C-j> <C-W>j
@@ -170,10 +172,10 @@ fun! <SID>StripTrailingWhitespaces()
   %s/\s\+$//e
   call cursor(l, c)
 endfun
-autocmd FileType c,cc,cpp,.thrift,py autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+autocmd FileType c,cc,cpp,.thrift,sh,py autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
 
 " 定义函数AutoSetFileHead，自动插入文件头
-autocmd BufNewFile *.sh,*.py exec ":call AutoSetFileHead()"
+autocmd BufNewFile *.h,*.cc,*.sh,*.py exec ":call AutoSetFileHead()"
 function! AutoSetFileHead()
   "如果文件类型为.sh文件
   if &filetype == 'sh'
@@ -184,6 +186,14 @@ function! AutoSetFileHead()
   if &filetype == 'python'
     call setline(1, "\#!/usr/bin/env python")
     call append(1, "\# encoding: utf-8")
+  endif
+
+  "如果文件类型为cpp
+  if &filetype == 'cpp'
+    call setline(1, "\/\/ Copyright [2013-2014] <formaxmarket.Inc>")
+    call append(1, "\/\/")
+    call append(2, "\/\/ Author: Nathan (wangfuqiang@jrq.com)")
+    call append(3, "")
   endif
 
   normal G
