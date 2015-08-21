@@ -12,24 +12,31 @@
 set nocompatible
 " configure Vundle
 filetype off " required! turn off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/k-vim/bundle/Vundle.vim
+call vundle#begin()
 
 
 " ################### 插件管理 ###################
 
 " 使用Vundle来管理插件
 " vim plugin bundle control, command model
-"     :BundleInstall     install 安装配置的插件
-"     :BundleInstall!    update  更新
-"     :BundleClean       remove plugin not in list 删除本地无用插件
-Bundle 'gmarik/vundle'
+"     :PluginList        lists configured plugins
+"     :PluginSearch foo  searches for foo; append `!` to refresh local cache
+"     :PluginInstall     install 安装配置的插件
+"     :PluginInstall!    update  更新
+"     :PluginClean       remove plugin not in list 删除本地无用插件
+" see :h vundle          for more details or wiki for FAQ
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
 
 
 " ################### 基础 ######################
 
 " 多语言语法检查
-Bundle 'scrooloose/syntastic'
+Plugin 'scrooloose/syntastic'
 let g:syntastic_error_symbol='>>'
 let g:syntastic_warning_symbol='>'
 let g:syntastic_check_on_open=1
@@ -80,7 +87,7 @@ nnoremap <Leader>s :call ToggleErrors()<cr>
 " 代码自动补全
 "迄今为止用到的最好的自动VIM自动补全插件
 "重启 :YcmRestartServer
-Bundle 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 "youcompleteme  默认tab  s-tab 和自动补全冲突
 "let g:ycm_key_list_select_completion=['<c-n>']
 let g:ycm_key_list_select_completion = ['<Down>']
@@ -120,9 +127,9 @@ let g:ycm_filetype_blacklist = {
 
 
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
-Bundle 'SirVer/ultisnips'
+Plugin 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
-Bundle 'honza/vim-snippets'
+Plugin 'honza/vim-snippets'
 
 let g:UltiSnipsExpandTrigger       = "<tab>"
 let g:UltiSnipsJumpForwardTrigger  = "<tab>"
@@ -155,7 +162,7 @@ let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 
 
 " 自动补全单引号，双引号等
-Bundle 'Raimondi/delimitMate'
+Plugin 'Raimondi/delimitMate'
 
 "" for python docstring ",优化输入
 au FileType python let b:delimitMate_nesting_quotes = ['"']
@@ -164,27 +171,27 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 
 
 " 自动补全html/xml标签
-Bundle 'docunext/closetag.vim'
+Plugin 'docunext/closetag.vim'
 let g:closetag_html_style=1
 
 " ################### 快速编码 ###################
 
 " 快速注释
-Bundle 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdcommenter'
 let g:NERDSpaceDelims=1
 
 
 " 快速加入修改环绕字符
-Bundle 'tpope/vim-surround'
+Plugin 'tpope/vim-surround'
 " for repeat -> enhance surround.vim, . to repeat command
-Bundle 'tpope/vim-repeat'
+Plugin 'tpope/vim-repeat'
 
 " 快速去行尾空格 [, + <Space>]
-Bundle 'bronson/vim-trailing-whitespace'
+Plugin 'bronson/vim-trailing-whitespace'
 map <leader><space> :FixWhitespace<cr>
 
 " 快速赋值语句对齐
-Bundle 'junegunn/vim-easy-align'
+Plugin 'junegunn/vim-easy-align'
 vmap <Leader>a <Plug>(EasyAlign)
 nmap <Leader>a <Plug>(EasyAlign)
 if !exists('g:easy_align_delimiters')
@@ -195,7 +202,7 @@ let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String']
 " ################### 快速移动 ###################
 
 "更高效的移动 [,, + w/fx]
-Bundle 'Lokaltog/vim-easymotion'
+Plugin 'Lokaltog/vim-easymotion'
 let g:EasyMotion_smartcase = 1
 "let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
 map <Leader><leader>h <Plug>(easymotion-linebackward)
@@ -207,35 +214,35 @@ map <Leader><leader>. <Plug>(easymotion-repeat)
 
 
 
-Bundle 'vim-scripts/matchit.zip'
+Plugin 'vim-scripts/matchit.zip'
 
 " 显示marks - 方便自己进行标记和跳转
 " m[a-zA-Z] add mark
 " '[a-zA-Z] go to mark
 " m<Space>  del all marks
-Bundle "kshenoy/vim-signature"
+Plugin 'kshenoy/vim-signature'
 
 " ################### 文本对象 ###################
 
 " 支持自定义文本对象
-Bundle 'kana/vim-textobj-user.git'
+Plugin 'kana/vim-textobj-user.git'
 " 增加行文本对象: l   dal yal cil
-Bundle 'kana/vim-textobj-line'
+Plugin 'kana/vim-textobj-line'
 " 增加文件文本对象: e   dae yae cie
-Bundle 'kana/vim-textobj-entire.git'
+Plugin 'kana/vim-textobj-entire.git'
 " 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
-Bundle 'kana/vim-textobj-indent.git'
+Plugin 'kana/vim-textobj-indent.git'
 
 " ################### 快速选中 ###################
 " 选中区块
-Bundle 'terryma/vim-expand-region'
+Plugin 'terryma/vim-expand-region'
 " map + <Plug>(expand_region_expand)
 " map _ <Plug>(expand_region_shrink)
 vmap v <Plug>(expand_region_expand)
 vmap V <Plug>(expand_region_shrink)
 
 " 多光标选中编辑
-Bundle 'terryma/vim-multiple-cursors'
+Plugin 'terryma/vim-multiple-cursors'
 let g:multi_cursor_use_default_mapping=0
 " Default mapping
 let g:multi_cursor_next_key='<C-m>'
@@ -247,7 +254,7 @@ let g:multi_cursor_quit_key='<Esc>'
 
 " 文件搜索
 " change to https://github.com/ctrlpvim/ctrlp.vim
-Bundle 'ctrlpvim/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
 map <leader>f :CtrlPMRU<CR>
@@ -271,7 +278,7 @@ let g:ctrlp_follow_symlinks=1
 
 
 " ctrlp插件1 - 不用ctag进行函数快速跳转
-Bundle 'tacahiroy/ctrlp-funky'
+Plugin 'tacahiroy/ctrlp-funky'
 nnoremap <Leader>fu :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
@@ -280,7 +287,7 @@ let g:ctrlp_funky_syntax_highlight = 1
 let g:ctrlp_extensions = ['funky']
 
 " 类似sublimetext的搜索
-Bundle "dyng/ctrlsf.vim"
+Plugin 'dyng/ctrlsf.vim'
 " In CtrlSF window:
 " 回车/o, 打开
 " t       在tab中打开(建议)
@@ -308,7 +315,7 @@ let g:ctrlsf_mapping = {
 
 " git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
 " :Gdiff  :Gstatus :Gvsplit
-Bundle 'tpope/vim-fugitive'
+Plugin 'tpope/vim-fugitive'
 nnoremap <leader>ge :Gdiff<CR>
 " not ready to open
 " <leader>gb maps to :Gblame<CR>
@@ -320,21 +327,21 @@ nnoremap <leader>ge :Gdiff<CR>
 
 " 同git diff,实时展示文件中修改的行
 " 只是不喜欢除了行号多一列, 默认关闭,gs时打开
-Bundle 'airblade/vim-gitgutter'
+Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_map_keys = 0
 let g:gitgutter_enabled = 0
 let g:gitgutter_highlight_lines = 1
 nnoremap <leader>gs :GitGutterToggle<CR>
 
 " edit history, 可以查看回到某个历史状态
-Bundle 'sjl/gundo.vim'
+Plugin 'sjl/gundo.vim'
 noremap <leader>h :GundoToggle<CR>
 
 " ################### 显示增强 ###################
 
 " 状态栏增强展示
 " 新的airline配置
-Bundle 'bling/vim-airline'
+Plugin 'bling/vim-airline'
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
@@ -350,7 +357,7 @@ let g:airline_symbols.branch = '⎇'
 
 
 " 括号显示增强
-Bundle 'kien/rainbow_parentheses.vim'
+Plugin 'kien/rainbow_parentheses.vim'
 " 不加入这行, 防止黑色括号出现, 很难识别
 " \ ['black',       'SeaGreen3'],
 let g:rbpt_colorpairs = [
@@ -382,24 +389,24 @@ au Syntax * RainbowParenthesesLoadBraces
 " ################### 显示增强-主题 ###################"
 
 " 主题 solarized
-Bundle 'altercation/vim-colors-solarized'
+Plugin 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=1
 let g:solarized_contrast="normal"
 let g:solarized_visibility="normal"
 " let g:solarized_termcolors=256
 
 " 主题 molokai
-Bundle 'tomasr/molokai'
+Plugin 'tomasr/molokai'
 " monokai原始背景色
 let g:molokai_original = 1
 
 " 主题 tomorrow
-Bundle 'chriskempson/vim-tomorrow-theme'
+Plugin 'chriskempson/vim-tomorrow-theme'
 
 
 " ################### 快速导航 ###################
 "目录导航
-Bundle 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdtree'
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
@@ -410,7 +417,7 @@ let g:NERDTreeMapOpenSplit = 's'
 let g:NERDTreeMapOpenVSplit = 'v'
 
 
-Bundle 'jistr/vim-nerdtree-tabs'
+Plugin 'jistr/vim-nerdtree-tabs'
 map <Leader>n <plug>NERDTreeTabsToggle<CR>
 " 关闭同步
 let g:nerdtree_tabs_synchronize_view=0
@@ -420,7 +427,7 @@ let g:nerdtree_tabs_synchronize_focus=0
 
 
 " Vim Workspace Controller
-Bundle "szw/vim-ctrlspace"
+Plugin 'szw/vim-ctrlspace'
 let g:airline_exclude_preview = 1
 hi CtrlSpaceSelected guifg=#586e75 guibg=#eee8d5 guisp=#839496 gui=reverse,bold ctermfg=10 ctermbg=7 cterm=reverse,bold
 hi CtrlSpaceNormal   guifg=#839496 guibg=#021B25 guisp=#839496 gui=NONE ctermfg=12 ctermbg=0 cterm=NONE
@@ -429,7 +436,7 @@ hi CtrlSpaceStatus   guifg=#839496 guibg=#002b36 gui=reverse term=reverse cterm=
 
 
 " for minibufferexpl 去掉, 有需要同学的自己解开
-" Bundle 'fholgado/minibufexpl.vim'
+" Plugin 'fholgado/minibufexpl.vim'
 " let g:miniBufExplMapWindowNavVim = 1
 " let g:miniBufExplMapWindowNavArrows = 1
 " let g:miniBufExplMapCTabSwitchBufs = 1
@@ -446,7 +453,7 @@ hi CtrlSpaceStatus   guifg=#839496 guibg=#002b36 gui=reverse term=reverse cterm=
 
 
 " 标签导航
-Bundle 'majutsushi/tagbar'
+Plugin 'majutsushi/tagbar'
 nmap <F9> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 " for ruby
@@ -498,7 +505,7 @@ let g:tagbar_type_go = {
 
 " ################### 语言相关 ###################
 
-Bundle 'thinca/vim-quickrun'
+Plugin 'thinca/vim-quickrun'
 let g:quickrun_config = {
 \   "_" : {
 \       "outputter" : "message",
@@ -512,34 +519,34 @@ map <F10> :QuickRun<CR>
 " ###### Python #########
 
 " python fly check, 弥补syntastic只能打开和保存才检查语法的不足
-Bundle 'kevinw/pyflakes-vim'
+Plugin 'kevinw/pyflakes-vim'
 let g:pyflakes_use_quickfix = 0
 
 " for python.vim syntax highlight
-Bundle 'hdima/python-syntax'
+Plugin 'hdima/python-syntax'
 let python_highlight_all = 1
 
 " ###### Golang #########
 " 1.install golang and install gocode 'go get github.com/nsf/gocode'
 " 2.make sure gocode in your path: `which gocode` (add $GOPATH/bin to you $PATH)
-Bundle 'Blackrush/vim-gocode'
-" Bundle 'fatih/vim-go.git'
+Plugin 'Blackrush/vim-gocode'
+" Plugin 'fatih/vim-go.git'
 
 " ###### Ruby #########
-" Bundle 'vim-ruby/vim-ruby'
-" Bundle 'nelstrom/vim-textobj-rubyblock'
+" Plugin 'vim-ruby/vim-ruby'
+" Plugin 'nelstrom/vim-textobj-rubyblock'
 
 " 有bug, 和当前有冲突, 尚未解决, 不要打开
-" Bundle 'tpope/vim-endwise'
+" Plugin 'tpope/vim-endwise'
 
 
 " ###### Markdown #########
-Bundle 'plasticboy/vim-markdown'
+Plugin 'plasticboy/vim-markdown'
 let g:vim_markdown_folding_disabled=1
 
 " https://github.com/suan/vim-instant-markdown
 " npm -g install instant-markdown-d
-" Bundle 'suan/vim-instant-markdown'
+" Plugin 'suan/vim-instant-markdown'
 " let g:instant_markdown_slow = 1
 " let g:instant_markdown_autostart = 0
 " map <F12> :InstantMarkdownPreview<CR>
@@ -547,8 +554,8 @@ let g:vim_markdown_folding_disabled=1
 " ###### HTML/JS/JQUERY/CSS #########
 
 " for javascript  注意: syntax这个插件要放前面
-Bundle 'jelera/vim-javascript-syntax'
-Bundle "pangloss/vim-javascript"
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'pangloss/vim-javascript'
 let g:html_indent_inctags = "html,body,head,tbody"
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
@@ -556,42 +563,46 @@ let g:html_indent_style1 = "inc"
 
 " for javascript 自动补全,配合YCM,需要安装nodejs&npm  see
 " https://github.com/marijnh/tern_for_vim
-" Bundle 'marijnh/tern_for_vim'
+" Plugin 'marijnh/tern_for_vim'
 
 " for jquery
-Bundle 'nono/jquery.vim'
+Plugin 'nono/jquery.vim'
 
 " ###### emmet HTML complete #########
-" Bundle "mattn/emmet-vim"
+" Plugin "mattn/emmet-vim"
 
 " ###### vim.less : less 自动更新##########
-" Bundle 'groenewege/vim-less'
+" Plugin 'groenewege/vim-less'
 " autocmd BufWritePost *.less :!lessc % > %:p:r.css
 
 " ###### Jinja2 #########
-Bundle 'Glench/Vim-Jinja2-Syntax'
+Plugin 'Glench/Vim-Jinja2-Syntax'
 
 " for css color
 " not work in iterm2 which termianl selection is not xterm-256
-" Bundle 'ap/vim-css-color'
+" Plugin 'ap/vim-css-color'
 
 " 这个有坑, see issue https://github.com/wklken/k-vim/issues/49
-" Bundle 'gorodinskiy/vim-coloresque'
+" Plugin 'gorodinskiy/vim-coloresque'
 
 " ###### nginx #########
-" Bundle 'evanmiller/nginx-vim-syntax'
+" Plugin 'evanmiller/nginx-vim-syntax'
 
 
 " ####### temp #######
 " python code format
 " autocmd FileType python nnoremap <leader>y :0,$!yapf --stdout-encoding=utf-8<Cr>
 " autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
-" Bundle 'mindriot101/vim-yapf'
+" Plugin 'mindriot101/vim-yapf'
 " scriptencoding utf-8
 " let g:yapf_style = "google"
 " let g:yapf_style = "pep8"
 " setenv PYTHONIOENCODING UTF-8
 " nnoremap <leader>y :call Yapf()<cr>
 
-" Bundle 'amoffat/snake'
+" Plugin 'amoffat/snake'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+
 "------------------------------------------- end of configs --------------------------------------------

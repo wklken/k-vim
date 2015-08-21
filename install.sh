@@ -4,6 +4,7 @@
 BASEDIR=$(dirname $0)
 cd $BASEDIR
 CURRENT_DIR=`pwd`
+VUNDLE_VIM_URL="https://github.com/VundleVim/Vundle.vim.git"
 
 lnif() {
     if [ -e "$1" ]; then
@@ -22,13 +23,19 @@ lnif $CURRENT_DIR/vimrc $HOME/.vimrc
 lnif $CURRENT_DIR/vimrc.bundles $HOME/.vimrc.bundles
 lnif "$CURRENT_DIR/" "$HOME/.vim"
 
-echo "Step3: install vundle"
-if [ ! -e $CURRENT_DIR/bundle/vundle ]; then
+echo "Step3: install Vundle.vim"
+# remove vundle directory
+if [ -e $CURRENT_DIR/bundle/vundle ]; then
+    rm -rf $CURRENT_DIR/bundle/vundle
+fi
+
+# get the latest Vundle.vim
+if [ ! -e $CURRENT_DIR/bundle/Vundle.vim ]; then
     echo "Installing Vundle"
-    git clone https://github.com/gmarik/vundle.git $CURRENT_DIR/bundle/vundle
+    git clone $VUNDLE_VIM_URL $CURRENT_DIR/bundle/Vundle.vim
 else
     echo "Upgrade Vundle"
-    cd "$HOME/.vim/bundle/vundle" && git pull origin master
+    cd "$HOME/.vim/bundle/Vundle.vim" && git pull origin master
 fi
 
 echo "Step4: update/install plugins using Vundle"

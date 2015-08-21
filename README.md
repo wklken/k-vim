@@ -186,24 +186,30 @@ molokai主题
 
 5. 安装/卸载/更新插件：
 
+    搜索插件
+
+        命令行模式，执行:
+        :PluginSearch foo
+
     安装新插件
 
         1. vimrc.bundles中配置对应插件
-            Bundle 'xxx/xxxx'
+            Plugin 'xxx/xxxx'
         2. 命令行模式，执行:
-            :BundleInstall
+            :PluginInstall
 
     更新插件(注意如果YCM更新, 可能需要重编译, 否则自动补全可能失效)
 
         命令行模式，执行:
-        :BundleUpdate
+        :PluginUpdate
+        或
+        :PluginInstall!
 
     删除插件
 
         1. vimrc.bundles中注释或删除对应插件bundle配置行(行首加一个双引号)
         2.命令行模式，执行: (会物理上删除插件文件)
-            :BundleClean
-
+            :PluginClean
 
 
 ---------------------------------
@@ -333,9 +339,9 @@ molokai主题
     必装,用于管理所有插件
     命令行模式下管理命令:
 
-        :BundleInstall     install
-        :BundleInstall!    update
-        :BundleClean       remove plugin not in list
+        :PluginInstall     install
+        :PluginInstall!    update
+        :PluginClean       remove plugin not in list
 
 1. ####多语言语法检查 [scrooloose/syntastic](https://github.com/scrooloose/syntastic)
 
