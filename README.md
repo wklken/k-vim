@@ -636,7 +636,8 @@ molokai主题
 
         进入左侧后的操作:
 
-                    回车/o, 打开
+                    O, 打开
+                    <C-o> 水平分屏打开
                     t - 在tab中打开(建议)
                     T - Like t but focus CtrlSF window instead of opened new tab.
                     q - Quit CtrlSF window.
