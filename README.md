@@ -907,6 +907,8 @@ version 9.1 [待发布]
 
     2. 解决在insert mode粘贴代码缩进错乱问题(以前需要:set paste . 即k-vim中F5快捷键)
 
+    3. add plugin for tmux: christoomey/vim-tmux-navigator
+
 version: 9.0
 
     1. 新增依赖ag(the_silver_searcher)
