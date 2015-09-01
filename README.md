@@ -326,6 +326,30 @@ molokai主题
 
 # 插件部分
 
+简介及演示(blog外链)
+
+- [vundle](http://www.wklken.me/posts/2015/06/07/vim-plugin-vundle.html)
+- [easymotion](http://www.wklken.me/posts/2015/06/07/vim-plugin-easymotion.html)
+- [signature](http://www.wklken.me/posts/2015/06/07/vim-plugin-signature.html)
+- [multiple-cursors](http://www.wklken.me/posts/2015/06/07/vim-plugin-multiplecursors.html)
+- [easyalign](http://www.wklken.me/posts/2015/06/07/vim-plugin-easyalign.html)
+- [matchit](http://www.wklken.me/posts/2015/06/07/vim-plugin-matchit.html)
+- [delimitmate](http://www.wklken.me/posts/2015/06/07/vim-plugin-delimitmate.html)
+- [syntastic](http://www.wklken.me/posts/2015/06/07/vim-plugin-syntastic.html)
+- [rainbowparentheses](http://www.wklken.me/posts/2015/06/07/vim-plugin-rainbowparentheses.html)
+- [nerdcommenter](http://www.wklken.me/posts/2015/06/07/vim-plugin-nerdcommenter.html)
+- [tagbar](http://www.wklken.me/posts/2015/06/07/vim-plugin-tagbar.html)
+- [theme](http://www.wklken.me/posts/2015/06/07/vim-plugin-theme.html)
+- [airline](http://www.wklken.me/posts/2015/06/07/vim-plugin-airline.html)
+- [ctrlp](http://www.wklken.me/posts/2015/06/07/vim-plugin-ctrlp.html)
+- [closetag](http://www.wklken.me/posts/2015/06/07/vim-plugin-closetag.html)
+- [trailing-whitespace](http://www.wklken.me/posts/2015/06/07/vim-plugin-trailing-whitespace.html)
+- [quick-run](http://www.wklken.me/posts/2015/06/13/vim-plugin-quickrun.html)
+- [expand-region](http://www.wklken.me/posts/2015/06/13/vim-plugin-expandregion.html)
+- [gundo](http://www.wklken.me/posts/2015/06/13/vim-plugin-gundo.html)
+- [surround & repeat](http://www.wklken.me/posts/2015/06/13/vim-plugin-surround-repeat.html)
+
+
 > 基础
 
 1. ####插件管理 [gmarik/vundle](https://github.com/gmarik/vundle)
