@@ -670,3 +670,26 @@ let g:CommandTWildIgnore=&wildignore . "*.o,*.obj"
 "fix . as keyword issue
 "https://github.com/wklken/k-vim/issues/49
 au BufWinEnter set isk -=.
+
+
+
+"easygrep
+" easygrep options
+"let g:EasyGrepFileAssociations
+let g:EasyGrepMode=0                       " 0=all files / 1=open buffers / 2=track the current extension
+let g:EasyGrepCommand=1                    " specifies the grep command to use (0=vimgrep / 1=grep)
+let g:EasyGrepRecursive=1                  " specifies that recursive search be activated on start (0 / 1)
+let g:EasyGrepIgnoreCase=1                 " specifies the case sensitivity of searches (0 / 1)
+let g:EasyGrepHidden=0                     " specifies that hidden files search be activated on start (0 / 1)
+"let g:EasyGrepAllOptionsInExplorer
+"let g:EasyGrepWindow
+let g:EasyGrepOpenWindowOnMatch=1
+let g:EasyGrepEveryMatch=0
+let g:EasyGrepJumpToMatch=0
+let g:EasyGrepSearchCurrentBufferDir=0
+"let g:EasyGrepInvertWholeWord
+"let g:EasyGrepFileAssociationsInExplorer
+"let g:EasyGrepReplaceWindowMode
+"let g:EasyGrepReplaceAllPerFile
+"let g:EasyGrepOptionPrefix
+"let g:EasyGrepExtraWarnings

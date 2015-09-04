@@ -517,5 +517,8 @@ Bundle 'perl.vim'
 Bundle 'java.vim'
 Bundle 'facebook/watchman'
 
+"grep
+Bundle 'dkprice/vim-easygrep'
+
 "------------------------------------------- end of configs --------------------------------------------
 
