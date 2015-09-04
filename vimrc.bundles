@@ -519,6 +519,5 @@ Bundle 'facebook/watchman'
 
 "grep
 Bundle 'dkprice/vim-easygrep'
-
 "------------------------------------------- end of configs --------------------------------------------
 

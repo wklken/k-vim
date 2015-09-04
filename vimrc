@@ -320,6 +320,7 @@ nmap <F11> :!find . -iname '*.c' -o -iname '*.cpp' -o -iname "*.cc" -o -iname '*
             \:!cscope -b -i cscope.files -f cscope.out<CR> 
             \:cs kill -1<CR>:cs add cscope.out<CR>
 
+<<<<<<< HEAD
 
 nmap <silent> <leader>f2 :call HideNumber()<CR>
 nmap <silent> <leader>f3 :set list! list?<CR>
@@ -330,6 +331,8 @@ nmap <silent> <leader>fb :!find . -iname '*.c' -o -iname '*.cpp' -o -iname "*.cc
             \:cs kill -1<CR>:cs add cscope.out<CR>
 
 
+=======
+>>>>>>> af12a3fe03a1e551cabc45b07a6fc695d39d401e
 " disbale paste mode when leaving insert mode
 au InsertLeave * set nopaste
 
@@ -670,7 +673,6 @@ let g:CommandTWildIgnore=&wildignore . "*.o,*.obj"
 "fix . as keyword issue
 "https://github.com/wklken/k-vim/issues/49
 au BufWinEnter set isk -=.
-
 
 
 "easygrep
