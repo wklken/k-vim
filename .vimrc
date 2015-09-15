@@ -56,6 +56,23 @@ set history=1024
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " UI
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  0     Black
+"  1     DarkBlue
+"  2     DarkGreen
+"  3     DarkCyan
+"  4     DarkRed
+"  5     DarkMagenta
+"  6     Brown, DarkYellow
+"  7     LightGray, LightGrey, Gray, Grey
+"  8     DarkGray, DarkGrey
+"  9     Blue, LightBlue
+" 10     Green, LightGreen
+" 11     Cyan, LightCyan
+" 12     Red, LightRed
+" 13     Magenta, LightMagenta
+" 14     Yellow, LightYellow
+" 15     White
+"
 " Set colorscheme
 colorscheme elflord
 " Enable syntax highlight
@@ -71,13 +88,12 @@ set is
 
 " Highlight the current line
 set cursorline
-hi cursorline   guibg=#333333
-hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+hi CursorLine   term=reverse cterm=NONE ctermbg=darkred     ctermfg=white guibg=darkred guifg=white
 " Highlight the current column
 set cursorcolumn
-hi CursorColumn guibg=#333333
-hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-nnoremap <Leader>hl :set cursorline! cursorcolumn!<CR>
+hi CursorColumn term=reverse cterm=NONE ctermbg=darkmagenta ctermfg=white guibg=darkred guifg=white
+nnoremap <Leader>hl :set cursorline!<CR>
+nnoremap <Leader>hc :set cursorcolumn!<CR>
 
 if has('cmdline_info')
 	" Show the ruler
@@ -342,6 +358,15 @@ map <Leader>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 map <Leader>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 map <Leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
+if has("quickfix")
+    "set cscopequickfix=s-,c-,d-,i-,t-,e-
+    set cscopequickfix=s0,c0,d0,i0,t0,e0
+endif
+
+nmap <Leader>n :cn<CR>
+nmap <Leader>p :cp<CR>
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ctags
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -386,6 +411,24 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 " Better Rainbow Parentheses
 " https://github.com/kien/rainbow_parentheses.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+" Always On
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
@@ -420,6 +463,10 @@ let g:EasyMotion_smartcase = 1
 " JK motions: Line motions
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
+
+
+" Format json
+nmap <Leader>fj   :%!python -m json.tool<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Misc
