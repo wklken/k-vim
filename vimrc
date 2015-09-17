@@ -692,3 +692,8 @@ let g:EasyGrepSearchCurrentBufferDir=0
 "let g:EasyGrepReplaceAllPerFile
 "let g:EasyGrepOptionPrefix
 "let g:EasyGrepExtraWarnings
+let g:EasyGrepFilesToExclude=".svn,.git,cscope.out"
+
+
+"YouCompleteMe
+let g:ycm_disable_for_files_larger_than_kb = 10000
