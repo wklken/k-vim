@@ -692,7 +692,7 @@ let g:EasyGrepSearchCurrentBufferDir=0
 "let g:EasyGrepReplaceAllPerFile
 "let g:EasyGrepOptionPrefix
 "let g:EasyGrepExtraWarnings
-let g:EasyGrepFilesToExclude=".svn,.git,cscope.out"
+let g:EasyGrepFilesToExclude=".svn,.git,cscope.out, cscope.files"
 
 
 "YouCompleteMe
