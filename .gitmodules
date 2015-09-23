@@ -16,6 +16,6 @@
 [submodule ".vim/bundle/vim-trailing-whitespace"]
 	path = .vim/bundle/vim-trailing-whitespace
 	url = git@github.com:bronson/vim-trailing-whitespace.git
-[submodule ".vim/bundle/YouCompleteMe/"]
+[submodule ".vim/bundle/YouCompleteMe"]
 	path = .vim/bundle/YouCompleteMe
 	url = git@github.com:Valloric/YouCompleteMe.git

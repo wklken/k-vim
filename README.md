@@ -20,6 +20,6 @@ Steps:
 
     1, git clone git@github.com:robbie-cao/config-vim.git
     2, git submodule init
-    3, git submodule update
+    3, git submodule update --init --recursive
     4, cp -fr .vimrc .vim ~
 
