@@ -17,7 +17,9 @@ Clone to other place:
     git submodule update
 
 Steps:
+
     1, git clone git@github.com:robbie-cao/config-vim.git
     2, git submodule init
     3, git submodule update
     4, cp -fr .vimrc .vim ~
+
