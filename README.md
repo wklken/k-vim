@@ -10,6 +10,8 @@ Manage plugins with bundle:
     git submodule add git@github.com:Lokaltog/vim-easymotion.git
     git submodule add git@github.com:bronson/vim-trailing-whitespace.git
     git submodule add git@github.com:Valloric/YouCompleteMe.git
+    git submodule add git@github.com:Valloric/ListToggle.git
+    git submodule add git@github.com:scrooloose/syntastic.git
 
 Clone to other place:
 
