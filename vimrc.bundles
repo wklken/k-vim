@@ -123,6 +123,8 @@ let g:ycm_filetype_blacklist = {
 Bundle 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
 Bundle 'honza/vim-snippets'
+" 在gentoo中， 需要而外安装最新版的superTab确保在按<tab>键的时候不报错
+Bundle 'ervandew/supertab'
 
 let g:UltiSnipsExpandTrigger       = "<tab>"
 let g:UltiSnipsJumpForwardTrigger  = "<tab>"

@@ -265,8 +265,8 @@ set wildignore=*.o,*~,*.pyc,*.class
 
 "离开插入模式后自动关闭预览窗口
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-"回车即选中当前项
-inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
+"回车即选中当前项(在gentoo中会冲突，回车会打印字符串pumvisible() ? "\" : "\)
+"inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
 
 "上下左右键的行为 会显示其他信息
 inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
