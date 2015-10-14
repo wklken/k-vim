@@ -91,7 +91,7 @@ set cursorline
 hi CursorLine   term=reverse cterm=NONE ctermbg=darkred     ctermfg=white guibg=darkred guifg=white
 " Highlight the current column
 set cursorcolumn
-hi CursorColumn term=reverse cterm=NONE ctermbg=darkmagenta ctermfg=white guibg=darkred guifg=white
+hi CursorColumn term=reverse cterm=NONE ctermbg=darkgray    ctermfg=white guibg=darkred guifg=white
 nnoremap <Leader>hl :set cursorline!<CR>
 nnoremap <Leader>hc :set cursorcolumn!<CR>
 
@@ -332,13 +332,17 @@ call InitializeDirectories()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " cscope
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set csprg=/usr/bin/cscope
+if has('mac')
+    set csprg=/usr/local/bin/cscope
+else
+    set csprg=/usr/bin/cscope
+endif
 set cst
 set nocsverb
 if filereadable("cscope.out")	" db in current dir
-	cs add cscope.out
+    cs add cscope.out
 elseif $CSCOPE_DB != ""		" db pointed to by env
-	cs add $CSCOPE_DB
+    cs add $CSCOPE_DB
 endif
 
 " 's'   symbol: find all references to the token under cursor
