@@ -1,6 +1,9 @@
 bundle/*
+*.vim/sessions/
 *.pyc
 *.bak
 *.bk
+.DS_Store
 configs
 myconfig.sh
+*._*
