@@ -1,24 +1,45 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Robbie Cao<robbie.cao@gmail.com>'s vim config
+" Vim configuration
+" Robbie Cao <robbie.cao@gmail.com>
+"
+" This is the .vimrc file of Robbie Cao.
+" Much of it is beneficial for general use, I would recommend
+" picking out the parts you want and understand.
+"
+" Major of those config are from:
+" - spf13/spf13-vim (https://github.com/spf13/spf13-vim)
+" - wklken/k-vim (https://github.com/wklken/k-vim)
+" Thank spf13 and wklken !
+"
+" You can find me at https://www.facebook.com/cao.robbie
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Modeline
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim: set foldmarker={,} foldlevel=0 foldmethod=marker spell :
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Environment
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Basics
-set nocompatible        " must be first line
+set nocompatible        " Must be first line
+set background=dark     " Assume a dark background
 
 " Windows Compatible
 " On Windows, also use '.vim' instead of 'vimfiles'; this makes synchronization
 " across (heterogeneous) systems easier.
 if has('win32') || has('win64')
-	set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+    set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" pathogen
+" Setup Bundle Support
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-call pathogen#infect()
+" The next two lines ensure that the ~/.vim/bundle/ system works
+runtime! autoload/pathogen.vim
+silent! call pathogen#helptags()
+silent! call pathogen#runtime_append_all_bundles()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General
@@ -34,9 +55,12 @@ set mouse=a
 set background=dark
 " Make arrow and other keys work
 if !has('win32') && !has('win64')
-	set term=$TERM
+    set term=$TERM
 endif
 " Automatically detect file types.
+filetype on
+filetype indent on
+filetype plugin on
 filetype plugin indent on
 " Specify the character encoding used in the script.
 scriptencoding utf-8
@@ -52,6 +76,28 @@ set viewoptions=folds,options,cursor,unix,slash
 set virtualedit=onemore
 " Store a ton of history (default is 20)
 set history=1024
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Backup / Undo settings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if 1
+    set nobackup                                 " No backup ...
+else
+    set backup                                   " Backups are nice ...
+    set backupdir=$HOME/.vimbackup//             " 
+    set directory=$HOME/.vimswap//               " Same for swap files
+    set viewdir=$HOME/.vimviews//                " same for view files
+                                                 " Creating directories if they don't exist
+    silent execute '!mkdir -p $HVOME/.vimbackup'
+    silent execute '!mkdir -p $HOME/.vimswap'
+    silent execute '!mkdir -p $HOME/.vimviews'
+endif
+set undofile                                     " Persistent undo
+set undolevels=1024                              " maximum number of changes that can be undone
+set undoreload=8192                              " maximum number lines to save for undo on a buffer reload
+
+au BufWinLeave * silent! mkview                  " make vim save view (state) (folds, cursor, etc)
+au BufWinEnter * silent! loadview                " make vim load view (state) (folds, cursor, etc)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " UI
@@ -96,23 +142,24 @@ nnoremap <Leader>hl :set cursorline!<CR>
 nnoremap <Leader>hc :set cursorcolumn!<CR>
 
 if has('cmdline_info')
-	" Show the ruler
-	set ruler
-	set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
-	" Show partial commands in status line and selected
-	" characters/lines in visual mode
-	set showcmd
+    " Show the ruler
+    set ruler
+    set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
+    " Show partial commands in status line and selected
+    " characters/lines in visual mode
+    set showcmd
 endif
 
 if has('statusline')
-	set laststatus=2
+    set laststatus=2
 
-	" Broken down into easily includeable segments
-	set statusline=
-	set statusline+=%<%f\                    " Filename
-	set statusline+=%w%h%m%r                 " Options
-	set statusline+=\[%{&ff}/%Y]             " Filetype
-	set statusline+=%=%-14.(%l,%c%V%)\%p%%   " Right aligned file nav info
+    " Broken down into easily includeable segments
+    set statusline=
+    set statusline+=%<%f\                    " Filename
+    set statusline+=%w%h%m%r                 " Options
+    set statusline+=%{fugitive#statusline()} " Git Hotness
+    set statusline+=\[%{&ff}/%Y]             " Filetype
+    set statusline+=%=%-14.(%l,%c%V%)\%p%%   " Right aligned file nav info
 endif
 
 set backspace=indent,eol,start  " Backspace for dummys
@@ -129,9 +176,15 @@ set wildmode=list:longest,full  " Comand <Tab> completion, list matches, then lo
 set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap to
 set scrolljump=4                " Lines to scroll when cursor leaves screen
 set scrolloff=3                 " Minimum lines to keep above and below cursor
-set foldenable                  " Auto fold code
-set fdl=1                       " Set fold level
 set gdefault                    " The /g flag on :s substitutions by default
+set foldenable                  " Auto fold code
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc,*.class,cscope.*,tags,*.r51,*.pbi,*.map,*i,*.pbd,*.cout,*.dep,*.wst,*dni,*.sfr,*.hex
+
+" Close any "Preview" window when leaving insrt mode
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text and Formatting
@@ -160,7 +213,7 @@ set tw=2048
 set selection=inclusive
 
 " Remove trailing whitespaces and ^M chars
-autocmd FileType c,cpp,java,php,js,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+autocmd FileType c,cpp,java,php,js,twig,xml,yml,vim autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -181,56 +234,17 @@ cmap cd. lcd %:p:h
 vnoremap < <gv
 vnoremap > >gv
 
-" Fix home and end keybindings for screen, particularly on mac
-" - for some reason this fixes the arrow keys too. huh.
-map [F $
-imap [F $
-map [H g0
-imap [H g0
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Encoding Settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set encoding=utf-8
+set termencoding=utf-8
 if has("multi_byte")
-	" Set fileencoding priority
-	if getfsize(expand("%")) > 0
-		set fileencodings=ucs-bom,utf-8,cp936,big5,euc-jp,euc-kr,latin1
-	else
-		set fileencodings=cp936,big5,euc-jp,euc-kr,latin1
-	endif
-
-	" CJK environment detection and corresponding setting
-	if v:lang =~ "^zh_CN"
-		" Use cp936 to support GBK, euc-cn == gb2312
-		set encoding=cp936
-		set termencoding=cp936
-		set fileencoding=cp936
-	elseif v:lang =~ "^zh_TW"
-		" cp950, big5 or euc-tw
-		" Are they equal to each other?
-		set encoding=big5
-		set termencoding=big5
-		set fileencoding=big5
-	elseif v:lang =~ "^ko"
-		" Copied from someone's dotfile, untested
-		set encoding=euc-kr
-		set termencoding=euc-kr
-		set fileencoding=euc-kr
-	elseif v:lang =~ "^ja_JP"
-		" Copied from someone's dotfile, unteste
-		set encoding=euc-jp
-		set termencoding=euc-jp
-		set fileencoding=euc-jp
-	endif
-	" Detect UTF-8 locale, and replace CJK setting if needed
-	if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
-		set encoding=utf-8
-		set termencoding=utf-8
-		set fileencoding=utf-8
-	endif
+    " Set fileencoding priority
+    set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 else
-	echoerr "Sorry, this version of (g)vim was not compiled with multi_byte"
+    echoerr "Sorry, this version of (g)vim was not compiled with multi_byte"
 endif
 
 
@@ -243,11 +257,11 @@ endif
 " Tlist(taglist)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if &diff
-	" Don't auto pen when compare two files
-	let Tlist_Auto_Open=0
+    " Don't auto pen when compare two files
+    let Tlist_Auto_Open=0
 else
-	" Auto pen Tlist when open a file
-	let Tlist_Auto_Open=1
+    " Auto pen Tlist when open a file
+    let Tlist_Auto_Open=1
 endif
 
 let Tlist_Auto_Highlight_Tag=1
@@ -290,7 +304,7 @@ let g:LookupFile_AlwaysAcceptFirst = 1          " enter to open first match
 let g:LookupFile_AllowNewFiles = 0              " not create file which not exist
 let g:LookupFile_ignorecase= 1                  " ignore case to match files
 if filereadable("fn.tags")                      " set tag file name
-	let g:LookupFile_TagExpr = '"fn.tags"'
+    let g:LookupFile_TagExpr = '"fn.tags"'
 endif
 nmap <silent> <Leader>lf :LookupFile<cr>
 nmap <silent> <Leader>lt :LUTags<cr>
@@ -302,29 +316,29 @@ nmap <silent> <Leader>lw :LUWalk<cr>
 " Functions
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! InitializeDirectories()
-	let separator = "."
-	let parent = $HOME
-	let prefix = '.vim'
-	let dir_list = {
-		\ 'backup': 'backupdir',
-		\ 'views': 'viewdir',
-		\ 'swap': 'directory' }
+    let separator = "."
+    let parent = $HOME
+    let prefix = '.vim'
+    let dir_list = {
+                \ 'backup': 'backupdir',
+                \ 'views': 'viewdir',
+                \ 'swap': 'directory' }
 
-	for [dirname, settingname] in items(dir_list)
-		let directory = parent . '/' . prefix . dirname . "/"
-		if exists("*mkdir")
-			if !isdirectory(directory)
-				call mkdir(directory)
-			endif
-		endif
-		if !isdirectory(directory)
-			echo "Warning: Unable to create backup directory: " . directory
-			echo "Try: mkdir -p " . directory
-		else
-			let directory = substitute(directory, " ", "\\\\ ", "")
-			exec "set " . settingname . "=" . directory
-		endif
-	endfor
+    for [dirname, settingname] in items(dir_list)
+        let directory = parent . '/' . prefix . dirname . "/"
+        if exists("*mkdir")
+            if !isdirectory(directory)
+                call mkdir(directory)
+            endif
+        endif
+        if !isdirectory(directory)
+            echo "Warning: Unable to create backup directory: " . directory
+            echo "Try: mkdir -p " . directory
+        else
+            let directory = substitute(directory, " ", "\\\\ ", "")
+            exec "set " . settingname . "=" . directory
+        endif
+    endfor
 endfunction
 call InitializeDirectories()
 
@@ -339,9 +353,9 @@ else
 endif
 set cst
 set nocsverb
-if filereadable("cscope.out")	" db in current dir
+if filereadable("cscope.out")    " db in current dir
     cs add cscope.out
-elseif $CSCOPE_DB != ""		" db pointed to by env
+elseif $CSCOPE_DB != ""        " db pointed to by env
     cs add $CSCOPE_DB
 endif
 
@@ -416,22 +430,22 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 " https://github.com/kien/rainbow_parentheses.vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
+            \ ['brown',       'RoyalBlue3'],
+            \ ['Darkblue',    'SeaGreen3'],
+            \ ['darkgray',    'DarkOrchid3'],
+            \ ['darkgreen',   'firebrick3'],
+            \ ['darkcyan',    'RoyalBlue3'],
+            \ ['darkred',     'SeaGreen3'],
+            \ ['darkmagenta', 'DarkOrchid3'],
+            \ ['brown',       'firebrick3'],
+            \ ['gray',        'RoyalBlue3'],
+            \ ['darkmagenta', 'DarkOrchid3'],
+            \ ['Darkblue',    'firebrick3'],
+            \ ['darkgreen',   'RoyalBlue3'],
+            \ ['darkcyan',    'SeaGreen3'],
+            \ ['darkred',     'DarkOrchid3'],
+            \ ['red',         'firebrick3'],
+            \ ]
 " Always On
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
@@ -477,7 +491,7 @@ nmap <Leader>fj   :%!python -m json.tool<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use local vimrc if available
 if filereadable(expand("~/.vimrc.local"))
-	source ~/.vimrc.local
+    source ~/.vimrc.local
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
