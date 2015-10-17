@@ -586,6 +586,84 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 " ###### nginx #########
 " Bundle 'evanmiller/nginx-vim-syntax'
 
+" ###### Markdown Preview #########
+Bundle 'MikeCoder/markdown-preview.vim'
+
+" ###### Markdown Preview #########
+Bundle 'yuratomo/w3m.vim'
+
+" ###### Instant Markdown #########
+" You first need to have node.js with npm installed.
+" Nodejs - https://nodejs.org/en/
+" [sudo] npm -g install instant-markdown-d
+Bundle 'suan/vim-instant-markdown'
+
+" ###### ack #########
+" Run your favorite search tool ack from Vim, with an enhanced results list.
+Bundle 'mileszs/ack.vim'
+
+" ###### acp #########
+" Automatically opens popup menu for completions
+Bundle 'vim-scripts/AutoComplPop'
+
+" ###### fugitive #########
+" Best git wrapper
+Bundle 'tpope/vim-fugitive'
+
+" ###### clang-format #########
+" Formats your C++ code with specific coding style using clang
+Bundle 'rhysd/vim-clang-format'
+
+" ###### autoload_cscope #########
+" Automatically load cscope.out databases into vim when you open a C file. (headers included) 
+Bundle 'vim-scripts/autoload_cscope.vim'
+
+" ###### taglist #########
+" Source code browser plugin for Vim.
+" Provides an overview of the structure of source code files and allows
+" you to efficiently browse through source code files for different
+" programming languages.
+Bundle 'vim-scripts/taglist.vim'
+
+" ###### Trinity #########
+" The Trinity plugin manages Source Explorer, Taglist and NERD Tree, and build
+" them as a great IDE which works like the "Source Insignt".
+Bundle 'wesleyche/Trinity'
+
+" ###### SrcExpl #########
+" Exploring the source code based on "tags"
+Bundle 'wesleyche/SrcExpl'
+
+" ###### bufexplorer #########
+" Quickly and easily switch between buffers by using the one of 
+" the default public interfaces:
+" - 'be' (normal open) 
+" - 'bt' (toggle open / close) 
+" - 'bs' (force horizontal split open) 
+" - 'bv' (force vertical split open)
+Bundle 'jlanzarotta/bufexplorer'
+
+" ###### browser #########
+" This plugin provides vim with web browsing and html formatting capabilities. 
+Bundle 'vim-scripts/browser.vim'
+
+" ###### c.vim #########
+" C/C++ IDE --  Write and run programs. Insert statements, idioms, comments etc. 
+Bundle 'vim-scripts/c.vim'
+
+" ###### Calendar #########
+" A calendar application for Vim
+Bundle 'itchyny/calendar.vim'
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
+
+" ###### Calendar #########
+" Allows you to configure % to match more than just single characters
+Bundle 'tmhedberg/matchit'
+
+" ###### XML #########
+" A plugin for editing xml
+Bundle 'othree/xml.vim'
 
 " ####### temp #######
 " python code format
