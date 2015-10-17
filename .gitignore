@@ -1,0 +1,6 @@
+bundle/*
+*.pyc
+*.bak
+*.bk
+configs
+myconfig.sh
