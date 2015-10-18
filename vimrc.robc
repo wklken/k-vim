@@ -24,7 +24,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Identify platform
 silent function! OSX()
-    return has('macunix')
+    return (has('macunix') || has('mac'))
 endfunction
 silent function! LINUX()
     return has('unix') && !has('macunix') && !has('win32unix')
@@ -441,7 +441,7 @@ call InitializeDirectories()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " cscope
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has('mac')
+if OSX()
     set csprg=/usr/local/bin/cscope
 else
     set csprg=/usr/bin/cscope
@@ -520,6 +520,8 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 " if you install vim-operator-user
 " autocmd FileType c,cpp,objc map <buffer><Leader>x <Plug>(operator-clang-format)
 
+" Already in vimrc.bundles
+" TO BE REMOVED
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Better Rainbow Parentheses
 " https://github.com/kien/rainbow_parentheses.vim
@@ -547,12 +549,17 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
+" Already in vimrc.bundles
+" TO BE REMOVED
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " delimit mate
 " https://github.com/Raimondi/delimitMate
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let delimitMate_expand_cr = 1
 
+
+" Already in vimrc.bundles
+" TO BE REMOVED
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim-easymotion
 " https://github.com/Lokaltog/vim-easymotion
