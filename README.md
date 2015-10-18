@@ -6,9 +6,11 @@ Much of it is beneficial for general use, I would recommend
 picking out the parts you want and understand.
 
 Major of those config are from:
-    - spf13/spf13-vim (https://github.com/spf13/spf13-vim)
-    - wklken/k-vim (https://github.com/wklken/k-vim)
-Thank spf13 and wklken !
+    ```
+    - [spf13/spf13-vim](https://github.com/spf13/spf13-vim)
+    - [wklken/k-vim](https://github.com/wklken/k-vim)
+    ```
+Thank @spf13 and @wklken !
 
 ## How to install
 1. Clone a copy to your local
