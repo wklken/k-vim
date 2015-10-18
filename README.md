@@ -7,8 +7,8 @@ picking out the parts you want and understand.
 
 Major of those config are from:
     ```
-    - [spf13/spf13-vim](https://github.com/spf13/spf13-vim)
-    - [wklken/k-vim](https://github.com/wklken/k-vim)
+    * [spf13/spf13-vim](https://github.com/spf13/spf13-vim)
+    * [wklken/k-vim](https://github.com/wklken/k-vim)
     ```
 Thank @spf13 and @wklken !
 
