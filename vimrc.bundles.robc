@@ -484,17 +484,29 @@ Bundle 'kana/vim-textobj-indent.git'
 Bundle 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+
 map <leader>f :CtrlPMRU<CR>
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+" Excluding version control directories
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*        " Linux/MacOSX
+set wildignore+=*\\.git\\*,*\\.hg\\*,*\\.svn\\*  " Windows ('noshellslash')
+
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-            \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+            \ 'file': '\v\.(exe|so|dll)$',
+            \ 'link': 'some_bad_symbolic_links',
             \ }
-let g:ctrlp_working_path_mode=0
-let g:ctrlp_match_window_bottom=1
-let g:ctrlp_max_height=15
-let g:ctrlp_match_window_reversed=0
-let g:ctrlp_mruf_max=500
-let g:ctrlp_follow_symlinks=1
+let g:ctrlp_working_path_mode     = 0
+let g:ctrlp_match_window_bottom   = 1
+let g:ctrlp_max_height            = 15
+let g:ctrlp_match_window_reversed = 0
+let g:ctrlp_mruf_max              = 500
+let g:ctrlp_follow_symlinks       = 1
+let g:ctrlp_working_path_mode     = 'ra'
+
+let g:ctrlp_mruf_max              = 250
+
 " 如果安装了ag, 使用ag
 if executable('ag')
     " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
@@ -512,6 +524,12 @@ nnoremap <Leader>fu :CtrlPFunky<Cr>
 " Narrow the list down with a word under cursor
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 let g:ctrlp_funky_syntax_highlight = 1
+let g:ctrlp_funky_multi_buffers = 1
+let g:ctrlp_funky_sort_by_mru = 1
+let g:ctrlp_funky_use_cache = 1
+let g:ctrlp_funky_nerdtree_include_files = 1
+let g:ctrlp_funky_php_requires = 1
+let g:ctrlp_funky_php_include = 1
 
 let g:ctrlp_extensions = ['funky']
 " }
@@ -825,6 +843,13 @@ Bundle 'wesleyche/SrcExpl'
 " - 'bs' (force horizontal split open)
 " - 'bv' (force vertical split open)
 Bundle 'jlanzarotta/bufexplorer'
+let g:bufExplorerSortBy='mru'        " Sort by most recently used.
+let g:bufExplorerSplitRight=0        " Split left.
+let g:bufExplorerVertSize=30         " New split window is n columns wide.
+let g:bufExplorerShowDirectories=0   " Do not show directories.
+let g:bufExplorerShowRelativePath=1  " Show relative paths.
+nmap <Leader>b :BufExplorer<CR>
+nmap <Leader>be :BufExplorer<CR>
 " }
 
 
@@ -848,6 +873,20 @@ Bundle 'tmhedberg/matchit'
 
 " Lookupfile {
 Bundle 'vim-scripts/lookupfile'
+let g:LookupFile_MinPatLength = 2               " start search until 2 char input
+let g:LookupFile_PreserveLastPattern = 0        " not save last search strin
+let g:LookupFile_PreservePatternHistory = 1     " save serach history
+let g:LookupFile_AlwaysAcceptFirst = 1          " enter to open first match
+let g:LookupFile_AllowNewFiles = 0              " not create file which not exist
+let g:LookupFile_ignorecase= 1                  " ignore case to match files
+if filereadable("fn.tags")                      " set tag file name
+    let g:LookupFile_TagExpr = '"fn.tags"'
+endif
+nmap <silent> <Leader>lf :LookupFile<cr>
+nmap <silent> <Leader>lt :LUTags<cr>
+nmap <silent> <Leader>lb :LUBufs<cr>
+nmap <silent> <Leader>lp :LUPath<cr>
+nmap <silent> <Leader>lw :LUWalk<cr>
 " }
 " genutils {
 Bundle 'clones/vim-genutils'
@@ -1012,10 +1051,43 @@ endif
 " c.vim
 " C/C++ IDE --  Write and run programs. Insert statements, idioms, comments etc.
 Bundle 'vim-scripts/c.vim'
+" Vim library plugin to provide an easy way to define your own operator
+Bundle 'kana/vim-operator-user'
 
 " clang-format
 " Formats your C++ code with specific coding style using clang
 Bundle 'rhysd/vim-clang-format'
+
+" BS_Attach     (in configuration: Attach) Always attach braces to surrounding context.
+" BS_Linux      (in configuration: Linux) Like Attach, but break before braces on function,
+"               namespace and class definitions.
+" BS_Stroustrup (in configuration: Stroustrup) Like Attach, but break before function
+"               definitions, and .else..
+" BS_Allman     (in configuration: Allman) Always break before braces.
+" BS_GNU        (in configuration: GNU) Always break before braces and add an extra level
+"               of indentation to braces of control statements, not to those of class,
+"               function or other definitions.
+let g:clang_format#style_options = {
+            \ "BasedOnStyle" : "WebKit",
+            \ "AccessModifierOffset" : -4,
+            \ "UseTab" : "Never",
+            \ "IndentWidth" : 4,
+            \ "TabWidth" : 4,
+            \ "ColumnLimit" : 0,
+            \ "AlignTrailingComments" : "true",
+            \ "AllowShortIfStatementsOnASingleLine" : "false",
+            \ "AllowShortLoopsOnASingleLine" : "false",
+            \ "AlwaysBreakTemplateDeclarations" : "true",
+            \ "BreakBeforeBraces" : "Allman",
+            \ "SpaceBeforeAssignmentOperators" : "true",
+            \ "IndentCaseLabels" : "true",
+            \ "Standard" : "Auto"}
+
+" map to <Leader>cf in C++ code
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+" If you install vim-operator-user
+autocmd FileType c,cpp,objc map <buffer><Leader>x <Plug>(operator-clang-format)
 " }
 
 " autoload_cscope {

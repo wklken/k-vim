@@ -42,7 +42,7 @@ endif
 " Windows Compatible
 " On Windows, also use '.vim' instead of 'vimfiles'; this makes synchronization
 " across (heterogeneous) systems easier.
-if has('win32') || has('win64')
+if WINDOWS()
     set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
 endif
 
@@ -84,7 +84,7 @@ set mouse=a
 " Assume a dark background
 set background=dark
 " Make arrow and other keys work
-if !has('win32') && !has('win64')
+if !WINDOWS()
     set term=$TERM
 endif
 " Automatically detect file types.
@@ -389,23 +389,6 @@ nmap <Leader>tt   :TrinityToggleNERDTree<CR>
 nmap <Leader>b :BufExplorer<CR>
 nmap <Leader>be :BufExplorer<CR>
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" LookupFile
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:LookupFile_MinPatLength = 2               " start search until 2 char input
-let g:LookupFile_PreserveLastPattern = 0        " not save last search strin
-let g:LookupFile_PreservePatternHistory = 1     " save serach history
-let g:LookupFile_AlwaysAcceptFirst = 1          " enter to open first match
-let g:LookupFile_AllowNewFiles = 0              " not create file which not exist
-let g:LookupFile_ignorecase= 1                  " ignore case to match files
-if filereadable("fn.tags")                      " set tag file name
-    let g:LookupFile_TagExpr = '"fn.tags"'
-endif
-nmap <silent> <Leader>lf :LookupFile<cr>
-nmap <silent> <Leader>lt :LUTags<cr>
-nmap <silent> <Leader>lb :LUBufs<cr>
-nmap <silent> <Leader>lp :LUPath<cr>
-nmap <silent> <Leader>lw :LUWalk<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Functions
@@ -462,22 +445,28 @@ endif
 " 'f'   file:   open the filename under cursor
 " 'i'   includes: find files that include the filename under cursor
 " 'd'   called: find functions that function under cursor calls
-map <Leader>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-map <Leader>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-map <Leader>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-map <Leader>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-map <Leader>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-map <Leader>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-map <Leader>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-map <Leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+map <Leader>cs :cs find s <C-R>=expand("<cword>")<CR><CR>
+map <Leader>cg :cs find g <C-R>=expand("<cword>")<CR><CR>
+map <Leader>sc :cs find c <C-R>=expand("<cword>")<CR><CR>
+map <Leader>ct :cs find t <C-R>=expand("<cword>")<CR><CR>
+map <Leader>ce :cs find e <C-R>=expand("<cword>")<CR><CR>
+map <Leader>cf :cs find f <C-R>=expand("<cfile>")<CR><CR>
+map <Leader>ci :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+map <Leader>cd :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+map <Leader><Leader>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+map <Leader><Leader>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+map <Leader><Leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 if has("quickfix")
     "set cscopequickfix=s-,c-,d-,i-,t-,e-
     set cscopequickfix=s0,c0,d0,i0,t0,e0
 endif
-
-nmap <Leader>n :cn<CR>
-nmap <Leader>p :cp<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -485,104 +474,6 @@ nmap <Leader>p :cp<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " For ctags, let it can find the 'tags' file even not in current directory
 set tags=tags;/
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" clang-format
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" BS_Attach     (in configuration: Attach) Always attach braces to surrounding context.
-" BS_Linux      (in configuration: Linux) Like Attach, but break before braces on function,
-"               namespace and class definitions.
-" BS_Stroustrup (in configuration: Stroustrup) Like Attach, but break before function
-"               definitions, and .else..
-" BS_Allman     (in configuration: Allman) Always break before braces.
-" BS_GNU        (in configuration: GNU) Always break before braces and add an extra level
-"               of indentation to braces of control statements, not to those of class,
-"               function or other definitions.
-let g:clang_format#style_options = {
-            \ "BasedOnStyle" : "WebKit",
-            \ "AccessModifierOffset" : -4,
-            \ "UseTab" : "Never",
-            \ "IndentWidth" : 4,
-            \ "TabWidth" : 4,
-            \ "ColumnLimit" : 0,
-            \ "AlignTrailingComments" : "true",
-            \ "AllowShortIfStatementsOnASingleLine" : "false",
-            \ "AllowShortLoopsOnASingleLine" : "false",
-            \ "AlwaysBreakTemplateDeclarations" : "true",
-            \ "BreakBeforeBraces" : "Allman",
-            \ "SpaceBeforeAssignmentOperators" : "true",
-            \ "IndentCaseLabels" : "true",
-            \ "Standard" : "Auto"}
-
-" map to <Leader>cf in C++ code
-autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
-autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
-" if you install vim-operator-user
-" autocmd FileType c,cpp,objc map <buffer><Leader>x <Plug>(operator-clang-format)
-
-" Already in vimrc.bundles
-" TO BE REMOVED
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Better Rainbow Parentheses
-" https://github.com/kien/rainbow_parentheses.vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:rbpt_colorpairs = [
-            \ ['brown',       'RoyalBlue3'],
-            \ ['Darkblue',    'SeaGreen3'],
-            \ ['darkgray',    'DarkOrchid3'],
-            \ ['darkgreen',   'firebrick3'],
-            \ ['darkcyan',    'RoyalBlue3'],
-            \ ['darkred',     'SeaGreen3'],
-            \ ['darkmagenta', 'DarkOrchid3'],
-            \ ['brown',       'firebrick3'],
-            \ ['gray',        'RoyalBlue3'],
-            \ ['darkmagenta', 'DarkOrchid3'],
-            \ ['Darkblue',    'firebrick3'],
-            \ ['darkgreen',   'RoyalBlue3'],
-            \ ['darkcyan',    'SeaGreen3'],
-            \ ['darkred',     'DarkOrchid3'],
-            \ ['red',         'firebrick3'],
-            \ ]
-" Always On
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
-
-" Already in vimrc.bundles
-" TO BE REMOVED
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" delimit mate
-" https://github.com/Raimondi/delimitMate
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let delimitMate_expand_cr = 1
-
-
-" Already in vimrc.bundles
-" TO BE REMOVED
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" vim-easymotion
-" https://github.com/Lokaltog/vim-easymotion
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:EasyMotion_do_mapping = 0 " Disable default mappings
-
-" Bi-directional find motion
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-nmap s <Plug>(easymotion-s)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-nmap s <Plug>(easymotion-s2)
-
-nmap <Leader><Leader>s <Plug>(easymotion-sn)
-
-" Turn on case sensitive feature
-let g:EasyMotion_smartcase = 1
-
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
 
 
 " Format json
@@ -607,12 +498,6 @@ if has('gui_running')
         source ~/.gvimrc.local
     endif
 endif
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" grep
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <Leader>gr :Grep -r <C-R>=expand("<cword>")<CR><CR>
-cmap gr Grep -r
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Android logcat highlight syntax
