@@ -22,15 +22,44 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Environment
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Identify platform
+silent function! OSX()
+    return has('macunix')
+endfunction
+silent function! LINUX()
+    return has('unix') && !has('macunix') && !has('win32unix')
+endfunction
+silent function! WINDOWS()
+    return  (has('win16') || has('win32') || has('win64'))
+endfunction
+
 " Basics
 set nocompatible        " Must be first line
-set background=dark     " Assume a dark background
+if !WINDOWS()
+    set shell=/bin/sh
+endif
 
 " Windows Compatible
 " On Windows, also use '.vim' instead of 'vimfiles'; this makes synchronization
 " across (heterogeneous) systems easier.
 if has('win32') || has('win64')
     set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+endif
+
+" Arrow Key Fix
+" https://github.com/spf13/spf13-vim/issues/780
+if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
+    inoremap <silent> <C-[>OC <RIGHT>
+endif
+
+" Use before config if available
+if filereadable(expand("~/.vimrc.before"))
+    source ~/.vimrc.before
+endif
+
+" Use bundles config
+if filereadable(expand("~/.vimrc.bundles"))
+    source ~/.vimrc.bundles
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -65,6 +94,15 @@ filetype plugin indent on
 " Specify the character encoding used in the script.
 scriptencoding utf-8
 
+if has('clipboard')
+    if has('unnamedplus')   " When possible use + register for copy-paste
+        set clipboard=unnamed,unnamedplus
+    else                    " On mac and Windows, use * register for copy-paste
+        set clipboard=unnamed
+    endif
+endif
+
+
 " Automatically write a file when leaving a modified buffer.
 " Turn it off
 set noautowrite
@@ -77,24 +115,38 @@ set virtualedit=onemore
 " Store a ton of history (default is 20)
 set history=1024
 
+set iskeyword-=.                    " '.' is an end of word designator
+set iskeyword-=#                    " '#' is an end of word designator
+set iskeyword-=-                    " '-' is an end of word designator
+
+set hidden                          " Allow buffer switching without saving
+set spell                           " Spell checking on
+
+if 0
+    " Move any option you dont want here
+endif
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Backup / Undo settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if 1
-    set nobackup                                 " No backup ...
-else
-    set backup                                   " Backups are nice ...
-    set backupdir=$HOME/.vimbackup//             " 
-    set directory=$HOME/.vimswap//               " Same for swap files
-    set viewdir=$HOME/.vimviews//                " same for view files
-                                                 " Creating directories if they don't exist
-    silent execute '!mkdir -p $HVOME/.vimbackup'
-    silent execute '!mkdir -p $HOME/.vimswap'
-    silent execute '!mkdir -p $HOME/.vimviews'
+set backup                                       " Backups are nice ...
+set backupdir=$HOME/.vimbackup//                 " Backup folder
+set directory=$HOME/.vimswap//                   " Same for swap files
+set viewdir=$HOME/.vimviews//                    " Same for view files
+set undodir=$HOME/.vimundo//                     " Same for view files
+
+silent execute '!mkdir -p $HOME/.vimbackup'      " Creating directories if they don't exist
+silent execute '!mkdir -p $HOME/.vimswap'
+silent execute '!mkdir -p $HOME/.vimviews'
+silent execute '!mkdir -p $HOME/.vimundo'
+if has('persistent_undo')
+    set undofile                                 " Persistent undo
+    set undolevels=1024                          " maximum number of changes that can be undone
+    set undoreload=8192                          " maximum number lines to save for undo on a buffer reload
 endif
-set undofile                                     " Persistent undo
-set undolevels=1024                              " maximum number of changes that can be undone
-set undoreload=8192                              " maximum number lines to save for undo on a buffer reload
+if 0
+    set nobackup                                 " No backup ...
+endif
 
 au BufWinLeave * silent! mkview                  " make vim save view (state) (folds, cursor, etc)
 au BufWinEnter * silent! loadview                " make vim load view (state) (folds, cursor, etc)
@@ -157,14 +209,16 @@ if has('statusline')
     set statusline=
     set statusline+=%<%f\                    " Filename
     set statusline+=%w%h%m%r                 " Options
-    set statusline+=%{fugitive#statusline()} " Git Hotness
+    if !WINDOWS()
+        set statusline+=%{fugitive#statusline()} " Git Hotness, !!! IT MAY MAKE VIM VERY SLOW IN CYGWIN !!!
+    endif
     set statusline+=\[%{&ff}/%Y]             " Filetype
     set statusline+=%=%-14.(%l,%c%V%)\%p%%   " Right aligned file nav info
 endif
 
 set backspace=indent,eol,start  " Backspace for dummys
 set linespace=0                 " No extra spaces between rows
-set nu                          " Line numbers on
+set number                      " Line numbers on
 set showmatch                   " Show matching brackets/parenthesis
 set incsearch                   " Find as you type search
 set hlsearch                    " Highlight search terms
@@ -178,6 +232,8 @@ set scrolljump=4                " Lines to scroll when cursor leaves screen
 set scrolloff=3                 " Minimum lines to keep above and below cursor
 set gdefault                    " The /g flag on :s substitutions by default
 set foldenable                  " Auto fold code
+set list
+
 
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc,*.class,cscope.*,tags,*.r51,*.pbi,*.map,*i,*.pbd,*.cout,*.dep,*.wst,*dni,*.sfr,*.hex
@@ -225,6 +281,9 @@ autocmd FileType c,cpp,java,php,js,twig,xml,yml,vim autocmd BufWritePre <buffer>
 
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
+
+" Find merge conflict markers
+map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR>
 
 " Change Working Directory to that of the current file
 cmap cwd lcd %:p:h
@@ -395,13 +454,13 @@ set tags=tags;/
 " clang-format
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " BS_Attach     (in configuration: Attach) Always attach braces to surrounding context.
-" BS_Linux      (in configuration: Linux) Like Attach, but break before braces on function, 
+" BS_Linux      (in configuration: Linux) Like Attach, but break before braces on function,
 "               namespace and class definitions.
-" BS_Stroustrup (in configuration: Stroustrup) Like Attach, but break before function 
+" BS_Stroustrup (in configuration: Stroustrup) Like Attach, but break before function
 "               definitions, and .else..
 " BS_Allman     (in configuration: Allman) Always break before braces.
-" BS_GNU        (in configuration: GNU) Always break before braces and add an extra level 
-"               of indentation to braces of control statements, not to those of class, 
+" BS_GNU        (in configuration: GNU) Always break before braces and add an extra level
+"               of indentation to braces of control statements, not to those of class,
 "               function or other definitions.
 let g:clang_format#style_options = {
             \ "BasedOnStyle" : "WebKit",
@@ -489,9 +548,21 @@ nmap <Leader>fj   :%!python -m json.tool<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Misc
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use fork vimrc if available
+if filereadable(expand("~/.vimrc.fork"))
+    source ~/.vimrc.fork
+endif
+
 " Use local vimrc if available
 if filereadable(expand("~/.vimrc.local"))
     source ~/.vimrc.local
+endif
+
+" Use local gvimrc if available and gui is running
+if has('gui_running')
+    if filereadable(expand("~/.gvimrc.local"))
+        source ~/.gvimrc.local
+    endif
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

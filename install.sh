@@ -22,6 +22,10 @@ lnif $CURRENT_DIR/vimrc $HOME/.vimrc
 lnif $CURRENT_DIR/vimrc.bundles $HOME/.vimrc.bundles
 lnif "$CURRENT_DIR/" "$HOME/.vim"
 
+mkdir -p ~/.vim/autoload 
+mkdir -p ~/.vim/bundle
+curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
 echo "Step3: install vundle"
 if [ ! -e $CURRENT_DIR/bundle/vundle ]; then
     echo "Installing Vundle"

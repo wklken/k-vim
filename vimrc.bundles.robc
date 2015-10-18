@@ -1,8 +1,19 @@
-" ==========================================
-" bundle 插件管理和配置项
-" ==========================================
 
-"------------------------------------------- begin of configs --------------------------------------------
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vim configuration
+" Robbie Cao <robbie.cao@gmail.com>
+"
+" This is the .vimrc file of Robbie Cao.
+" Much of it is beneficial for general use, I would recommend
+" picking out the parts you want and understand.
+"
+" Major of those config are from:
+" - spf13/spf13-vim (https://github.com/spf13/spf13-vim)
+" - wklken/k-vim (https://github.com/wklken/k-vim)
+" Thank spf13 and wklken !
+"
+" You can find me at https://www.facebook.com/cao.robbie
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " ################### 包依赖 #####################
 " package dependence:  ctags, ag(he_silver_searcher)
@@ -15,6 +26,39 @@ filetype off " required! turn off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+
+
+" Bundles
+
+" Deps
+Bundle 'gmarik/vundle'
+Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'tomtom/tlib_vim'
+if executable('ag')
+    Bundle 'mileszs/ack.vim'
+    let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
+elseif executable('ack-grep')
+    let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+    Bundle 'mileszs/ack.vim'
+elseif executable('ack')
+    Bundle 'mileszs/ack.vim'
+endif
+
+" Setup Bundle Support
+" The next three lines ensure that the ~/.vim/bundle/ system works
+filetype off
+set rtp+=~/.vim/bundle/vundle
+call vundle#rc()
+
+" Add an UnBundle command {
+function! UnBundle(arg, ...)
+    let bundle = vundle#config#init_bundle(a:arg, a:000)
+    call filter(g:vundle#bundles, 'v:val["name_spec"] != "' . a:arg . '"')
+endfunction
+
+    com! -nargs=+         UnBundle
+    \ call UnBundle(<args>)
+    " }
 
 " ################### 插件管理 ###################
 
@@ -207,7 +251,7 @@ map <Leader><leader>. <Plug>(easymotion-repeat)
 
 
 
-Bundle 'vim-scripts/matchit.zip'
+Bundle 'tmhedberg/matchit'
 
 " 显示marks - 方便自己进行标记和跳转
 " m[a-zA-Z] add mark
@@ -600,4 +644,3 @@ autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
 " Bundle 'amoffat/snake'
 " I do not want to change much for default registers, just default behavior
 " Bundle 'svermeulen/vim-easyclip'
-"------------------------------------------- end of configs --------------------------------------------
