@@ -1,0 +1,507 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vim configuration
+" Robbie Cao <robbie.cao@gmail.com>
+"
+" This is the .vimrc file of Robbie Cao.
+" Much of it is beneficial for general use, I would recommend
+" picking out the parts you want and understand.
+"
+" Major of those config are from:
+" - spf13/spf13-vim (https://github.com/spf13/spf13-vim)
+" - wklken/k-vim (https://github.com/wklken/k-vim)
+" Thank spf13 and wklken !
+"
+" You can find me at https://www.facebook.com/cao.robbie
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Modeline
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim: set foldmarker={,} foldlevel=0 foldmethod=marker spell :
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Environment
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Identify platform
+silent function! OSX()
+    return (has('macunix') || has('mac'))
+endfunction
+silent function! LINUX()
+    return has('unix') && !has('macunix') && !has('win32unix')
+endfunction
+silent function! WINDOWS()
+    return  (has('win16') || has('win32') || has('win64'))
+endfunction
+
+" Basics
+set nocompatible        " Must be first line
+if !WINDOWS()
+    set shell=/bin/sh
+endif
+
+" Windows Compatible
+" On Windows, also use '.vim' instead of 'vimfiles'; this makes synchronization
+" across (heterogeneous) systems easier.
+if WINDOWS()
+    set runtimepath=$HOME/.vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/.vim/after
+endif
+
+" Arrow Key Fix
+" https://github.com/spf13/spf13-vim/issues/780
+if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
+    inoremap <silent> <C-[>OC <RIGHT>
+endif
+
+" Use before config if available
+if filereadable(expand("~/.vimrc.before"))
+    source ~/.vimrc.before
+endif
+
+" Use bundles config
+if filereadable(expand("~/.vimrc.bundles"))
+    source ~/.vimrc.bundles
+endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Setup Bundle Support
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" The next two lines ensure that the ~/.vim/bundle/ system works
+runtime! autoload/pathogen.vim
+silent! call pathogen#helptags()
+silent! call pathogen#runtime_append_all_bundles()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" General
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set to auto read when a file is changed from the outside
+set autoread
+
+" Have the mouse enabled all the time.
+" When you need to copy from vim, you have to ':set mouse=' first
+set mouse=a
+
+" Assume a dark background
+set background=dark
+" Make arrow and other keys work
+if !WINDOWS()
+    set term=$TERM
+endif
+" Automatically detect file types.
+filetype on
+filetype indent on
+filetype plugin on
+filetype plugin indent on
+" Specify the character encoding used in the script.
+scriptencoding utf-8
+
+if has('clipboard')
+    if has('unnamedplus')   " When possible use + register for copy-paste
+        set clipboard=unnamed,unnamedplus
+    else                    " On Mac and Windows, use * register for copy-paste
+        set clipboard=unnamed
+    endif
+    " Method #1
+    nnoremap <Leader>;y :"+y<CR><CR>
+    nnoremap <Leader>;p :"+p<CR><CR>
+    " Method #2
+    if OSX()
+        nnoremap <Leader>;c :w !pbcopy<CR><CR>
+        nnoremap <Leader>;v :r !pbpaste<CR><CR>
+    elseif LINUX()
+    else
+    endif
+endif
+
+
+" Automatically write a file when leaving a modified buffer.
+" Turn it off
+set noautowrite
+" Abbrev. of messages
+set shortmess+=filmnrxoOtT
+" Better unix/windows compatibility
+set viewoptions=folds,options,cursor,unix,slash
+" Allow for cursor beyond last character
+set virtualedit=onemore
+" Store a ton of history (default is 20)
+set history=1024
+
+set iskeyword-=.                    " '.' is an end of word designator
+set iskeyword-=#                    " '#' is an end of word designator
+set iskeyword-=-                    " '-' is an end of word designator
+
+set hidden                          " Allow buffer switching without saving
+set spell                           " Spell checking on
+
+if 0
+    " Move any option you dont want here
+endif
+
+
+" Automatically write a file when leaving a modified buffer.
+" Turn it off
+set noautowrite
+" Abbrev. of messages
+set shortmess+=filmnrxoOtT
+" Better unix/windows compatibility
+set viewoptions=folds,options,cursor,unix,slash
+" Allow for cursor beyond last character
+set virtualedit=onemore
+" Store a ton of history (default is 20)
+set history=1024
+
+set iskeyword-=.                    " '.' is an end of word designator
+set iskeyword-=#                    " '#' is an end of word designator
+set iskeyword-=-                    " '-' is an end of word designator
+
+set hidden                          " Allow buffer switching without saving
+set spell                           " Spell checking on
+
+if 0
+    " Move any option you dont want here
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Backup / Undo settings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set backup                                       " Backups are nice ...
+set backupdir=$HOME/.vimbackup/                  " Backup folder
+set directory=$HOME/.vimswap/                    " Same for swap files
+set viewdir=$HOME/.vimviews/                     " Same for view files
+set undodir=$HOME/.vimundo/                      " Same for view files
+
+" Creating directories if they don't exist
+silent execute '!mkdir -p $HOME/.vimbackup'
+silent execute '!mkdir -p $HOME/.vimswap'
+silent execute '!mkdir -p $HOME/.vimviews'
+silent execute '!mkdir -p $HOME/.vimundo'
+if has('persistent_undo')
+    set undofile                                 " Persistent undo
+    set undolevels=1024                          " Maximum number of changes that can be undone
+    set undoreload=8192                          " Maximum number lines to save for undo on a buffer reload
+endif
+if 0
+    set nobackup                                 " No backup ...
+endif
+
+au BufWinLeave * silent! mkview                  " Make vim save view (state) (folds, cursor, etc)
+au BufWinEnter * silent! loadview                " Make vim load view (state) (folds, cursor, etc)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" UI
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  0     Black
+"  1     DarkBlue
+"  2     DarkGreen
+"  3     DarkCyan
+"  4     DarkRed
+"  5     DarkMagenta
+"  6     Brown, DarkYellow
+"  7     LightGray, LightGrey, Gray, Grey
+"  8     DarkGray, DarkGrey
+"  9     Blue, LightBlue
+" 10     Green, LightGreen
+" 11     Cyan, LightCyan
+" 12     Red, LightRed
+" 13     Magenta, LightMagenta
+" 14     Yellow, LightYellow
+" 15     White
+"
+" Set colorscheme
+colorscheme elflord
+" Enable syntax highlight
+syntax enable
+" Display the current mode
+set showmode
+" The commandbar is 2 high
+set cmdheight=2
+" How many tenths of a second to blink
+set mat=2
+" Imediately show the search result
+set is
+
+" Highlight the current line
+set cursorline
+hi CursorLine   term=reverse cterm=NONE ctermbg=darkred     ctermfg=white guibg=darkred guifg=white
+" Highlight the current column
+set cursorcolumn
+hi CursorColumn term=reverse cterm=NONE ctermbg=darkgray    ctermfg=white guibg=darkred guifg=white
+nnoremap <Leader>hl :set cursorline!<CR>
+nnoremap <Leader>hc :set cursorcolumn!<CR>
+
+if has('cmdline_info')
+    " Show the ruler
+    set ruler
+    set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
+    " Show partial commands in status line and selected
+    " characters/lines in visual mode
+    set showcmd
+endif
+
+if has('statusline')
+    set laststatus=2
+
+    " Broken down into easily includeable segments
+    set statusline=
+    set statusline+=%<%f\                    " Filename
+    set statusline+=%w%h%m%r                 " Options
+    if !WINDOWS()
+        set statusline+=%{fugitive#statusline()} " Git Hotness, !!! IT MAY MAKE VIM VERY SLOW !!!
+    endif
+    set statusline+=\[%{&ff}/%Y]             " Filetype
+    set statusline+=%=%-14.(%l,%c%V%)\%p%%   " Right aligned file nav info
+endif
+
+set backspace=indent,eol,start  " Backspace for dummys
+set linespace=0                 " No extra spaces between rows
+set number                      " Line numbers on
+set showmatch                   " Show matching brackets/parenthesis
+set incsearch                   " Find as you type search
+set hlsearch                    " Highlight search terms
+set winminheight=0              " Windows can be 0 line high
+set ignorecase                  " Case insensitive search
+set smartcase                   " Case sensitive when uc present
+set wildmenu                    " Show list instead of just completing
+set wildmode=list:longest,full  " Comand <Tab> completion, list matches, then longest common part, then all.
+set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap to
+set scrolljump=4                " Lines to scroll when cursor leaves screen
+set scrolloff=3                 " Minimum lines to keep above and below cursor
+set gdefault                    " The /g flag on :s substitutions by default
+set foldenable                  " Auto fold code
+set list
+
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc,*.class,cscope.*,tags,*.r51,*.pbi,*.map,*i,*.pbd,*.cout,*.dep,*.wst,*dni,*.sfr,*.hex
+
+" Close any "Preview" window when leaving insrt mode
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Text and Formatting
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set nowrap                      " Not wrap long lines, 'set wrap' if need
+set autoindent                  " Auto indent
+set smartindent                 " Smart indent
+set tabstop=4                   " Set <Tab> to 4 spaces
+set expandtab                   " Expand <Tab> to spaces
+set shiftwidth=4                " Use indents of 4 spaces
+set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
+
+" Only effective when 'encoding' is 'utf-8' or another Unicode encoding
+set ambiwidth=double
+" <Tab> in front of a line inserts blanks according to
+" 'shiftwidth'.  'tabstop' or 'softtabstop' is used in other places
+set smarttab
+" If on Vim will wrap long lines at a character in 'breakat' rather
+" than at the last character that fits on the screen
+set lbr
+" Maximum width of text that is being inserted.  A longer line will be
+" broken after white space to get this width.  A zero value disables this.
+set tw=2048
+" This option defines the behavior of the selection.  It is only used
+" in Visual and Select mode.
+set selection=inclusive
+
+" Remove trailing whitespaces and ^M chars
+autocmd FileType c,cpp,java,php,js,twig,xml,yml,vim autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Key (re)Mappings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" The default Leader is '\', use the following line to change to your favoriate,
+" eg, ','
+let mapLeader = ','     " Single quotation mark (') is another good option
+
+" Yank from the cursor to the end of the line, to be consistent with C and D.
+nnoremap Y y$
+
+" Find merge conflict markers
+map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR>
+
+" Change Working Directory to that of the current file
+cmap cwd lcd %:p:h
+cmap cd. lcd %:p:h
+
+" Visual shifting (does not exit Visual mode)
+vnoremap < <gv
+vnoremap > >gv
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Encoding Settings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set encoding=utf-8
+set termencoding=utf-8
+if has("multi_byte")
+    " Set fileencoding priority
+    set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+else
+    echoerr "Sorry, this version of (g)vim was not compiled with multi_byte"
+endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugins
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tlist(taglist)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if &diff
+    " Don't auto pen when compare two files
+    let Tlist_Auto_Open=0
+else
+    " Auto pen Tlist when open a file
+    let Tlist_Auto_Open=1
+endif
+
+let Tlist_Auto_Highlight_Tag=1
+let Tlist_Use_Right_Window=0
+let Tlist_Auto_Update=1
+let Tlist_File_Fold_Auto_Close=1
+let Tlist_Exit_OnlyWindow=1
+let Tlist_Highlight_Tag_On_BufEnter=1
+let Tlist_Use_SingleClick=0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Trinity
+"
+" This small plugin is just an IDE manager to control the three plugins open and
+" close, and build them into a great IDE which works like the Source Insignt
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Open and close all the three plugins on the same time
+nmap <Leader>ta   :TrinityToggleAll<CR>
+" Open and close the srcexpl.vim separately
+nmap <Leader>ts   :TrinityToggleSourceExplorer<CR>
+" Open and close the taglist.vim separately
+nmap <Leader>tl   :TrinityToggleTagList<CR>
+" Open and close the NERD_tree.vim separately
+nmap <Leader>tt   :TrinityToggleNERDTree<CR>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Buffer Explorer
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <Leader>b :BufExplorer<CR>
+nmap <Leader>be :BufExplorer<CR>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Functions
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! InitializeDirectories()
+    let separator = "."
+    let parent = $HOME
+    let prefix = '.vim'
+    let dir_list = {
+                \ 'backup': 'backupdir',
+                \ 'views': 'viewdir',
+                \ 'swap': 'directory' }
+
+    for [dirname, settingname] in items(dir_list)
+        let directory = parent . '/' . prefix . dirname . "/"
+        if exists("*mkdir")
+            if !isdirectory(directory)
+                call mkdir(directory)
+            endif
+        endif
+        if !isdirectory(directory)
+            echo "Warning: Unable to create backup directory: " . directory
+            echo "Try: mkdir -p " . directory
+        else
+            let directory = substitute(directory, " ", "\\\\ ", "")
+            exec "set " . settingname . "=" . directory
+        endif
+    endfor
+endfunction
+call InitializeDirectories()
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" cscope
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if OSX()
+    set csprg=/usr/local/bin/cscope
+else
+    set csprg=/usr/bin/cscope
+endif
+set cst
+set nocsverb
+if filereadable("cscope.out")    " db in current dir
+    cs add cscope.out
+elseif $CSCOPE_DB != ""        " db pointed to by env
+    cs add $CSCOPE_DB
+endif
+
+" 's'   symbol: find all references to the token under cursor
+" 'g'   global: find global definition(s) of the token under cursor
+" 'c'   calls:  find all calls to the function name under cursor
+" 't'   text:   find all instances of the text under cursor
+" 'e'   egrep:  egrep search for the word under cursor
+" 'f'   file:   open the filename under cursor
+" 'i'   includes: find files that include the filename under cursor
+" 'd'   called: find functions that function under cursor calls
+map <Leader>cs :cs find s <C-R>=expand("<cword>")<CR><CR>
+map <Leader>cg :cs find g <C-R>=expand("<cword>")<CR><CR>
+map <Leader>sc :cs find c <C-R>=expand("<cword>")<CR><CR>
+map <Leader>ct :cs find t <C-R>=expand("<cword>")<CR><CR>
+map <Leader>ce :cs find e <C-R>=expand("<cword>")<CR><CR>
+map <Leader>cf :cs find f <C-R>=expand("<cfile>")<CR><CR>
+map <Leader>ci :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+map <Leader>cd :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+map <Leader><Leader>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+map <Leader><Leader>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+map <Leader><Leader>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+map <Leader><Leader>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+if has("quickfix")
+    "set cscopequickfix=s-,c-,d-,i-,t-,e-
+    set cscopequickfix=s0,c0,d0,i0,t0,e0
+endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ctags
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" For ctags, let it can find the 'tags' file even not in current directory
+set tags=tags;/
+
+
+" Format json
+nmap <Leader>fj   :%!python -m json.tool<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Misc
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use fork vimrc if available
+if filereadable(expand("~/.vimrc.fork"))
+    source ~/.vimrc.fork
+endif
+
+" Use local vimrc if available
+if filereadable(expand("~/.vimrc.local"))
+    source ~/.vimrc.local
+endif
+
+" Use local gvimrc if available and gui is running
+if has('gui_running')
+    if filereadable(expand("~/.gvimrc.local"))
+        source ~/.gvimrc.local
+    endif
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Android logcat highlight syntax
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au BufRead,BufNewFile *.logcat set filetype=logcat
+au BufRead,BufNewFile aplog* set filetype=logcat
+
