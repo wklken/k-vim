@@ -130,26 +130,27 @@ endif
 " Backup / Undo settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set backup                                       " Backups are nice ...
-set backupdir=$HOME/.vimbackup//                 " Backup folder
-set directory=$HOME/.vimswap//                   " Same for swap files
-set viewdir=$HOME/.vimviews//                    " Same for view files
-set undodir=$HOME/.vimundo//                     " Same for view files
+set backupdir=$HOME/.vimbackup/                  " Backup folder
+set directory=$HOME/.vimswap/                    " Same for swap files
+set viewdir=$HOME/.vimviews/                     " Same for view files
+set undodir=$HOME/.vimundo/                      " Same for view files
 
-silent execute '!mkdir -p $HOME/.vimbackup'      " Creating directories if they don't exist
+" Creating directories if they don't exist
+silent execute '!mkdir -p $HOME/.vimbackup'
 silent execute '!mkdir -p $HOME/.vimswap'
 silent execute '!mkdir -p $HOME/.vimviews'
 silent execute '!mkdir -p $HOME/.vimundo'
 if has('persistent_undo')
     set undofile                                 " Persistent undo
-    set undolevels=1024                          " maximum number of changes that can be undone
-    set undoreload=8192                          " maximum number lines to save for undo on a buffer reload
+    set undolevels=1024                          " Maximum number of changes that can be undone
+    set undoreload=8192                          " Maximum number lines to save for undo on a buffer reload
 endif
 if 0
     set nobackup                                 " No backup ...
 endif
 
-au BufWinLeave * silent! mkview                  " make vim save view (state) (folds, cursor, etc)
-au BufWinEnter * silent! loadview                " make vim load view (state) (folds, cursor, etc)
+au BufWinLeave * silent! mkview                  " Make vim save view (state) (folds, cursor, etc)
+au BufWinEnter * silent! loadview                " Make vim load view (state) (folds, cursor, etc)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " UI
