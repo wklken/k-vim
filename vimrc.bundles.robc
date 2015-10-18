@@ -1044,7 +1044,7 @@ if g:markdown_enabled
     " $ npm -g install instant-markdown-d
     Bundle 'suan/vim-instant-markdown'
     let g:instant_markdown_slow = 1
-    let g:instant_markdown_autostart = 0
+    let g:instant_markdown_autostart = 1
     map <Leader><Leader>mi  :InstantMarkdownPreview GitHub<CR>
 
 endif
