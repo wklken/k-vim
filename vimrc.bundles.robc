@@ -1,6 +1,5 @@
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Vim configuration
+" Vim bundle configuration
 " Robbie Cao <robbie.cao@gmail.com>
 "
 " This is the .vimrc file of Robbie Cao.
@@ -16,8 +15,8 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Dependence
-" package :  ctags, ag(he_silver_searcher)
-" python  :  pep8, pyflake
+" Package :  ctags, ag(the_silver_searcher)
+" Python  :  pep8, pyflake
 " Install them external
 
 
@@ -48,41 +47,50 @@ filetype off
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
-" Add an UnBundle command {
+" Add an UnBundle command
 function! UnBundle(arg, ...)
     let bundle = vundle#config#init_bundle(a:arg, a:000)
     call filter(g:vundle#bundles, 'v:val["name_spec"] != "' . a:arg . '"')
 endfunction
 
-    com! -nargs=+         UnBundle
-    \ call UnBundle(<args>)
-    " }
+com! -nargs=+ UnBundle call UnBundle(<args>)
 
-" ################### 插件管理 ###################
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" 使用Vundle来管理插件
-" vim plugin bundle control, command model
-"     :BundleInstall     install 安装配置的插件
-"     :BundleInstall!    update  更新
-"     :BundleClean       remove plugin not in list 删除本地无用插件
+" Vundle
+" Plugin manager using bundle
+"   :PluginList          - list configured plugins
+"   :PluginInstall(!)    - install (update) plugins
+"   :PluginSearch(!) foo - search (or refresh cache first) for foo
+"   :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
 Bundle 'gmarik/vundle'
 
 
 " ################### 基础 ######################
 
-" 多语言语法检查
+" Syntastic
+" Syntax checking
 Bundle 'scrooloose/syntastic'
-let g:syntastic_error_symbol='>>'
-let g:syntastic_warning_symbol='>'
-let g:syntastic_check_on_open=1
-let g:syntastic_check_on_wq=0
-let g:syntastic_enable_highlighting=1
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list            = 1
+let g:syntastic_check_on_open            = 1
+let g:syntastic_check_on_wq              = 0
+let g:syntastic_enable_highlighting      = 1
+let g:syntastic_error_symbol             = '>>'
+let g:syntastic_warning_symbol           = '>'
 
 " 最轻量
 " let g:syntastic_python_checkers=['pyflakes'] " 使用pyflakes
 
 " 中等
-" error code: http://pep8.readthedocs.org/en/latest/intro.html#error-codes
+" Error code: http://pep8.readthedocs.org/en/latest/intro.html#error-codes
 let g:syntastic_python_checkers=['pyflakes', 'pep8'] " 使用pyflakes,速度比pylint快
 let g:syntastic_python_pep8_args='--ignore=E501,E225,E124,E712'
 

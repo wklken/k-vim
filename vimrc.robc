@@ -62,6 +62,7 @@ if filereadable(expand("~/.vimrc.bundles"))
     source ~/.vimrc.bundles
 endif
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Setup Bundle Support
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -97,9 +98,43 @@ scriptencoding utf-8
 if has('clipboard')
     if has('unnamedplus')   " When possible use + register for copy-paste
         set clipboard=unnamed,unnamedplus
-    else                    " On mac and Windows, use * register for copy-paste
+    else                    " On Mac and Windows, use * register for copy-paste
         set clipboard=unnamed
     endif
+    " Method #1
+    nnoremap <Leader>;y :"+y<CR><CR>
+    nnoremap <Leader>;p :"+p<CR><CR>
+    " Method #2
+    if OSX()
+        nnoremap <Leader>;c :w !pbcopy<CR><CR>
+        nnoremap <Leader>;v :r !pbpaste<CR><CR>
+    elseif LINUX()
+    else
+    endif
+endif
+
+
+" Automatically write a file when leaving a modified buffer.
+" Turn it off
+set noautowrite
+" Abbrev. of messages
+set shortmess+=filmnrxoOtT
+" Better unix/windows compatibility
+set viewoptions=folds,options,cursor,unix,slash
+" Allow for cursor beyond last character
+set virtualedit=onemore
+" Store a ton of history (default is 20)
+set history=1024
+
+set iskeyword-=.                    " '.' is an end of word designator
+set iskeyword-=#                    " '#' is an end of word designator
+set iskeyword-=-                    " '-' is an end of word designator
+
+set hidden                          " Allow buffer switching without saving
+set spell                           " Spell checking on
+
+if 0
+    " Move any option you dont want here
 endif
 
 
@@ -278,7 +313,7 @@ autocmd FileType c,cpp,java,php,js,twig,xml,yml,vim autocmd BufWritePre <buffer>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " The default Leader is '\', use the following line to change to your favoriate,
 " eg, ','
-" let mapLeader = ','
+let mapLeader = ','     " Single quotation mark (') is another good option
 
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
