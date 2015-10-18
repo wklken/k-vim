@@ -1034,6 +1034,7 @@ if g:markdown_enabled
 
     " Markdown Preview
     Bundle 'MikeCoder/markdown-preview.vim'
+    let g:MarkDownCSSDir='~/.vim/mdres'
     map <Leader><Leader>md  :MarkdownPreview GitHub<CR>
 
     " Instant Markdown
