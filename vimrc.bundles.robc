@@ -1030,26 +1030,23 @@ let g:markdown_enabled = 1
 " Markdown {
 if g:markdown_enabled
     Bundle 'plasticboy/vim-markdown'
-    let g:vim_markdown_folding_disabled=1
-
-    " https://github.com/suan/vim-instant-markdown
-    " npm -g install instant-markdown-d
-    " Bundle 'suan/vim-instant-markdown'
-    " let g:instant_markdown_slow = 1
-    " let g:instant_markdown_autostart = 0
-    " map <F12> :InstantMarkdownPreview<CR>
+    let g:vim_markdown_folding_disabled = 1
 
     " Markdown Preview
     Bundle 'MikeCoder/markdown-preview.vim'
-
-    " Markdown Preview
-    Bundle 'yuratomo/w3m.vim'
+    map <Leader><Leader>md  :MarkdownPreview GitHub<CR>
 
     " Instant Markdown
+    " https://github.com/suan/vim-instant-markdown
     " You first need to have node.js with npm installed.
     " Nodejs - https://nodejs.org/en/
-    " [sudo] npm -g install instant-markdown-d
+    " $ [sudo] npm -g install instant-markdown-d
+    " $ npm -g install instant-markdown-d
     Bundle 'suan/vim-instant-markdown'
+    let g:instant_markdown_slow = 1
+    let g:instant_markdown_autostart = 0
+    map <Leader><Leader>mi  :InstantMarkdownPreview GitHub<CR>
+
 endif
 " }
 
@@ -1124,6 +1121,9 @@ let g:calendar_google_task = 1
 " This plugin provides vim with web browsing and html formatting capabilities.
 Bundle 'vim-scripts/browser.vim'
 " }
+
+" w3m web browser
+Bundle 'yuratomo/w3m.vim'
 
 " easyclip {
 " Simplified clipboard functionality for Vim
