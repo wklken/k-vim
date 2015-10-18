@@ -562,18 +562,33 @@ let g:ctrlsf_mapping = {
             \ }
 " }
 
-" fugitive {
-" Git wrapper
-" :Gdiff  :Gstatus :Gvsplit
+" Git wrapper {
+" fugitive
+"   :Gdiff
+"   :Gstatus
+"   :Gvsplit
+"   :Glog
 Bundle 'tpope/vim-fugitive'
-"nnoremap <leader>ge :Gdiff<CR>
-" <leader>gb maps to :Gblame<CR>
-" <leader>gs maps to :Gstatus<CR>
-" <leader>gd maps to :Gdiff<CR>  和现有冲突
-" <leader>gl maps to :Glog<CR>
-" <leader>gc maps to :Gcommit<CR>
-" <leader>gp maps to :Git push<CR>
+nnoremap <Leader><Leader>ge :Gdiff<CR>
+nnoremap <Leader><Leader>gb :Gblame<CR>
+nnoremap <Leader><Leader>gs :Gstatus<CR>
+nnoremap <Leader><Leader>gd :Gdiff<CR>  和现有冲突
+nnoremap <Leader><Leader>gl :Glog<CR>
+nnoremap <Leader><Leader>gc :Gcommit<CR>
+nnoremap <Leader><Leader>gp :Git push<CR>
 
+Bundle 'vim-scripts/vcscommand.vim'
+let b:VCSCommandMapPrefix=',v'
+let b:VCSCommandVCSType='git'
+nmap <Leader><Leader>vs :VCSStatus<CR>
+nmap <Leader><Leader>vc :VCSCommit<CR>
+nmap <Leader><Leader>vb :VCSBlame<CR>
+nmap <Leader><Leader>va :VCSAdd<CR>
+nmap <Leader><Leader>vd :VCSVimDiff<CR>
+nmap <Leader><Leader>vl :VCSLog<CR>
+nmap <Leader><Leader>vu :VCSUpdate<CR>
+
+" gitgutter
 " 同git diff,实时展示文件中修改的行
 Bundle 'airblade/vim-gitgutter'
 let g:gitgutter_map_keys = 0
