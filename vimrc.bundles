@@ -42,7 +42,7 @@ let g:syntastic_enable_highlighting=1
 " 中等
 " error code: http://pep8.readthedocs.org/en/latest/intro.html#error-codes
 let g:syntastic_python_checkers=['pyflakes', 'pep8'] " 使用pyflakes,速度比pylint快
-let g:syntastic_python_pep8_args='--ignore=E501,E225'
+let g:syntastic_python_pep8_args='--ignore=E501,E225,E124,E712'
 
 " 重量级, 但是足够强大, 定制完成后相当个性化
 " pylint codes: http://pylint-messages.wikidot.com/all-codes
@@ -495,6 +495,10 @@ let g:tagbar_type_go = {
 
 
 " 去除taglist =>原因: 使用tagbar和ctrlp-funky可以直接快速跳转函数和变量位置,taglist有些多余
+" ################### 语言相关 ###################
+" For tmux navigator Ctrl-hjkl
+Bundle 'christoomey/vim-tmux-navigator'
+
 
 " ################### 语言相关 ###################
 
@@ -531,6 +535,7 @@ Bundle 'Blackrush/vim-gocode'
 
 " 有bug, 和当前有冲突, 尚未解决, 不要打开
 " Bundle 'tpope/vim-endwise'
+" Bundle 'tpope/vim-rails'
 
 
 " ###### Markdown #########
@@ -584,8 +589,7 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 
 " ####### temp #######
 " python code format
-" autocmd FileType python nnoremap <leader>y :0,$!yapf --stdout-encoding=utf-8<Cr>
-" autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
+autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
 " Bundle 'mindriot101/vim-yapf'
 " scriptencoding utf-8
 " let g:yapf_style = "google"
@@ -594,4 +598,6 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 " nnoremap <leader>y :call Yapf()<cr>
 
 " Bundle 'amoffat/snake'
+" I do not want to change much for default registers, just default behavior
+" Bundle 'svermeulen/vim-easyclip'
 "------------------------------------------- end of configs --------------------------------------------
