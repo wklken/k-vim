@@ -454,6 +454,9 @@ vnoremap > >gv
 " y$ -> Y Make Y behave like other capitals
 map Y y$
 
+" 复制选中区到系统剪切板中
+vnoremap <leader>y "+y
+
 " auto jump to end of select
 " vnoremap <silent> y y`]
 " vnoremap <silent> p p`]
