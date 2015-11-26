@@ -167,10 +167,98 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 Bundle 'docunext/closetag.vim'
 let g:closetag_html_style=1
 
+let g:neocomplete_ennabled = 1
+" NeoComplete {
+" Another plugin for code completeion.
+" It provides keyword completion system by maintaining a cache of keywords in the current buffer.
+if g:neocomplete_ennabled
+    Bundle 'Shougo/neocomplete.vim'
+    " Disable AutoComplPop.
+    let g:acp_enableAtStartup = 0
+    " Use neocomplete.
+    let g:neocomplete#enable_at_startup = 1
+    " Use smartcase.
+    let g:neocomplete#enable_smart_case = 1
+    " Set minimum syntax keyword length.
+    let g:neocomplete#sources#syntax#min_keyword_length = 3
+    let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+    " Define dictionary.
+    let g:neocomplete#sources#dictionary#dictionaries = {
+                \ 'default' : '',
+                \ 'vimshell' : $HOME.'/.vimshell_hist',
+                \ 'scheme' : $HOME.'/.gosh_completions'
+                \ }
+
+    " Define keyword.
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:neocomplete#keyword_patterns = {}
+    endif
+    let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+    " Plugin key-mappings.
+    inoremap <expr><C-g>     neocomplete#undo_completion()
+    inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+    " Recommended key-mappings.
+    " <CR>: close popup and save indent.
+    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+    function! s:my_cr_function()
+        return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+        " For no inserting <CR> key.
+        "return pumvisible() ? "\<C-y>" : "\<CR>"
+    endfunction
+    " <TAB>: completion.
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    " <C-h>, <BS>: close popup and delete backword char.
+    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+    " Close popup by <Space>.
+    "inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+    " AutoComplPop like behavior.
+    "let g:neocomplete#enable_auto_select = 1
+
+    " Shell like behavior(not recommended).
+    "set completeopt+=longest
+    "let g:neocomplete#enable_auto_select = 1
+    "let g:neocomplete#disable_auto_complete = 1
+    "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+    " Enable omni completion.
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+    " Enable heavy omni completion.
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+        let g:neocomplete#sources#omni#input_patterns = {}
+    endif
+    "let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+    "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+    "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+    " For perlomni.vim setting.
+    " https://github.com/c9s/perlomni.vim
+    let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+endif
+" }
+
 " ################### 快速编码 ###################
 
 " 快速注释
 Bundle 'scrooloose/nerdcommenter'
+" <Leader>cc - Comment out the current line or text selected in visual mode.
+" <Leader>cn - Same as |<Leader>|cc but forces nesting.
+" <Leader>c<space> - Toggles the comment state of the selected line(s).
+" <Leader>cm - Comments the given lines using only one set of multipart delimiters.
+" <Leader>ci - Toggles the comment state of the selected line(s) individually.
+" <Leader>cs - Comments out the selected lines ``sexily''
+" <Leader>cy - Same as |<Leader>|cc except that the commented line(s) are yanked first.
+" <Leader>c$ - Comments the current line from the cursor to the end of line.
+" <Leader>cA - Adds comment delimiters to the end of line and goes into insert mode between them.
 let g:NERDSpaceDelims=1
 
 
@@ -192,6 +280,11 @@ if !exists('g:easy_align_delimiters')
 endif
 let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
 
+" Tabular {
+" Text filtering and alignment
+Bundle 'godlygeek/tabular'
+" }
+"
 " ################### 快速移动 ###################
 
 "更高效的移动 [,, + w/fx]
@@ -276,6 +369,12 @@ nnoremap <Leader>fu :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 let g:ctrlp_funky_syntax_highlight = 1
+let g:ctrlp_funky_multi_buffers = 1
+let g:ctrlp_funky_sort_by_mru = 1
+let g:ctrlp_funky_use_cache = 1
+let g:ctrlp_funky_nerdtree_include_files = 1
+let g:ctrlp_funky_php_requires = 1
+let g:ctrlp_funky_php_include = 1
 
 let g:ctrlp_extensions = ['funky']
 
@@ -317,6 +416,17 @@ nnoremap <leader>ge :Gdiff<CR>
 " <leader>gl maps to :Glog<CR>
 " <leader>gc maps to :Gcommit<CR>
 " <leader>gp maps to :Git push<CR>
+"
+Bundle 'vim-scripts/vcscommand.vim'
+let b:VCSCommandMapPrefix=',v'
+let b:VCSCommandVCSType='git'
+nmap <Leader><Leader>vs :VCSStatus<CR>
+nmap <Leader><Leader>vc :VCSCommit<CR>
+nmap <Leader><Leader>vb :VCSBlame<CR>
+nmap <Leader><Leader>va :VCSAdd<CR>
+nmap <Leader><Leader>vd :VCSVimDiff<CR>
+nmap <Leader><Leader>vl :VCSLog<CR>
+nmap <Leader><Leader>vu :VCSUpdate<CR>
 
 " 同git diff,实时展示文件中修改的行
 " 只是不喜欢除了行号多一列, 默认关闭,gs时打开
@@ -419,6 +529,51 @@ let g:nerdtree_tabs_synchronize_focus=0
 "let g:nerdtree_tabs_open_on_console_startup=1
 
 
+
+let g:taglist_enabled = 1
+" taglist {
+" Source code browser plugin for Vim.
+" Provides an overview of the structure of source code files and allows
+" you to efficiently browse through source code files for different
+" programming languages.
+" 使用tagbar和ctrlp-funky可以直接快速跳转函数和变量位置,taglist有些多余
+if g:taglist_enabled
+    Bundle 'vim-scripts/taglist.vim'
+
+    if &diff
+        " Don't auto pen when compare two files
+        let Tlist_Auto_Open=0
+    else
+        " Auto pen Tlist when open a file
+        let Tlist_Auto_Open=1
+    endif
+
+    let Tlist_Auto_Highlight_Tag=1
+    let Tlist_Use_Right_Window=0
+    let Tlist_Auto_Update=1
+    let Tlist_File_Fold_Auto_Close=1
+    let Tlist_Exit_OnlyWindow=1
+    let Tlist_Highlight_Tag_On_BufEnter=1
+    let Tlist_Use_SingleClick=0
+endif
+" }
+
+" Trinity {
+" The Trinity plugin manages Source Explorer, Taglist and NERD Tree, and build
+" them as a great IDE which works like the "Source Insignt".
+Bundle 'wesleyche/Trinity'
+
+" Open and close all the three plugins on the same time
+nmap <Leader>ta   :TrinityToggleAll<CR>
+" Open and close the srcexpl.vim separately
+nmap <Leader>ts   :TrinityToggleSourceExplorer<CR>
+" Open and close the taglist.vim separately
+nmap <Leader>tl   :TrinityToggleTagList<CR>
+" Open and close the NERD_tree.vim separately
+nmap <Leader>tt   :TrinityToggleNERDTree<CR>
+" }
+
+
 " Vim Workspace Controller
 Bundle "szw/vim-ctrlspace"
 let g:airline_exclude_preview = 1
@@ -498,6 +653,29 @@ let g:tagbar_type_go = {
 " ################### 语言相关 ###################
 " For tmux navigator Ctrl-hjkl
 Bundle 'christoomey/vim-tmux-navigator'
+
+]
+" SrcExpl {
+" Exploring the source code based on "tags"
+Bundle 'wesleyche/SrcExpl'
+" "}
+
+" bufexplorer {
+" Quickly and easily switch between buffers by using the one of
+" the default public interfaces:
+" - 'be' (normal open)
+" - 'bt' (toggle open / close)
+" - 'bs' (force horizontal split open)
+" - 'bv' (force vertical split open)
+Bundle 'jlanzarotta/bufexplorer'
+let g:bufExplorerSortBy='mru'        " Sort by most recently used.
+let g:bufExplorerSplitRight=0        " Split left.
+let g:bufExplorerVertSize=30         " New split window is n columns wide.
+let g:bufExplorerShowDirectories=0   " Do not show directories.
+let g:bufExplorerShowRelativePath=1  " Show relative paths.
+nmap <Leader>b :BufExplorer<CR>
+nmap <Leader>be :BufExplorer<CR>
+" }
 
 
 " ################### 语言相关 ###################
@@ -586,6 +764,116 @@ Bundle 'Glench/Vim-Jinja2-Syntax'
 " ###### nginx #########
 " Bundle 'evanmiller/nginx-vim-syntax'
 
+" ###### Markdown Preview #########
+Bundle 'MikeCoder/markdown-preview.vim'
+
+let g:markdown_enabled = 1
+" Markdown {
+if g:markdown_enabled
+    Bundle 'plasticboy/vim-markdown'
+    let g:vim_markdown_folding_disabled = 1
+
+    " Markdown Preview
+    Bundle 'MikeCoder/markdown-preview.vim'
+    let g:MarkDownCSSDir='~/.vim/mdres'
+    map <Leader><Leader>md  :MarkdownPreview GitHub<CR>
+
+    " Instant Markdown
+    " https://github.com/suan/vim-instant-markdown
+    " You first need to have node.js with npm installed.
+    " Nodejs - https://nodejs.org/en/
+    " $ [sudo] npm -g install instant-markdown-d
+    " $ npm -g install instant-markdown-d
+    Bundle 'suan/vim-instant-markdown'
+    let g:instant_markdown_slow = 1
+    let g:instant_markdown_autostart = 1
+    map <Leader><Leader>mi  :InstantMarkdownPreview GitHub<CR>
+
+endif
+" }
+
+" ###### Instant Markdown #########
+" You first need to have node.js with npm installed.
+" Nodejs - https://nodejs.org/en/
+" [sudo] npm -g install instant-markdown-d
+Bundle 'suan/vim-instant-markdown'
+
+" ###### ack #########
+" Run your favorite search tool ack from Vim, with an enhanced results list.
+Bundle 'mileszs/ack.vim'
+
+" ###### acp #########
+" Automatically opens popup menu for completions
+Bundle 'vim-scripts/AutoComplPop'
+
+" ###### fugitive #########
+" Best git wrapper
+Bundle 'tpope/vim-fugitive'
+
+" ###### clang-format #########
+" Formats your C++ code with specific coding style using clang
+Bundle 'rhysd/vim-clang-format'
+
+" ###### autoload_cscope #########
+" Automatically load cscope.out databases into vim when you open a C file. (headers included)
+Bundle 'vim-scripts/autoload_cscope.vim'
+
+" ###### taglist #########
+" Source code browser plugin for Vim.
+" Provides an overview of the structure of source code files and allows
+" you to efficiently browse through source code files for different
+" programming languages.
+Bundle 'vim-scripts/taglist.vim'
+
+" ###### Trinity #########
+" The Trinity plugin manages Source Explorer, Taglist and NERD Tree, and build
+" them as a great IDE which works like the "Source Insignt".
+Bundle 'wesleyche/Trinity'
+
+" ###### SrcExpl #########
+" Exploring the source code based on "tags"
+Bundle 'wesleyche/SrcExpl'
+
+" ###### bufexplorer #########
+" Quickly and easily switch between buffers by using the one of
+" the default public interfaces:
+" - 'be' (normal open)
+" - 'bt' (toggle open / close)
+" - 'bs' (force horizontal split open)
+" - 'bv' (force vertical split open)
+Bundle 'jlanzarotta/bufexplorer'
+
+" ###### browser #########
+" This plugin provides vim with web browsing and html formatting capabilities.
+Bundle 'vim-scripts/browser.vim'
+
+" ###### c.vim #########
+" C/C++ IDE --  Write and run programs. Insert statements, idioms, comments etc.
+Bundle 'vim-scripts/c.vim'
+
+" A calendar application for Vim
+Bundle 'itchyny/calendar.vim'
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
+" }
+
+" browser {
+" This plugin provides vim with web browsing and html formatting capabilities.
+Bundle 'vim-scripts/browser.vim'
+" }
+
+" w3m web browser
+Bundle 'yuratomo/w3m.vim'
+
+" easyclip {
+" Simplified clipboard functionality for Vim
+Bundle 'svermeulen/vim-easyclip'
+" }
+
+
+" ###### XML #########
+" A plugin for editing xml
+Bundle 'othree/xml.vim'
 
 " ####### temp #######
 " python code format
