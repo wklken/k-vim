@@ -9,7 +9,7 @@ k-vim
 
 > VERSION: 9.1
 
-> LAST_UPDATE_TIME: 2015-15-15
+> LAST_UPDATE_TIME: 2015-12-15
 
 > 本次更新: 大版本更新, 众多细节优化
 
