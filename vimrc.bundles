@@ -69,7 +69,7 @@ Plug 'Lokaltog/vim-easymotion'
 
 " 更高效的行内移动, f/F/t/T, 才触发
 " quickscope
-Plug 'unblevable/quick-scope'
+" Plug 'unblevable/quick-scope'
 
 Plug 'vim-scripts/matchit.zip'
 " signature
