@@ -69,7 +69,7 @@ Plug 'Lokaltog/vim-easymotion'
 
 " 更高效的行内移动, f/F/t/T, 才触发
 " quickscope
-" Plug 'unblevable/quick-scope'
+Plug 'unblevable/quick-scope'
 
 Plug 'vim-scripts/matchit.zip'
 " signature
@@ -429,10 +429,11 @@ call plug#end()
 
 " quickscope {{{
     let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-    let g:qs_first_occurrence_highlight_color = '#afff5f' " gui vim
-    let g:qs_first_occurrence_highlight_color = 155       " terminal vim
-    let g:qs_second_occurrence_highlight_color = '#5fffff'  " gui vim
-    let g:qs_second_occurrence_highlight_color = 81         " terminal vim
+    " macvim/gvim会有问题, 暂时注解
+    " let g:qs_first_occurrence_highlight_color = '#afff5f' " gui vim
+    " let g:qs_first_occurrence_highlight_color = 155       " terminal vim
+    " let g:qs_second_occurrence_highlight_color = '#5fffff'  " gui vim
+    " let g:qs_second_occurrence_highlight_color = 81         " terminal vim
 " }}}
 
 " ################### 快速选中 ###################
