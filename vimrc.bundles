@@ -626,8 +626,10 @@ call plug#end()
     " 关闭同步
     let g:nerdtree_tabs_synchronize_view=0
     let g:nerdtree_tabs_synchronize_focus=0
-    " 自动开启nerdtree
-    "let g:nerdtree_tabs_open_on_console_startup=1
+    " 是否自动开启nerdtree
+    " thank to @ListenerRi, see https://github.com/wklken/k-vim/issues/165
+    let g:nerdtree_tabs_open_on_console_startup=0
+    let g:nerdtree_tabs_open_on_gui_startup=0
 " }}}
 
 
