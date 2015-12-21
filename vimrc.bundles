@@ -303,6 +303,10 @@ call plug#end()
 
     " 修改高亮的背景色, 适应主题
     highlight SyntasticErrorSign guifg=white guibg=black
+
+    " 禁止插件检查java
+    " thanks to @marsqing, see https://github.com/wklken/k-vim/issues/164
+    let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['java'] }
 " }}}
 
 
@@ -725,7 +729,6 @@ call plug#end()
     let g:go_fmt_fail_silently = 1
     " let g:go_fmt_command = "goimports"
     " let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-    " let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['go'] }
 " }}}
 
 " markdown {{{
