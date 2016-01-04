@@ -160,6 +160,7 @@ set showmatch
 " How many tenths of a second to blink when matching brackets
 set matchtime=2
 
+
 " 设置文内智能搜索提示
 " 高亮search命中的文本
 set hlsearch
@@ -283,6 +284,10 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 " 回车即选中当前项
 inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
 
+" In the quickfix window, <CR> is used to jump to the error under the
+" cursor, so undefine the mapping there.
+autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+
 " 上下左右键的行为 会显示其他信息
 inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
 inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
@@ -364,6 +369,24 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
+
+
+" http://stackoverflow.com/questions/13194428/is-better-way-to-zoom-windows-in-vim-than-zoomwin
+" Zoom / Restore window.
+function! s:ZoomToggle() abort
+    if exists('t:zoomed') && t:zoomed
+        execute t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        resize
+        vertical resize
+        let t:zoomed = 1
+    endif
+endfunction
+command! ZoomToggle call s:ZoomToggle()
+nnoremap <silent> <Leader>z :ZoomToggle<CR>
+
 
 " Go to home and end using capitalized directions
 noremap H ^
@@ -524,6 +547,9 @@ autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
 autocmd FileType ruby set tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
 autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown.mkd
 autocmd BufRead,BufNewFile *.part set filetype=html
+" disable showmatch when use > in php
+au BufWinEnter *.php set mps-=<:>
+
 
 
 " 保存python文件时删除多余空格
@@ -639,3 +665,7 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
+
+
+
+
