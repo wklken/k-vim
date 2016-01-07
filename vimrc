@@ -288,6 +288,9 @@ inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
 " In the quickfix window, <CR> is used to jump to the error under the
 " cursor, so undefine the mapping there.
 autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+" quickfix window  s/v to open in split window,  ,gd/,jd => quickfix window => open it
+autocmd BufReadPost quickfix nnoremap <buffer> v <C-w><Enter><C-w>L
+autocmd BufReadPost quickfix nnoremap <buffer> s <C-w><Enter><C-w>K
 
 " command-line window
 autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
