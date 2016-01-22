@@ -206,8 +206,9 @@ if count(g:bundle_groups, 'javascript')
     Plug 'othree/javascript-libraries-syntax.vim'
     let g:used_javascript_libs = 'jquery,underscore,backbone'
 
-    " for javascript 自动补全,配合YCM,需要安装nodejs&npm  see
-    " https://github.com/marijnh/tern_for_vim
+    " for javascript 自动补全, 配合YCM, 需要安装全局环境的（非nvm中) node.js&npm
+    " 安装完成后还需要在 bundle/tern_for_vim 下执行 npm install 安装依赖
+    " see https://github.com/marijnh/tern_for_vim
     " Plug 'marijnh/tern_for_vim'
 endif
 
