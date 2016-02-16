@@ -10,6 +10,7 @@
 
 " 非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
 set nocompatible
+set hidden
 filetype off " required! turn off
 
 " ################### 插件管理 ###################
