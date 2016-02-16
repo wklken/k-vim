@@ -46,6 +46,8 @@ Plug 'Valloric/YouCompleteMe'
 Plug 'Raimondi/delimitMate'
 " 自动补全html/xml标签
 Plug 'docunext/closetag.vim'
+" 解决在C/C+，花括号换行后光标不能调到指定位置（Mac，Ubuntu已测试）
+Plug 'jiangmiao/auto-pairs'
 
 " quick edit
 " 快速注释
