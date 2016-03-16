@@ -508,7 +508,7 @@ vnoremap <leader>y "+y
 " nnoremap <silent> p p`]
 
 " select all
-map <Leader>sa ggVG"
+map <Leader>sa ggVG
 
 " select block
 nnoremap <leader>v V`}
