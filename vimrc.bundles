@@ -16,7 +16,7 @@ filetype off " required! turn off
 
 " inspired by spf13, 自定义需要的插件集合
 if !exists('g:bundle_groups')
-    " more options: ['json', 'nginx', 'golang', 'ruby', 'less', 'json', ]
+    " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta', 'json', 'nginx', 'golang', 'ruby', 'less', 'php', 'coffeescript']
     let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
 endif
 
@@ -124,7 +124,8 @@ Plug 'sjl/gundo.vim'
 " view
 " airline
 " 状态栏增强展示
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 " rainbow_parentheses
 " 括号显示增强
 Plug 'kien/rainbow_parentheses.vim'
@@ -186,6 +187,10 @@ if count(g:bundle_groups, 'python')
     Plug 'Glench/Vim-Jinja2-Syntax'
 endif
 
+if count(g:bundle_groups, 'php')
+    Plug 'spf13/PIV'
+endif
+
 if count(g:bundle_groups, 'ruby')
     Plug 'vim-ruby/vim-ruby'
     Plug 'tpope/vim-rails'
@@ -210,6 +215,11 @@ if count(g:bundle_groups, 'javascript')
     " 安装完成后还需要在 bundle/tern_for_vim 下执行 npm install 安装依赖
     " see https://github.com/marijnh/tern_for_vim
     " Plug 'marijnh/tern_for_vim'
+endif
+
+
+if count(g:bundle_groups, 'coffeescript')
+    Plug 'kchmck/vim-coffee-script'
 endif
 
 if count(g:bundle_groups, 'json')
@@ -252,6 +262,7 @@ if count(g:bundle_groups, 'beta')
     let g:indent_guides_auto_colors = 0
     autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=black
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=black
+
 endif
 
 
@@ -262,6 +273,9 @@ call plug#end()
 " ################### 基础 ######################
 
 " syntastic {{{
+    " dependence
+    " 1. shellcheck `brew install shellcheck` https://github.com/koalaman/shellcheck
+
     let g:syntastic_error_symbol='>>'
     let g:syntastic_warning_symbol='>'
     let g:syntastic_check_on_open=1
@@ -286,8 +300,10 @@ call plug#end()
     " let g:syntastic_html_checkers=['tidy', 'jshint']
 
     " to see error location list
-    let g:syntastic_always_populate_loc_list = 0
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_enable_signs = 1
     let g:syntastic_auto_loc_list = 0
+    let g:syntastic_auto_jump = 0
     let g:syntastic_loc_list_height = 5
 
     function! ToggleErrors()
@@ -299,8 +315,28 @@ call plug#end()
         endif
     endfunction
     nnoremap <Leader>s :call ToggleErrors()<cr>
-    " nnoremap <Leader>sn :lnext<cr>
-    " nnoremap <Leader>sp :lprevious<cr>
+
+    " ,en ,ep to jump between errors
+    function! <SID>LocationPrevious()
+    try
+        lprev
+    catch /^Vim\%((\a\+)\)\=:E553/
+        llast
+    endtry
+    endfunction
+
+    function! <SID>LocationNext()
+    try
+        lnext
+    catch /^Vim\%((\a\+)\)\=:E553/
+        lfirst
+    endtry
+    endfunction
+
+    nnoremap <silent> <Plug>LocationPrevious    :<C-u>exe 'call <SID>LocationPrevious()'<CR>
+    nnoremap <silent> <Plug>LocationNext        :<C-u>exe 'call <SID>LocationNext()'<CR>
+    nmap <silent> <Leader>ep    <Plug>LocationPrevious
+    nmap <silent> <Leader>en    <Plug>LocationNext
 
     " 修改高亮的背景色, 适应主题
     highlight SyntasticErrorSign guifg=white guibg=black
@@ -390,6 +426,7 @@ call plug#end()
 " delimitMate {{{
     " for python docstring ",优化输入
     au FileType python let b:delimitMate_nesting_quotes = ['"']
+    au FileType php let delimitMate_matchpairs = "(:),[:],{:}"
     " 关闭某些类型文件的自动补全
     "au FileType mail let b:delimitMate_autoclose = 0
 " }}}
@@ -403,6 +440,7 @@ call plug#end()
 
 " nerdcommenter {{{
     let g:NERDSpaceDelims=1
+    "TODO: for python, one space
 " }}}
 
 " trailingwhitespace {{{
@@ -759,7 +797,11 @@ call plug#end()
 
 " beta {{{
     " python code format
+    " format all file
     autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
+    " format select block
+    " autocmd FileType python vnoremap <leader>y :!yapf<Cr>
+
     " Plug 'mindriot101/vim-yapf'
     " scriptencoding utf-8
     " let g:yapf_style = "google"
