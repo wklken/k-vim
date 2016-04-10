@@ -332,6 +332,12 @@ thx a lot. 可以给我提pull request:)
 
 如果你认为对你有所帮助, You can Buy me a coffee:)
 
+
+![donation](https://raw.githubusercontent.com/wklken/gallery/master/donation/donation_w.jpg)
+
+
+支付宝
+
 ![donation](https://raw.githubusercontent.com/wklken/gallery/master/donation/donation.png)
 
 ------------------------
