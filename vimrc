@@ -388,6 +388,11 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 
+" 屏幕左右滑动的快捷键
+map <C-Right> zl
+map <C-Left> zh
+
+
 " http://stackoverflow.com/questions/13194428/is-better-way-to-zoom-windows-in-vim-than-zoomwin
 " Zoom / Restore window.
 function! s:ZoomToggle() abort
