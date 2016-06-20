@@ -89,7 +89,7 @@ set noswapfile
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 " 突出显示当前列
-set cursorcolumn
+" set cursorcolumn
 " 突出显示当前行
 set cursorline
 
@@ -153,7 +153,7 @@ set laststatus=2
 " 显示行号
 set number
 " 取消换行
-set nowrap
+" set nowrap
 
 " 括号配对情况, 跳转并高亮一下匹配的括号
 set showmatch
@@ -323,10 +323,10 @@ endif
 " 主要按键重定义
 
 " 关闭方向键, 强迫自己用 hjkl
-map <Left> <Nop>
-map <Right> <Nop>
-map <Up> <Nop>
-map <Down> <Nop>
+"map <Left> <Nop>
+"map <Right> <Nop>
+"map <Up> <Nop>
+"map <Down> <Nop>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -663,8 +663,8 @@ endif
 set background=dark
 set t_Co=256
 
-colorscheme solarized
-" colorscheme molokai
+" colorscheme solarized
+ colorscheme molokai
 " colorscheme desert
 
 
@@ -682,7 +682,3 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
-
-
-
-
