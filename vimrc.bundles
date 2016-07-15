@@ -25,7 +25,7 @@ endif
 " vim plugin bundle control, command model
 " ----------------------------------------------------------------------------
 
-call plug#begin('~/.vim/bundle')
+call plug#begin('$USERPROFILE/vimfile/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 

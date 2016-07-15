@@ -31,8 +31,8 @@ let g:mapleader = ','
 syntax on
 
 " install bundles
-if filereadable(expand("~/.vimrc.bundles"))
-  source ~/.vimrc.bundles
+if filereadable(expand("~/_vimrc.bundles"))
+  source ~/_vimrc.bundles
 endif
 
 " ensure ftdetect et al work by including this after the bundle stuff
