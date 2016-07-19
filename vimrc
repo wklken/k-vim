@@ -685,6 +685,10 @@ highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
+let g:airline_theme="luna"                                                                                                                        1 let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
+
+
 
 
 
