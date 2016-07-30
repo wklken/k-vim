@@ -1,4 +1,4 @@
-bundle/*
+bundle
 *.pyc
 *.bak
 *.bk
