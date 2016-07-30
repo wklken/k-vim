@@ -25,7 +25,7 @@ endif
 " vim plugin bundle control, command model
 " ----------------------------------------------------------------------------
 
-call plug#begin('~/.vim/bundle')
+call plug#begin('$USERPROFILE/vimfile/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
@@ -594,14 +594,8 @@ call plug#end()
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
     endif
-    let g:airline_left_sep = '▶'
-    let g:airline_left_alt_sep = '❯'
-    let g:airline_right_sep = '◀'
-    let g:airline_right_alt_sep = '❮'
-    let g:airline_symbols.linenr = '¶'
-    let g:airline_symbols.branch = '⎇'
     " 是否打开tabline
-    " let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#enabled = 1
 " }}}
 
 

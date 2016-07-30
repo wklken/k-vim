@@ -31,8 +31,8 @@ let g:mapleader = ','
 syntax on
 
 " install bundles
-if filereadable(expand("~/.vimrc.bundles"))
-  source ~/.vimrc.bundles
+if filereadable(expand("~/_vimrc.bundles"))
+  source ~/_vimrc.bundles
 endif
 
 " ensure ftdetect et al work by including this after the bundle stuff
@@ -255,7 +255,8 @@ endif
 " 设置新文件的编码为 UTF-8
 set encoding=utf-8
 " 自动判断编码时，依次尝试以下编码：
-set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+"set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+set fileencodings=utf-8,gbk,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 set helplang=cn
 "set langmenu=zh_CN.UTF-8
 "set enc=2byte-gb18030
@@ -263,7 +264,8 @@ set helplang=cn
 set termencoding=utf-8
 
 " Use Unix as the standard file type
-set ffs=unix,dos,mac
+"set ffs=unix,dos,mac
+set fileformats=dos,unix
 
 " 如遇Unicode值大于255的文本，不必等到空格再折行
 set formatoptions+=m
@@ -682,6 +684,10 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
+
+let g:airline_theme="luna"                                                                                                                        1 let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
+
 
 
 
