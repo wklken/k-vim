@@ -430,9 +430,22 @@ map <space> /
 nnoremap / /\v
 vnoremap / /\v
 
+" highlight next match specially
+highlight WhiteOnRed ctermbg=red ctermfg=white
+function! HLNext (blinktime)
+    let [bufnum, lnum, col, off] = getpos('.')
+    let matchlen = strlen(matchstr(strpart(getline('.'),col-1),@/))
+    let target_pat = '\c\%#'.@/
+    let ring = matchadd('WhiteOnRed', target_pat, 101)
+    redraw
+    exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
+    call matchdelete(ring)
+    redraw
+endfunction
+
 " Keep search pattern at the center of the screen.
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
+nnoremap <silent> n nzz:call HLNext(0.4)<cr>
+nnoremap <silent> N Nzz:call HLNext(0.4)<cr>
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
