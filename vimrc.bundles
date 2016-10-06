@@ -440,7 +440,7 @@ call plug#end()
 
 " nerdcommenter {{{
     let g:NERDSpaceDelims=1
-    "TODO: for python, one space
+    let g:NERDAltDelims_python = 1
 " }}}
 
 " trailingwhitespace {{{
