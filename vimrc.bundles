@@ -29,6 +29,9 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
+" vcscommand
+Plug 'vim-scripts/vcscommand.vim'
+
 " syntastic
 Plug 'scrooloose/syntastic'
 
@@ -271,6 +274,14 @@ call plug#end()
 
 
 " ################### 基础 ######################
+
+" vcscommand {{{
+    noremap .vd :VCSDiff<CR>
+    noremap .vvd :VCSVimDiff<CR>
+    noremap .vs :VCSStatus<CR>
+    noremap .vb :VCSBlame<CR>
+" }}}
+
 
 " syntastic {{{
     " dependence
