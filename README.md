@@ -39,7 +39,6 @@ molokai主题
 ![molokai](https://github.com/wklken/gallery/blob/master/vim/molokai.png?raw=true)
 
 ---------------------------------
-
 ---------------------------------
 
 # 安装步骤
@@ -114,6 +113,15 @@ sh -x install.sh
 
 ------------------------
 ------------------------
+
+# 移除安装
+
+```
+cd ~ && rm -rf .vim .vimrc .vimrc.bundles && cd -
+```
+
+---------------------------------
+---------------------------------
 
 # 常见问题
 
@@ -334,11 +342,6 @@ thx a lot. 可以给我提pull request:)
 
 
 ![donation](https://raw.githubusercontent.com/wklken/gallery/master/donation/donation_w.jpg)
-
-
-支付宝
-
-![donation](https://raw.githubusercontent.com/wklken/gallery/master/donation/donation.png)
 
 ------------------------
 ------------------------
