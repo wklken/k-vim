@@ -326,7 +326,7 @@ thx a lot. 可以给我提pull request:)
 
 2. install.sh 参考`spf13-vim` 的`bootstrap.sh` [spf13-vim](https://github.com/spf13/spf13-vim)
 
-2. 插件管理使用[Vundle](https://github.com/gmarik/Vundle.vim)
+2. 插件管理使用[Vim-plug](https://github.com/junegunn/vim-plug)
 
 3. 自动补全 [YCM](https://github.com/Valloric/YouCompleteMe)
 
