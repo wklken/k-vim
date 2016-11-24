@@ -680,10 +680,10 @@ if (empty($TMUX))
   endif
 endif
 
-colorscheme solarized
+" colorscheme solarized
 " colorscheme molokai
 " colorscheme desert
-" colorscheme onedark
+colorscheme onedark
 
 " 设置标记一列的背景颜色和数字一行颜色一致
 hi! link SignColumn   LineNr
