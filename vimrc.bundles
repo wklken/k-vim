@@ -135,7 +135,8 @@ Plug 'altercation/vim-colors-solarized'
 " molokai
 " 主题 molokai
 Plug 'tomasr/molokai'
-
+" 主题 onedark
+Plug 'joshdick/onedark.vim'
 
 " nav
 " nerdtree nerdtreetabs
@@ -600,6 +601,7 @@ call plug#end()
     let g:airline_right_alt_sep = '❮'
     let g:airline_symbols.linenr = '¶'
     let g:airline_symbols.branch = '⎇'
+    " let g:airline_theme = 'onedark'
     " 是否打开tabline
     " let g:airline#extensions#tabline#enabled = 1
 " }}}
@@ -650,6 +652,13 @@ call plug#end()
     let g:molokai_original = 1
     let g:rehash256 = 1
 " }}}
+
+" onedark {{{
+    " 使用16-color mode
+    " let g:onedark_termcolors=16
+    " 使用256-color mode
+    " let g:onedark_termcolors=256
+"}}}
 
 " ################### 快速导航 ###################
 
