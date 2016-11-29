@@ -64,7 +64,7 @@ sudo apt-get install silversearcher-ag
 # centos
 sudo yum install python-devel.x86_64
 sudo yum groupinstall 'Development Tools'
-sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum install the_silver_searcher
 sudo yum install cmake
 
