@@ -149,6 +149,7 @@ let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 
 使用 [vim-plug](https://github.com/junegunn/vim-plug) 管理插件
 
 `vim-plug` 常见问题: [vim-plug faq](https://github.com/junegunn/vim-plug/wiki/faq) / [YCM timeout](https://github.com/junegunn/vim-plug/wiki/faq#youcompleteme-timeout)
+／[YCM 国人在国内做的镜像](https://github.com/LooEv/A-bridge-to-YouCompleteMe)
 
 管理插件的命令
 
