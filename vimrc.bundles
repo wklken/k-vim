@@ -135,9 +135,12 @@ Plug 'altercation/vim-colors-solarized'
 " molokai
 " 主题 molokai
 Plug 'tomasr/molokai'
+" Zenburn
+" 主题 zenburn
+Plug 'jnurmine/Zenburn'
 
 
-" nav
+" 文件浏览
 " nerdtree nerdtreetabs
 Plug 'scrooloose/nerdtree' | Plug 'jistr/vim-nerdtree-tabs'
 " ctrlspace
@@ -154,6 +157,7 @@ Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 " 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
 Plug 'kana/vim-textobj-indent'
+
 
 if count(g:bundle_groups, 'tmux')
     " tmux
@@ -598,10 +602,27 @@ call plug#end()
     let g:airline_left_alt_sep = '❯'
     let g:airline_right_sep = '◀'
     let g:airline_right_alt_sep = '❮'
-    let g:airline_symbols.linenr = '¶'
-    let g:airline_symbols.branch = '⎇'
+    " let g:airline_symbols.linenr = '␊'
+    let g:airline_symbols.linenr = ''
+    " let g:airline_symbols.linenr = '¶'
+    let g:airline_symbols.branch = ''
+    let g:airline_symbols.paste = 'ρ'
+    " let g:airline_symbols.paste = 'Þ'
+    " let g:airline_symbols.paste = '∥'
+    let g:airline_symbols.whitespace = 'Ξ'
+    let g:airline_symbols.readonly = ''
     " 是否打开tabline
     " let g:airline#extensions#tabline#enabled = 1
+    " tabline中当前buffer两端的分隔符
+    " let g:airline#extensions#tabline#left_sep = ' '
+    " tabline为激活的buffer的两端字符
+    " let g:airline#extensions#tabline#left_alt_sep = '|'
+    " tabline中buffer显示编号
+    " let g:airline#extensions#tabline#buffer_nr_show = 1
+    " let g:airline#extensions#buffline#enabled = 1
+    " let g:airline#extensions#bufferline#overwrite_variables = 1
+    " 安装字体后启用字体
+    let g:airline_powerline_fonts = 1
 " }}}
 
 
