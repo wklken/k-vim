@@ -334,28 +334,12 @@ thx a lot. 可以给我提pull request:)
 
 4. 插件挑选 [VimAwesome](http://vimawesome.com/)
 
-### Resources
-
-[链接](http://www.wklken.me/posts/2014/10/03/vim-resources.html)
-
-### Donation
-
-如果你认为对你有所帮助, You can Buy me a coffee:)
-
-
-![donation](https://raw.githubusercontent.com/wklken/gallery/master/donation/donation_w.jpg)
 
 ------------------------
 ------------------------
 
 The End!
 
-wklken (凌岳/pythoner/vim党预备党员)
+Github: https://github.com/Orzldzx
 
-Email: wklken@yeah.net
-
-Github: https://github.com/wklken
-
-Blog: [http://www.wklken.me](http://www.wklken.me)
-
-2013-06-11 于深圳
+2016-12-09 Chengdu / China
