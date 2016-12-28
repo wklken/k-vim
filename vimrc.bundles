@@ -16,7 +16,7 @@ filetype off " required! turn off
 
 " inspired by spf13, 自定义需要的插件集合
 if !exists('g:bundle_groups')
-    " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta', 'json', 'nginx', 'golang', 'ruby', 'less', 'php', 'coffeescript']
+    " let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta', 'json', 'nginx', 'golang', 'ruby', 'less', 'php', 'coffeescript', 'shell']
     let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
 endif
 
@@ -45,7 +45,7 @@ Plug 'Valloric/YouCompleteMe'
 " 自动补全单引号，双引号等
 Plug 'Raimondi/delimitMate'
 " 自动补全html/xml标签
-Plug 'docunext/closetag.vim'
+Plug 'docunext/closetag.vim', { 'for': ['html', 'xml'] }
 
 " quick edit
 " 快速注释
@@ -174,7 +174,7 @@ endif
 if count(g:bundle_groups, 'golang')
     " 1. vim a.go
     " 2. :GoInstallBinaries
-    " vimgo
+    " vimgo  https://github.com/fatih/vim-go
     Plug 'fatih/vim-go', {'for': 'go'}
 endif
 
@@ -185,9 +185,17 @@ if count(g:bundle_groups, 'python')
     Plug 'hdima/python-syntax'
     Plug 'hynek/vim-python-pep8-indent'
     Plug 'Glench/Vim-Jinja2-Syntax'
+
+    " isort  https://github.com/timothycrosley/isort#readme + https://github.com/fisadev/vim-isort#installation
+    " pip install isort
+    Plug 'fisadev/vim-isort'
+    " Shift-V 上下选中, ctrl + i 规范化
+    let g:vim_isort_map = '<C-i>'
 endif
 
 if count(g:bundle_groups, 'php')
+    " piv
+    " shift-v可以查看函数手册 / leader-pd生成注释
     Plug 'spf13/PIV'
 endif
 
@@ -197,7 +205,7 @@ if count(g:bundle_groups, 'ruby')
     " dir / dar
     Plug 'nelstrom/vim-textobj-rubyblock'
 
-    " 有bug, 和当前有冲突, 尚未解决, 不要打开
+    " 有bug, 和当前有冲突, 尚未解决, 不要打开 => TODO: solve this problem
     " Plug 'tpope/vim-endwise'
 endif
 
@@ -212,15 +220,19 @@ if count(g:bundle_groups, 'javascript')
     let g:used_javascript_libs = 'jquery,underscore,backbone'
 
     " for javascript 自动补全, 配合YCM, 需要安装全局环境的（非nvm中) node.js&npm
-    " 安装完成后还需要在 bundle/tern_for_vim 下执行 npm install 安装依赖
+    " 安装完成后还需要在 bundle/tern_for_vim 下执行 npm install 安装依赖 `cd ~/.vim/bundle/tern_for_vim && npm install`
     " see https://github.com/marijnh/tern_for_vim
-    " Plug 'marijnh/tern_for_vim'
+    " Plug 'marijnh/tern_for_vim', {'do': 'npm install'}
 endif
 
 
 if count(g:bundle_groups, 'coffeescript')
     Plug 'kchmck/vim-coffee-script'
 endif
+
+" if count(g:bundle_groups, 'shell')
+    " Plug 'Shougo/vimshell.vim'
+" endif
 
 if count(g:bundle_groups, 'json')
     " json
@@ -234,6 +246,7 @@ if count(g:bundle_groups, 'css')
 
     " 这个有坑, see issue https://github.com/wklken/k-vim/issues/49
     " Plug 'gorodinskiy/vim-coloresque'
+    " Plug 'lilydjwg/colorizer'
 endif
 
 if count(g:bundle_groups, 'less')
@@ -344,6 +357,9 @@ call plug#end()
     " 禁止插件检查java
     " thanks to @marsqing, see https://github.com/wklken/k-vim/issues/164
     let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['java'] }
+
+    " 关闭syntastic语法检查, 鼠标复制代码时用到, 防止把错误标志给复制了
+    nnoremap <silent> <Leader>ec :SyntasticToggleMode<CR>
 " }}}
 
 
@@ -454,6 +470,9 @@ call plug#end()
     let g:easy_align_delimiters = {}
     endif
     let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
+    " Default:
+    " If a delimiter is in a highlight group whose name matches any of the followings, it will be ignored.
+    let g:easy_align_ignore_groups = ['Comment', 'String']
 " }}}
 
 " ################### 快速移动 ###################
@@ -654,7 +673,7 @@ call plug#end()
 " ################### 快速导航 ###################
 
 " nerdtree nerdtreetabs {{{
-    map <leader>n :NERDTreeToggle<CR>
+    " map <leader>n :NERDTreeToggle<CR>
     let NERDTreeHighlightCursorline=1
     let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
     "close vim if the only window left open is a NERDTree
@@ -667,12 +686,12 @@ call plug#end()
     " nerdtreetabs
     map <Leader>n <plug>NERDTreeTabsToggle<CR>
     " 关闭同步
-    let g:nerdtree_tabs_synchronize_view=0
-    let g:nerdtree_tabs_synchronize_focus=0
+    " let g:nerdtree_tabs_synchronize_view=0
+    " let g:nerdtree_tabs_synchronize_focus=0
     " 是否自动开启nerdtree
     " thank to @ListenerRi, see https://github.com/wklken/k-vim/issues/165
-    let g:nerdtree_tabs_open_on_console_startup=0
-    let g:nerdtree_tabs_open_on_gui_startup=0
+    " let g:nerdtree_tabs_open_on_console_startup=0
+    " let g:nerdtree_tabs_open_on_gui_startup=0
 " }}}
 
 
@@ -757,6 +776,10 @@ call plug#end()
     let python_highlight_all = 1
 " }}}
 
+" piv {{{
+    let g:DisableAutoPHPFolding = 1
+" }}}
+
 
 " vimgo {{{
     let g:go_highlight_functions = 1
@@ -766,8 +789,10 @@ call plug#end()
     let g:go_highlight_build_constraints = 1
 
     let g:go_fmt_fail_silently = 1
-    " let g:go_fmt_command = "goimports"
-    " let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+    " format with goimports instead of gofmt
+    let g:go_fmt_command = "goimports"
+    let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+    let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'java'] }
 " }}}
 
 " markdown {{{
