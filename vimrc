@@ -190,9 +190,9 @@ function! AutoSetFileHead()
 
   "如果文件类型为cpp
   if &filetype == 'cpp'
-    call setline(1, "\/\/ Copyright [2013-2014] <formaxmarket.Inc>")
+    call setline(1, "\/\/ Copyright [2013-2017] <xxxxx.Inc>")
     call append(1, "\/\/")
-    call append(2, "\/\/ Author: Nathan (wangfuqiang@jrq.com)")
+    call append(2, "\/\/ Author: Nathan")
     call append(3, "")
   endif
 
