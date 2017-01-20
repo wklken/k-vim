@@ -169,6 +169,8 @@ endif
 
 if count(g:bundle_groups, 'markdown')
     Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+    Plug 'mzlogin/vim-markdown-toc', {'for': 'markdown'}
+    let g:vmt_auto_update_on_save = 1
     " https://github.com/suan/vim-instant-markdown
     " npm -g install instant-markdown-d
     " Plug 'suan/vim-instant-markdown'
