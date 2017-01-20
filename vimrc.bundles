@@ -55,6 +55,8 @@ Plug 'docunext/closetag.vim', { 'for': ['html', 'xml'] }
 " 快速注释
 Plug 'scrooloose/nerdcommenter'
 
+" table mode
+Plug 'dhruvasagar/vim-table-mode'
 
 " 快速加入修改环绕字符
 " for repeat -> enhance surround.vim, . to repeat command
@@ -821,6 +823,10 @@ call plug#end()
 " nginx {{{
 " }}}
 
+" table {{{
+    let g:table_mode_corner="|"
+    let g:table_mode_header_fillchar="="
+" }}}
 
 " ####### temp #######
 
