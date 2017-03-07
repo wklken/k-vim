@@ -29,6 +29,10 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
+" pandoc
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+
 " syntastic
 Plug 'scrooloose/syntastic'
 
@@ -51,6 +55,8 @@ Plug 'docunext/closetag.vim', { 'for': ['html', 'xml'] }
 " 快速注释
 Plug 'scrooloose/nerdcommenter'
 
+" table mode
+Plug 'dhruvasagar/vim-table-mode'
 
 " 快速加入修改环绕字符
 " for repeat -> enhance surround.vim, . to repeat command
@@ -162,7 +168,9 @@ if count(g:bundle_groups, 'tmux')
 endif
 
 if count(g:bundle_groups, 'markdown')
-    Plug 'plasticboy/vim-markdown', {'for': 'md'}
+    Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+    Plug 'mzlogin/vim-markdown-toc', {'for': 'markdown'}
+    let g:vmt_auto_update_on_save = 1
     " https://github.com/suan/vim-instant-markdown
     " npm -g install instant-markdown-d
     " Plug 'suan/vim-instant-markdown'
@@ -817,6 +825,10 @@ call plug#end()
 " nginx {{{
 " }}}
 
+" table {{{
+    let g:table_mode_corner="|"
+    let g:table_mode_header_fillchar="="
+" }}}
 
 " ####### temp #######
 
