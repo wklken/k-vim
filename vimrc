@@ -390,7 +390,14 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 
-" http://stackoverflow.com/questions/13194428/is-better-way-to-zoom-windows-in-vim-than-zoomwin
+" 屏幕左右滑动
+map { zh
+map } zl
+
+
+
+
+ http://stackoverflow.com/questions/13194428/is-better-way-to-zoom-windows-in-vim-than-zoomwin
 " Zoom / Restore window.
 function! s:ZoomToggle() abort
     if exists('t:zoomed') && t:zoomed
