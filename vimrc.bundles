@@ -225,6 +225,10 @@ if count(g:bundle_groups, 'javascript')
     " Plug 'marijnh/tern_for_vim', {'do': 'npm install'}
 endif
 
+if count(g:bundle_groups, 'typescript')
+    Plug 'leafgarland/typescript-vim'
+endif
+
 
 if count(g:bundle_groups, 'coffeescript')
     Plug 'kchmck/vim-coffee-script'
@@ -308,8 +312,11 @@ call plug#end()
     " let g:syntastic_python_checkers=['pylint'] " 使用pyflakes,速度比pylint快
     " let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
 
+    " if ts
+    " let g:syntastic_typescript_checkers = ['tsc', 'tslint']
+
     " if js
-    " let g:syntastic_javascript_checkers = ['jsl', 'jshint']
+    " let g:syntastic_javascript_checkers = ['jsl', 'jshint', 'eslint']
     " let g:syntastic_html_checkers=['tidy', 'jshint']
 
     " to see error location list
