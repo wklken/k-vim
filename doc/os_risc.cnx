@@ -1,0 +1,13 @@
+*os_risc.txt*   For Vim version 7.4.  最近更新: 2011年5月
+
+
+		  VIM 参考手册    by Thomas Leonard
+				译者: Willis
+				http://vimcdoc.sf.net
+
+
+						*riscos* *RISCOS* *RISC-OS*
+RISC OS 的支持在 Vim patch 7.3.187 中被删除。
+如果你想在 RISC OS 中使用 Vim，请获取该补丁之前的版本。
+
+ vim:tw=78:ts=8:ft=help:norl:

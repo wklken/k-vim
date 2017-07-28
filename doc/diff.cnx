@@ -1,0 +1,367 @@
+*diff.txt*      For Vim version 7.4.  最后修改: 2013年8月
+
+
+		  VIM REFERENCE MANUAL    by Bram Moolenaar
+		   译者: Zimin<cranecai@users.sf.net>, tocer
+		   http://vimcdoc.sf.net
+
+
+				*diff* *vimdiff* *gvimdiff* *diff-mode*
+这篇文章描述 |+diff| 特性: 比较同一文件的两、三或四个版本间的差异。
+
+用户手册 |08.7| 节说明了一些 diff 基本的用法。
+
+1. 进入比较模式			|vimdiff|
+2. 查看比较结果			|view-diffs|
+3. 跳转到差异文			|jumpto-diffs|
+4. 复制差异文本			|copy-diffs|
+5. diff 选项			|diff-options|
+
+{Vi 无此功能}
+
+==============================================================================
+1. 进入比较模式
+
+进入比较模式编辑的最简单方法就是用 "vimdiff" 命令。它如常启动 Vim，但附加一些
+设置，以便于查看输入参数所指定的文件间的差异: >
+
+	vimdiff file1 file2 [file3 [file4]]
+
+这等同于: >
+
+	vim -d file1 file2 [file3 [file4]]
+
+你也可以使用 "gvimdiff" 或 "vim -d -g" 以启动 GUI 的版本。
+又或者，使用 "viewdiff" 或 "gviewdiff" 以启动只读模式。
+"r" 可以附加在这些名字前面，用来进入受限模式 (参考 |-Z|)。
+
+第二个及其后的参数也可以是目录名。Vim 将依据第一个参数所指定的文件名在指定目录
+中查找另外的文件名。这一特性仅对标准的 "diff" 命令有效。参见 'diffexpr'。
+
+窗口比较局部于当前标签页 |tab-page| 中。你不能看到某窗口和别的标签页中的窗口的
+差异。这样，可以同时打开多组比较窗口，每组差异在单独的标签页中。
+
+Vim 将为每个文件打开一个窗口，并且就象使用 |-O| 参数一样，使用垂直分割。如果你
+要水平分割，加上 |-o| 参数: >
+
+	vimdiff -o file1 file2 [file3 [file4]]
+
+如果你喜欢总使用水平分割，在 'diffopt' 里包含 "horizontal"。
+
+在每一个被编辑的文件中，以下选项被设定:
+
+	'diff'		打开
+	'scrollbind'	打开
+	'cursorbind'	打开
+	'scrollopt'	包含 "hor"
+	'wrap'		关闭
+	'foldmethod'	"diff"
+	'foldcolumn'	来自 'diffopt' 的值，缺省为 2
+
+这些参数仅设置于当前窗口。当编辑其它文件时，以上选项被重设回全局值。
+不过，重新编辑文件时，仍然可以用模式行修改这些参数。但 'diff' 置位时，
+'foldmethod' 和 'wrap' 不受模式行改变。
+
+比较基于缓冲区的内容。因而，如果在载入文件后你做过改动，这些改动也将参加比较。
+不过，你也许要不时地使用 "diffupdate"。因为并非所有的改动的结果都能自动更新。
+
+在 .vimrc 文件中，你可以用以下的结构，对比较模式做专门的设定: >
+
+	if &diff
+	   setup for diff mode
+	else
+	   setup for non-diff mode
+	endif
+
+如果已在 Vim 中，你可以用三种方式进入比较模式。
+
+							*E98*
+:diffs[plit] {filename}					*:diffs* *:diffsplit*
+		对 {filename} 开一个新窗口。当前的和新开的窗口将设定和
+		"vimdiff" 一样的参数。另见 'diffexpr'。
+
+							*:difft* *:diffthis*
+:difft[his]	使当前窗口参与比较。本命令设定和 "vimdiff" 同样的选项。
+
+:diffp[atch] {patchfile}			 *E816* *:diffp* *:diffpatch*
+		使用当前的缓冲区，用 {patchfile} 给它打上补丁并打开一个缓冲区
+		显示结果。两个缓冲区都将设定为和 "vimdiff" 同样的参数。
+		{patchfile} 可以是任何一种 "patch" 程序认识的或 'patchexpr' 可
+		以处理的格式。
+		注意: {patchfile} 只能包含一个文件的比较结果: 当前文件。如果
+		{patchfile} 也包含了其他文件的比较，结果将不可预知。Vim 改变当
+		前目录到 /tmp， 以避免当前目录下的文件被意外的打补丁。但它仍不
+		能避免若干 ".rej" 文件产生。当绝对路径名出现时，这些文件也不能
+		避免被打补丁。
+
+要垂直分割窗口，在前面加上 |:vertical|。例如: >
+
+	:vert diffsplit main.c~
+	:vert diffpatch /tmp/diff
+
+如果你偏好垂直分割，可以在 'diffopt' 中包含 "vertical"。
+
+							*E96*
+最多可以对 4 个缓冲区设置 'diff' 模式。
+
+因为选项的值是由缓冲区记录的，在编辑另一个文件后又回到此文件时，你仍会处于比较
+模式。
+
+							*:diffo* *:diffoff*
+:diffo[ff]	为当前窗口关闭比较模式。
+
+:diffo[ff]!	为当前窗口和当前标签页所有置位 'diff' 的窗口关闭比较模式。
+
+":diffoff" 命令复位相关选项为使用 |:diffsplit|，|:diffpatch|，|:diffthis| 之
+前或以比较模式启动 Vim 时的值。否则复位其默认值如下:
+
+	'diff'		关闭
+	'scrollbind'	关闭
+	'cursorbind'	关闭
+	'scrollopt'	没有 "hor"
+	'wrap'		打开
+	'foldmethod'	"manual"
+	'foldcolumn'	0
+
+==============================================================================
+2. 查看比较结果						*view-diffs*
+
+比较产生的结果是，不同比较窗口显示同一文件不同版本，高亮标出差异的部分。当滚动
+文本时，'scrollbind' 选项将使得另一窗口的相应文本也随着滚动。垂直分割时，文本
+会恰当地对齐。
+
+不过，以下情况将使文本对齐出现问题:
+- 当设置了 'wrap' 后，一些行将被自动换行，在屏幕上占用两行以上。
+- 一个缓冲区打开了折叠，另一个却没有。
+- 'scrollbind' 被关闭
+- 文本做过改动
+- 'diffopt' 中没有 "filler"，插入或删除的行会使对齐出错
+
+所有打开 'diff' 选项并在某一个窗口编辑的缓冲区都将参与比较。即使对于一个隐藏的
+缓冲区也是如此，如果它曾在一个窗口内被编辑过的话。
+
+					*:DiffOrig* *diff-original-file*
+因为 'diff' 是一个局部于窗口的选项，所以同一缓冲区可以在某一个窗口里是比较模
+式，而在另一个窗口里则是普通模式。你也可能想查看对一缓冲区在读入文件后所做过的
+改动。既然 Vim 不允许同一个文件有 2 个缓冲区，你需要另一个缓冲区。可用下面的命
+令: >
+	 command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_
+	 	\ | diffthis | wincmd p | diffthis
+(|vimrc_example.vim| 里有该示例)。之后，使用 ":DiffOrig" 就可以查看当前缓冲区
+和它刚从文件里载入时的不同之处。
+
+要 注意: 已经卸载的缓冲区不能参与比较。但一个隐藏的缓冲区是可以的。你可以使用
+":hide" 来关闭但不卸载窗口。如果你不想缓冲区继续参与比较，可以在隐藏前先执行
+":set nodiff"。
+
+							*:diffu* *:diffupdate*
+:diffu[pdate][!]		刷新比较结果的高亮和折叠。
+
+在改变文本时，Vim 试图更新比较的结果。插入或删除行一般会得到正确的更新。但行内
+或者更复杂的改动将无法如此。要强制刷新比较结果，使用: >
+
+	:diffupdate
+
+包含 ! 时，Vim 会检查文件是否被外部改变而需要重新载入。对每个被改变的文件给出
+提示，就像用了 `:checktime` 那样。
+
+一些行在本窗口没有，但却在一个窗口里出现。它们或者是在那个文件里新插入的，或者
+是在本文件里刚删除的。对这些行，除非 'diffopt' 选项中不包含 "filler"，Vim 将在
+本窗口对应的位置显示填充行。
+
+
+折叠可以用来隐藏那些没有被更改过的文字。要知道所有用于折叠的命令，可以参考
+|folding|。
+
+'diffopt' 选项还可以用来设置在差异文之前不被折叠的行数 (上下文)。如要把上下文
+设为 3 行: >
+
+	:set diffopt=filler,context:3
+
+
+以下的语法高亮群组可以用来显示比较的结果:
+
+|hl-DiffAdd|	DiffAdd		添加 (插入) 的行。这些行只存在于本缓冲区里。
+|hl-DiffChange|	DiffChange	改动过的行。
+|hl-DiffText|	DiffText	在改动行中被更改的文本。Vim 找到第一个和最后一
+				个不同的字符 (从行末开始搜起) 之间的文字，包括
+				其实没被改动的部分，都被高亮。这里只受到
+				'diffopt' 中的 "iwhite" 的影响。
+|hl-DiffDelete|	DiffDelete 	被删除的行。也称为填充行，因为在本缓冲区里这些
+				行并不真正存在。
+
+==============================================================================
+3. 跳转到差异文						*jumpto-diffs*
+
+有两条命令可用于在跳转到差异文所在的位置:
+								*[c*
+	[c		反向跳转至上一处更改的开始。计数前缀使之重复执行相应
+			次。
+								*]c*
+	]c		正向跳转至下一个更改的开始。计数前缀使之重复执行相应
+			次。
+
+如果不存在光标可以跳转到的更改，将产生错误。
+
+==============================================================================
+4. 复制差异文本			*copy-diffs* *E99* *E100* *E101* *E102* *E103*
+								*merge*
+有两个命令可用来在两个缓冲区之间复制文本。相应的结果是，在一定的范围内两缓冲区
+的内容被统一。
+
+							*:diffg* *:diffget*
+:[range]diffg[et] [bufspec]
+		用另一个缓冲区来修改当前的缓冲区，消除不同之处。除非只有另外一
+		个比较模式下的缓冲区， [bufspec] 必须存在并指定那个缓冲区。
+		如果 [bufspec] 指定的是当前缓冲区，则为空动作。
+		[range] 可以参考下面。
+
+						*:diffpu* *:diffput* *E793*
+:[range]diffpu[t] [bufspec]
+		用当前缓冲区来修改另一个缓冲区，消除不同之处。不同于
+		":diffget" 之处仅在于被更改的是另一个缓冲区。
+		如果忽略 [bufspec]，而多于一个缓冲区处于比较模式并置位
+		'modifiable' 的话，此命令失败。
+		[range] 可以参考下面。
+
+							*do*
+do		同 ":diffget"，但没有参数和范围。"o" 表示 "obtain" (不能用
+		"dg"，因为那可能是 "dgg" 的开始！)。注意 不适用于可视模式。
+
+							*dp*
+dp		同 ":diffput"，但没有参数和范围。注意 不适用于可视模式。
+
+当没有给定 [range] 时，受影响的仅是当前光标所处位置或其紧上方的差异文本。
+当指定 [range] 时，Vim 试图仅改动它指定的行。不过，当有被删除的行时，这不总有
+效。
+
+可能在最后一行之后有删除的行。要从另一个缓冲区中取得那些行，可使用最后一行的行
+号加一来实现。以下命令从另一个缓冲区中得到所有的差异文本: >
+
+	:1,$+1diffget
+
+注意: 被删除的行会被显示，但不作为文本行看待。你也不能将光标移至其中。要用另一
+个缓冲区来填充被删除的行，可在其下一行用 ":diffget"。
+								*E787*
+如果要修改的缓冲区只读，而 |FileChangedRO| 激活的自动命令要修改缓冲区，该命令
+会失败。此时，自动命令不能修改缓冲区。
+
+参数 [bufspec] 可以是缓冲区的序号，匹配缓冲区名称或缓冲区名称的一部分的模式。
+例如:
+
+	:diffget		使用另一个进入比较模式的缓冲区
+	:diffget 3		使用 3 号缓冲区
+	:diffget v2		使用名字同 "v2" 匹配的缓冲区，并进入比较模式
+				(例如，"file.c.v2")
+
+==============================================================================
+5. diff 选项						*diff-options*
+
+也可参考 |'diffopt'| 和 |'fillchars'| 中的 "diff" 项。
+
+
+查 找 不 同						*diff-diffexpr*
+
+ 'diffexpr' 选项可以用来设定非标准的 "diff" 程序，用来比较文件间的异同。
+
+当 'diffexpr' 为空的时候，Vim 使用以下命令在 file1 和 file2 中查找不同之处: >
+
+	diff file1 file2 > outfile
+
+其中的 ">" 应当用 'shellredir' 的值替换。
+
+"diff" 的输出必须是普通的 "ed" 风格的 diff。_不要_ 使用上下文 (context) 风格的
+diff。下面就是一个 Vim 所期望格式的范例: >
+
+	1a2
+	> bbb
+	4d4
+	< 111
+	7c7
+	< GGG
+	---
+	> ggg
+
+"1a2" 项添加了 "bbb" 行。
+"4d4" 项删除了 "111" 行。
+"7c7" 项用 "ggg" 行替代了 "GGG" 行。
+
+当 'diffexpr' 不为空时，Vim 执行它以得到一个满足上述格式的 diff 文件。在执行过
+程中，以下的变量会被设置为须用到的文件名:
+
+	v:fname_in		原始文件
+	v:fname_new		同一文件的新版
+	v:fname_out		产生的 diff 文件
+
+另外，'diffexpr' 应负责实现 'diffopt' 选项中的 "icase" 和 "iwhite" 。
+而且，'diffexpr' 不能更改 'lines' 和 'columns' 的值。
+
+示例 (大致相当于 'diffexpr' 为空时的行为): >
+
+	set diffexpr=MyDiff()
+	function MyDiff()
+	   let opt = ""
+	   if &diffopt =~ "icase"
+	     let opt = opt . "-i "
+	   endif
+	   if &diffopt =~ "iwhite"
+	     let opt = opt . "-b "
+	   endif
+	   silent execute "!diff -a --binary " . opt . v:fname_in . " " . v:fname_new .
+		\  " > " . v:fname_out
+	endfunction
+<
+
+其中，"-a" 参数被用来强制将文件作为文本来比较，二进制的比较没有什么意义。
+"--binary" 参数使得文件以二进制模式读入，这样在 DOS 上 CTRL-Z 就不会结束文本。
+
+
+						*E810* *E97*
+Vim 将测试 diff 的输出看上去是否完全正确。如果不正确，你将得到一个错误信息。可
+能是因为:
+-  "diff" 程序无法执行。
+-  "diff" 程序无法产生普通 "ed" 风格的 diff 文件 (参考上面)。
+-  'shell' 和相关选项没有正确设置。试试类似 ":!sort" 过滤运行是否正确。
+-  你设置的 'diffexpr' 可能不正确。
+如果问题出在哪里不是很清楚，可以设置 'verbose' 选项为一或更高的值，以获得更多
+的信息。
+
+MS-Windows 自安装的 Vim 包含了 diff 程序。如果没有，您可以自行下载 diff.exe。
+例如从这里
+http://gnuwin32.sourceforge.net/packages/diffutils.htm.
+
+
+使 用 补 丁					*diff-patchexpr*
+
+选项 'patchexpr' 可以用来设定非标准的 "patch" 程序。
+
+当 'patchexpr' 为空时，Vim 将这样调用 "patch" 程序: >
+
+	patch -o outfile origfile < patchfile
+
+对于大多数的 "patch" 程序版本，这都可以正确工作。 注意: 在一行中间的 CR 可能产
+生问题。它被当做一个换行符。
+
+如果默认值无法使工作，设定 'patchexpr' 使之有以上所述的同样的效果。它被执行
+时，以下的变量会被设定为相关的文件名:
+
+	v:fname_in		原始文件
+	v:fname_diff		补丁文件
+	v:fname_out		要生成的打过补丁的文件
+
+示例 (对应 'patchexpr' 为空时的行为): >
+
+	set patchexpr=MyPatch()
+	function MyPatch()
+	   :call system("patch -o " . v:fname_out . " " . v:fname_in .
+	   \  " < " . v:fname_diff)
+	endfunction
+
+请确定使用 "patch" 程序时不会有不想要的副作用。比如，要留心那些生成的额外的文
+件，用完之后应该将其删除。该程序应该仅仅给文件打补丁而没有别的作用。
+
+使用 'patchexpr' 的值之前， Vim 将改变当前目录到 "/tmp" 或别的临时目录。这是为
+了让当前目录下的文件不被意外的打补丁。Vim 也将删除以 v:fname_in 开始以 ".rej"
+和 ".orig" 结尾的文件。
+
+ vim:tw=78:ts=8:ft=help:norl:

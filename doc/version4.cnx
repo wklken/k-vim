@@ -1,0 +1,328 @@
+*version4.txt*  For Vim version 7.4.  最近改变: 2006年2月
+
+
+		  VIM 参考手册    by Bram Moolenaar
+				译者: Willis
+				http://vimcdoc.sf.net
+
+
+本文档列出 Vim 3.0 和 Vim 4.0 不兼容的不同之处。尽管这里提到 4.0，但也适用于
+4.1，4.2 版本等。
+
+本文件对所有从 Vim 3.0 升级的用户很重要。仔细阅读以避免意想不到的问题。
+
+'backup' 选项改变缺省值				|backup-changed|
+备份文件扩展名改变				|backup-extension|
+交换文件结构改变				|swapfile-changed|
+"-w scriptout" 参数改变				|scriptout-changed|
+退格和删除键					|backspace-delete|
+| 转义键改变					|escape-bar|
+键码改变					|key-codes-changed|
+终端选项改变					|termcap-changed|
+'errorformat' 选项改变				|errorformat-changed|
+不再有 'graphic' 选项				|graphic-option-gone|
+不再有 'yankendofline' 选项			|ye-option-gone|
+'icon' 和 'title' 缺省值改变			|icon-changed|
+'highlight' 选项改变				|highlight-changed|
+'tildeop' 和 'weirdinvert' 缩写改变		|short-name-changed|
+"v"、"V" 和 "CTRL-V" 在可视模式的改变		|use-visual-cmds|
+删除插入模式的 CTRL-B 功能			|toggle-revins|
+
+
+'backup' 选项改变缺省值					*backup-changed*
+-------------------------------
+
+过去 'backup' 缺省值是打开的。结果是在原来文件被覆盖的时候备份文件建立起来。
+
+现在 'backup' 的缺省值是关闭。一旦文件成功的写入，备份文件就删除了。如果你想保
+留备份文件，在你的 vimrc 文件里置位 'backup'。这个改变的原因是许多人抱怨留下备
+份文件和 Vi 不兼容。					|'backup'|
+
+
+备份文件扩展名改变					*backup-extension*
+---------------------------------
+
+过去备份文件的扩展名是 '.bak'。因为别的程序也用这个扩展名，而且有的用户也自己
+建立用这个扩展名的备份，现在换成了不太明显的 "~"。另外一个好处是这样使用较少的
+空间，尤其是对短文件名的系统很有效。比如，在 MS-DOS 上 "longfile.c" 和
+"longfile.h" 用的备份文件名本来都是 "longfile.bak"；现在他们分别成为
+"longfile.c~" 和 "longfile.h~"。
+
+如果你宁可还是使用 ".bak"，你可以设置 'backupext' 选项: >
+	:set bex=.bak
+
+
+交换文件结构改变					*swapfile-changed*
+------------------------------
+
+交换文件的内容增加了若干参数。Vim 保存用户名字和被编辑文件的其它信息，使得恢复
+更加容易，而且能知道交换文件是从哪里来的。交换文件的第一部分可以识别字节顺序或
+者 sizeof(int) 不同的机器，当你在这样的机器上试图恢复时，你会得到错误信息，提
+示这不可能。
+
+因为这个改变，3.0 和 4.0 的交换文件不能互换。如果你有一个 3.0 的崩溃对话的交换
+文件，用 Vim 3.0 恢复之---不要用 4.0。			|swap-file|
+
+
+"-w scriptout" 参数改变					*scriptout-changed*
+-------------------------------
+
+"vim -w scriptout" 过去用来附加到 scriptout 文件。因为这不合逻辑，现在它用来建
+立新文件。已有的文件不会被覆盖 (为了避免破坏期待这个附加功能的人不小心删除已有
+的文件)。
+[后来这个也删除了]						|-w|
+
+
+退格和删除键						*backspace-delete*
+-------------------------
+
+3.0 里，删除和退格键在插入模式里都起到退格的功能；它们删除光标左面的字符。在
+4.0 里，删除键有了新功能: 他删除光标所在的字符，就像在命令行上那样。如果光标在
+行尾之后并且置位了 'bs'，两行会连接起来。		|<Del>| |i_<Del>|
+
+3.0 里退格键总是定义为 CTRL-H，而删除键定义为 CTRL-?。4.0 里退格和删除键的代码
+通过 termcap 和 termlib 定义，而且可以通过 Unix 的 "stty erase" 调整。这使得用
+户可以根据他们的键盘重新定义这些键。			 |<BS>| |i_<BS>|
+
+如果你喜欢插入模式下的退格和删除键的旧行为，在你的 vimrc 里加入一行: >
+
+	inoremap ^? ^H
+
+你也许想加上这些行来调整 <BS> 和 <Del> 的代码:
+
+	set t_kb=^H
+	set t_kD=^?
+
+(用 CTRL-V CTRL-H 输入 ^H，用 CTRL-V CTRL-? 或者 <Del> 输入 ^?。)
+
+如果 t_kb 的值正确，但是 t_kD 的值不对，使用 ":fixdel" 命令。它会根据 t_kb 的
+值设置 t_kD 的值。这可用于使用不同终端的场合。		|:fixdel|
+
+如果 ^H 不是识别成 <BS> 或者 <Del>，它的用法类似于退格键。
+
+
+| 转义键改变						*escape-bar*
+--------------------
+
+如果 'cpoptions' 里有 'b' 标志位，反斜杠不能用于在映射和缩写命令里转义 '|'。只
+有 CTRL-V 可以。这是 Vi 兼容的。如果工作在 Vi 兼容模式下，而在映射里为了加入竖
+杠而包含 "\|"，必须把它改成 "^V|"。参见 |:bar|。
+
+
+键码改变						*key-codes-changed*
+-----------------
+
+键码的内部表示发生了很大的改变。3.0 里每个键用单字节代码表示。这导致了不同字符
+集使用相同的代码时的很多问题。4.0 里，用三字节的代码来表示。这样不会和一个字符
+发生混淆。						|key-notation|
+
+如果你在 vimrc 里用单字节键码定义映射，你需要把他们换成 4.0 的代码。你不需要把
+它们直接写成三字节的代码，而应该用 <> 括起来的符号表示形式。见下表。该表也列出
+来 3.0 文档使用的旧名字。
+
+<> 内的键码可以用来直接定义映射。这样，你可以直接复制/粘贴例子或者输入。<> 的
+表示方法在这里有介绍 |<>|。要使之工作，'cpoptions' 里必须不能用 'B' 和 '<' 标
+志位 |'cpoptions'|。
+
+旧名字		新名字		  旧代码	旧的 MS-DOS 代码	~
+				十六进	十进制	十六进	十进制	~
+<ESC>		<Esc>
+<TAB>		<Tab>
+<LF>		<NL> <NewLine> <LineFeed>
+<SPACE>		<Space>
+<NUL>		<Nul>
+<BELL>		<Bell>
+<BS>		<BS> <BackSpace>
+<INSERT>	<Insert>
+<DEL>		<Del> <Delete>
+<HOME>		<Home>
+<END>		<End>
+<PAGE_UP>	<PageUp>
+<PAGE_DOWN>	<PageDown>
+
+<C_UP>		<Up>		0x80	128	0xb0	176
+<C_DOWN>	<Down>		0x81	129     0xb1	177
+<C_LEFT>	<Left>		0x82	130     0xb2	178
+<C_RIGHT>	<Right>		0x83	131     0xb3	179
+<SC_UP>		<S-Up>		0x84	132     0xb4	180
+<SC_DOWN>	<S-Down>	0x85	133     0xb5	181
+<SC_LEFT>	<S-Left>	0x86	134     0xb6	182
+<SC_RIGHT>	<S-Right>	0x87	135     0xb7	183
+
+<F1>		<F1>		0x88	136     0xb8	184
+<F2>		<F2>		0x89	137     0xb9	185
+<F3>		<F3>		0x8a	138     0xba	186
+<F4>		<F4>		0x8b	139     0xbb	187
+<F5>		<F5>		0x8c	140     0xbc	188
+<F6>		<F6>		0x8d	141     0xbd	189
+<F7>		<F7>		0x8e	142     0xbe	190
+<F8>		<F8>		0x8f	143     0xbf	191
+<F9>		<F9>		0x90	144     0xc0	192
+<F10>		<F10>		0x91	145     0xc1	193
+
+<SF1>		<S-F1>		0x92	146     0xc2	194
+<SF2>		<S-F2>		0x93	147     0xc3	195
+<SF3>		<S-F3>		0x94	148     0xc4	196
+<SF4>		<S-F4>		0x95	149     0xc5	197
+<SF5>		<S-F5>		0x96	150     0xc6	198
+<SF6>		<S-F6>		0x97	151     0xc7	199
+<SF7>		<S-F7>		0x98	152     0xc8	200
+<SF8>		<S-F8>		0x99	153     0xc9	201
+<SF9>		<S-F9>		0x9a	154     0xca	202
+<SF10>		<S-F10>		0x9b	155     0xcb	203
+
+<HELP>		<Help>		0x9c	156     0xcc	204
+<UNDO>		<Undo>		0x9d	157     0xcd	205
+
+		(没用到)	0x9e	158     0xce	206
+		(没用到)	0x9f	159     0xcf	207
+
+
+终端选项改变					*termcap-changed*
+------------------------
+
+终端选项的名字改成了 termcap 定义的这些选项的名字。所有的终端选项现在都有 t_xx
+这样的名字，其中 xx 是 termcap 的名字。通常这些选项都用不到。除非你有一个错误
+或者不完整的 termcap 名字，或者你设置不同的光亮选项的值。|terminal-options|
+
+注意 有些键没有 termcap 的名字。应该用 <> 形式的名字，不管这么说，这总是一个好
+主意。
+
+注意 "t_ti" 变成了 "t_mr" (反转输出) 而 "t_ts" 变成了 "t_ti" (初始终端模式)。
+用 "t_ti" 的时候要小心！
+
+旧名字		新名字		含义		~
+t_cdl		t_DL		删除行数			*t_cdl*
+t_ci		t_vi		光标不可见			*t_ci*
+t_cil		t_AL		插入行数			*t_cil*
+t_cm		t_cm		移动光标
+t_cri		t_RI		光标右侧字符数			*t_cri*
+t_cv		t_ve		光标可见			*t_cv*
+t_cvv		t_vs		光标非常可见			*t_cvv*
+t_dl		t_dl		删除行
+t_cs		t_cs		滚动区域
+t_ed		t_cl		清除显示			*t_ed*
+t_el		t_ce		清除行				*t_el*
+t_il		t_al		插入行				*t_il*
+		t_da		屏幕上方保留显示
+		t_db		屏幕下方保留显示
+t_ke		t_ke		设置终端离开 keypad 传输模式
+t_ks		t_ks		设置终端进入 keypad 传输模式
+t_ms		t_ms		保存以便在高亮模式里移动光标
+t_se		t_se		正常模式 (撤销 t_so)
+t_so		t_so		突出 (standout) 模式
+t_ti		t_mr		反转高亮
+t_tb		t_md		粗体模式			*t_tb*
+t_tp		t_me		结束高亮			*t_tp*
+t_sr		t_sr		反转滚动
+t_te		t_te		结束 termcap 模式
+t_ts		t_ti		进入 termcap 模式		*t_ts_old*
+t_vb		t_vb		可视响铃
+t_csc		t_CS		光标相对滚动区域		*t_csc*
+
+t_ku	t_ku	<Up>		向上光标键
+t_kd	t_kd	<Down>		向下光标键
+t_kr	t_kr	<Right>		向右光标键
+t_kl	t_kl	<Left>		向左光标键
+t_sku		<S-Up>		shifted 向上光标键		*t_sku*
+t_skd		<S-Down>	shifted 向下光标键		*t_skd*
+t_skr	t_%i	<S-Right>	shifted 向右光标键		*t_skr*
+t_skl	t_#4	<S-Left>	shifted 向左光标键		*t_skl*
+t_f1	t_k1	<F1>		功能键 1			*t_f1*
+t_f2	t_k2	<F2>		功能键 2			*t_f2*
+t_f3	t_k3	<F3>		功能键 3			*t_f3*
+t_f4	t_k4	<F4>		功能键 4			*t_f4*
+t_f5	t_k5	<F5>		功能键 5			*t_f5*
+t_f6	t_k6	<F6>		功能键 6			*t_f6*
+t_f7	t_k7	<F7>		功能键 7			*t_f7*
+t_f8	t_k8	<F8>		功能键 8			*t_f8*
+t_f9	t_k9	<F9>		功能键 9			*t_f9*
+t_f10	t_k;	<F10>		功能键 10			*t_f10*
+t_sf1		<S-F1>		shifted 功能键 1		*t_sf1*
+t_sf2		<S-F2>		shifted 功能键 2		*t_sf2*
+t_sf3		<S-F3>		shifted 功能键 3		*t_sf3*
+t_sf4		<S-F4>		shifted 功能键 4		*t_sf4*
+t_sf5		<S-F5>		shifted 功能键 5		*t_sf5*
+t_sf6		<S-F6>		shifted 功能键 6		*t_sf6*
+t_sf7		<S-F7>		shifted 功能键 7		*t_sf7*
+t_sf8		<S-F8>		shifted 功能键 8		*t_sf8*
+t_sf9		<S-F9>		shifted 功能键 9		*t_sf9*
+t_sf10		<S-F10>		shifted 功能键 10		*t_sf10*
+t_help	t_%1	<Help>		help 键				*t_help*
+t_undo	t_&8	<Undo>		undo 键				*t_undo*
+
+
+'errorformat' 选项改变					*errorformat-changed*
+----------------------------
+
+'errorformat' 现在包含多种格式，以逗号分隔。第一个匹配的格式被使用。缺省值现在
+能捕获许多常见格式。					|errorformat|
+
+如果你有一种格式包含逗号，前面需要加上反斜杠转义。输入两个反斜杠，因为 ":set"
+会吃掉一个。
+
+
+不再有 'graphic' 选项					*graphic-option-gone*
+---------------------
+
+'graphic' 选项过去使得 <~> 和 0xa0 之间的字符在屏幕上直接显示。现在 'isprint'
+选项替代了它，而且增加了很多可能性。缺省的设置一样；如果你以前在 vimrc 置位了
+'graphic' 选项，你只需要看到这一点就行了。
+							|'isprint'|
+
+
+不再有 'yankendofline' 选项				*ye-option-gone*
+---------------------------
+
+'yankendofline' 选项被删除了。你可以用 >
+	:map Y y$
+
+
+'icon' 和 'title' 缺省值改变				*icon-changed*
+----------------------------------------
+
+'title' 选项现在缺省只有在原来的标题恢复的时候才设置。不再有 "Thanks for
+flying Vim" 标题。如果你还是想要，在你的 vimrc 文件加上 ":set title"。
+							|'title'|
+
+'icon' 的缺省值现在决定于原来的值是否恢复，和 'title' 类似。如果你不喜欢你的
+icon 标题被改变，在 vim 里设置这一行:			|'icon'|
+	:set noicon
+
+
+'highlight' 选项改变					*highlight-changed*
+--------------------------
+
+'i' 标志位现在意味着斜体高亮，而不是反转。'r' 标志位现在用来代表反转高亮，也就
+是 'i' 过去的含义。通常你看不到区别，因为多数终端不支持斜体模式，而用反转模式
+作为替代。						|'highlight'|
+
+如果 'highlight' 的一种场合不存在，使用 'highlight' 的缺省值，而不是反转模式。
+
+
+'tildeop' 和 'weirdinvert' 缩写改变			*short-name-changed*
+-----------------------------------------------
+
+'to' 换名成 ('tildeop' 的缩写) 'top'。			|'tildeop'|
+'wi' 换名成 ('weirdinvert' 的缩写) 'wiv'。		|'weirdinvert'|
+
+之所以这么做，是因为 Vi 使用 "wi" 作为 'window' 的缩写，而 'to' 作为 'timeout'
+的缩写。这意味着你如果试图设置这些选项，你不会得到错误信息，但是效果不同。
+
+
+"v"、"V" 和 "CTRL-V" 在可视模式的改变			*use-visual-cmds*
+-------------------------------------------
+
+在可视模式下，"v"、"V" 和 "CTRL-V" 用来终止可视模式。现在这只有在可视模式处于
+相应的类型时才会，不然可视模式的类型发生相应的改变。现在只有 ESC 用来在所有情
+况下不做别的，只终止可视模式。				|v_V|
+
+
+删除插入模式的 CTRL-B 功能				*toggle-revins*
+-----------------------------
+
+插入模式下的 CTRL-B 原来用来切换 'revins' 选项。如果你不知道这一点而不小心按了
+CTRL-B，要发现怎么撤销这一点很困难。因为几乎没人用到这一功能，缺省这个功能被关
+闭了。如果需要，编译前在 feature.h 里定义 RIGHTLEFT。	 |'revins'|
+
+ vim:tw=78:ts=8:ft=help:norl:

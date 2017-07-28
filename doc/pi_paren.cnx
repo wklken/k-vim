@@ -1,0 +1,51 @@
+*pi_paren.txt*  For Vim version 7.4.  最近更新: 2013年8月
+
+
+		  VIM 参考手册	  by Bram Moolenaar
+				译者: Willis
+				http://vimcdoc.sf.net
+
+
+高亮匹配括号						*matchparen*
+
+这里提到的功能是一个标准插件 |standard-plugin|。
+只有 'compatible' 不置位时才能使用此插件。
+
+设置 "loaded_matchparen" 变量可以避免载入此插件: >
+	:let loaded_matchparen = 1
+
+此插件安装 CursorMoved、CursorMovedI 和 WinEnter 自动命令来重新定义匹配高亮。
+
+					*:NoMatchParen* *:DoMatchParen*
+要在载入此插件后关闭它，用: >
+
+	:NoMatchParen
+
+要再次打开: >
+
+	:DoMatchParen
+
+使用的高亮是 MatchParen。":highlight" 命令可用来为它指定不同的颜色。例如: >
+>
+	:hi MatchParen ctermbg=blue guibg=lightblue
+
+匹配的字符组来自 'matchpairs' 选项。你可以改变该值来高亮不同的匹配。注意 不是
+什么值都可以。比如，你不能高亮单引号或双引号，因为它们的开始和结束字符相同。
+
+使用语法高亮的属性。如果光标目前不在字符串或注释语法项目里，则忽略字符串和注释
+里的匹配。任何名字里包含 "string" 或 "comment" 的语法项目都被认为是字符串或注
+释项目。
+
+移动光标时，限制搜索范围以避免延迟。这些限制包括:
+- 窗口的可见部分。
+- 光标上下 100 行，避免关闭折叠存在时的延迟过长。
+- 光标前后 'synmaxcol' 乘以 2 个字节，避免存在带语法高亮的长行时延迟过长。
+- 300 毫秒 (插入模式下是 60 毫秒) 的超时。可用 g:matchparen_timeout 和
+  g:matchparen_insert_timeout 变量或局部于缓冲区的 b:matchparen_timeout 和
+  b:matchparen_insert_timeout 来改变。
+
+如果你希望 |%| 命令更好的工作，可以使用 matchit 插件，见 |matchit-install|。该
+插件也可用于跳过注释里的匹配。这不同于 matchparen 高亮，两者使用不同的机制。
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,121 @@
+*debugger.txt*	For Vim version 7.4.  最近更新: 2006年7月
+
+
+		     Vim 参考手册    作者: Gordon Prieur
+	   译者: iCrazy <icrazy@ustc.edu>  http://vimcdoc.sf.net
+
+
+支持调试器的特性					*debugger-support*
+
+1. 调试器的特性			|debugger-features|
+2. Vim 编译选项			|debugger-compilation|
+3. 整合的调试器			|debugger-integration|
+
+{Vi 没有以上的功能}
+
+==============================================================================
+1. 调试器的特性						*debugger-features*
+
+以下的功能可以和调试器、集成编程环境 (IPE) 或集成开发环境 (IDE) 集成使用:
+
+	替代命令输入					|alt-input|
+	调试标号					|debug-signs|
+	调试源代码高亮					|debug-highlight|
+	信息页脚					|gui-footer|
+	气泡表达式求值					|balloon-eval|
+
+这些特性主要是针对图形界面的 gvim 而新增的。然而，|alt-input| 和
+|debug-highlight| 是同时针对 vim 和 gvim 进行开发的。一些其他的功能略做修改，
+即可在非 GUI 的 vim 上使用。但是，我没有这样做，我也没有测试过针对非图形 GUI
+界面编译出的 vim 的可靠性。
+
+
+1.1 替代命令输入					*alt-input*
+
+要使 Vim 和一个调试器一起工作，至少必须有一种和调试器进行输入连接的方式，或者
+有一个外部工具。尽管很多情况下，也同时会有一个输出连接，但这并不是必要的。
+
+输入连接的目的是让外部调试器把命令传送给 Vim。调试器送来的命令必须足以使它自己
+显示当前的调试环境和状态。
+
+目前的实现是基于 X 工具包中的 dispatch 循环和对 XtAddInput() 函数的调用的。
+
+
+1.2 调试标号						*debug-signs*
+
+很多调试器用在一些行前面加一个小记号或使这些行颜色高亮的方式来给它们做标记。命
+令 |:sign| 可以使得调试器设定这种图形标号。这项特性有什么作用呢？举例来说，它
+可以用来使调试器显示一个箭头，从而指示正在被调试的程序的程序计数器 (PC)。另一
+个用处是在有断点的行后面显示一个小的停止标号。这些可见的标号可以使用户得知一些
+调试器的状态信息。
+
+这些特性不仅仅可以和调试器一起使用。它们可以使一个 IPE 高亮显示编译错误、查找
+到的文本等等。标号功能还可以和 |debug-highlight| 一起工作，从而保证标号可以被
+显眼的显示出来。
+
+调试标号可以用命令 |:sign| 来定义和设置。
+
+
+1.3 调试源代码高亮					*debug-highlight*
+
+这项特性可以使得您把一行文字突出地高亮。这种高亮是用来使某一行突出显示的。高亮
+功能在 vim 和 gvim 中都可以工作，而调试标号一般仅在 gvim 下工作。Sun
+Microsystem 的 dtterm 是一个例外，它有一个 "sign gutter" 可以用来显示标号。
+
+
+1.4 信息页脚						*gui-footer*
+
+信息页脚可以用来显示调试器或 IPE 中传来的信息。它还可以用来显示菜单和工具栏提
+示。页脚区域位于 GUI 窗口的底部，在用来显示冒号 (:) 命令的那一行的下方。
+
+页脚的显示是用 'guioptions' 中的字母 'F' 来控制的。
+
+
+1.5 气泡表达式求值					*balloon-eval*
+
+这项特性可以使一个调试器或其他的外部工具根据鼠标所指的位置显示动态的信息。它的
+目的在于使 Sun 的 Visual WorkShop 调试器能够显示表达式表达式求值。实际上，这个
+特性是用通用的方式实现的，所以它还可以用来显示其他的信息。
+
+气泡表达式求值还有一些可以设置的参数。对于 Motif，字体列表和颜色可以通过 X 资
+源 (XmNballoonEvalFontList、XmNballoonEvalBackground 和
+XmNballoonEvalForeground) 来设定。
+
+选项 'balloondelay' 用来设定显示气泡之前的延迟时间。
+选项 'ballooneval' 必须打开。
+
+气泡表达式求值仅当用 |+balloon_eval| 特性编译时有效。
+
+气泡表达式求值功能还被用来为工具栏显示提示。对于这个用途，无须设置选项
+'ballooneval'，但是其他选项的值将被应用。
+
+另一种使用气泡表达式的方法是使用 'balloonexpr' 选项。完全由用户定义。
+
+==============================================================================
+2. Vim 编译选项						*debugger-compilation*
+
+调试器特性是为了和 Sun 的 Visual WorkShop 集成编程环境 (ipe) 一起使用而开发
+的。事实上，它们使用了一种通用的方式，所以其他的调试器也可以使用一部分，甚至是
+所有的那些原本被 Sun 的 ipe 所使用的工具。
+
+以下的编译时的预处理程序变量控制着这些特性:
+
+    交替命令输入				ALT_X_INPUT
+    调试符号					FEAT_SIGNS
+    调试高亮					FEAT_SIGNS
+    信息页脚					FEAT_FOOTER
+    气泡表达式求值				FEAT_BEVAL
+
+最先提供且带有完整 IPE/IDE 的整合来自 Sun Visual WorkShop。如果需要编译一个带
+有 VWS 接口的 gvim，请设置下面这个标志位，它会设置以上所有的标志位:
+
+    Sun Visual WorkShop				FEAT_SUN_WORKSHOP
+
+==============================================================================
+3. 整合的调试器						*debugger-integration*
+
+一个完全整合的 调试器/IPE/IDE 是 Sun 的 Visual WorkShop 集成编程环境。
+
+对 Sun NetBeans 的支持，可见 |netbeans|。
+
+ vim:tw=78:sw=4:ts=8:ft=help:norl:

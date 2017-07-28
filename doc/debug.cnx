@@ -1,0 +1,165 @@
+*debug.txt*     For Vim version 7.4.  最近更新: 2013年1月
+
+
+		  VIM 参考手册	  by Bram Moolenaar
+				译者: Willis
+				http://vimcdoc.sf.net
+
+
+调试 Vim						*debug-vim*
+
+本文档是为了调试 Vim 自身而准备的，如果 Vim 不能正确工作，请看这里。
+如果要调试 Vim 脚本和函数等，见 |debug-scripts|。
+
+1. 用 gcc 和 gdb 定位崩溃			|debug-gcc|
+2. 定位内存泄漏                                 |debug-leaks|
+3. Windows 漏洞报告				|debug-win32|
+
+==============================================================================
+
+1. 用 gcc 和 gdb 定位崩溃				*debug-gcc* *gdb*
+
+如果 Vim 崩溃于某测试文件而使用的编译器是 gcc 的话，下面给出具体步骤，你可以用
+它来发现 Vim 崩溃的准确位置。MingW 工具同样适用。
+
+1. 用 "-g" 选项编译 Vim (src/Makefile 有一行用于此目的，只要去掉注释即可)。同
+   时保证不使用 "strip" (不要安装，或者用 "STRIP = /bin/true")。
+
+2. 执行命令 (把 "11" 换成实际失败的那个测试): >
+	cd testdir
+	gdb ../vim
+	run -u unix.vim -U NONE -s dotest.in test11.in
+
+3. 检查 Vim 在哪里崩溃，gdb 会给出这方面的消息。
+
+4. 此 gdb 命令可以得到堆栈记录: >
+	where
+<  此命令可以查看不同的堆栈记录位置: >
+	frame 3
+<  把 "3" 换成堆栈记录其中一个位置。
+
+==============================================================================
+
+2. 定位内存泄漏					*debug-leaks* *valgrind*
+
+如果你怀疑 Vim 泄漏内存并且使用的是 Linux，valgrind 是定位内存泄漏很有用的工
+具。
+
+首先，编译 Vim 时定义 EXITFREE。在 MAKEFILE 里查找之并去掉注释。
+
+用以下的命令启动 Vim:
+>
+	valgrind --log-file=valgrind.log --leak-check=full ./vim
+
+备注: Vim 的运行会变慢许多。如果 .vimrc 很大或者有多个插件，启动时请耐心，也可
+使用 "-u NONE" 参数运行来跳过这些。
+
+常有一些库函数发生泄漏，例如 getpwuid() 和 XtVaAppCreateShell()。没法避免这种
+情况，但泄漏的字节数应该很少，不超过一千字节。
+
+==============================================================================
+
+3. Windows 漏洞报告					*debug-win32*
+
+如果 Vim 的 Windows 版本崩溃且崩溃可以重现，通过采取若干步骤，你可以提供有用的
+漏洞报告。
+
+
+3.1 通用 ~
+
+首先，你需要可执行文件的调试器符号文件 (PDB): gvim.pdb 对应 gvim.exe，vim.pdb
+对应 vim.exe。在获得可执行文件的相同位置应该可以下载 PDB。确信使用和 EXE 匹配
+的 PDB 文件 (日期相同)。
+
+如果你自己用 Microsoft Visual C++ 编译器编译可执行文件，PDB 应该和 EXE 在同一
+个生成目录。
+
+另一个方案是，如果有源代码，在 Visual Studio 里你可以导入 Make_ivc.mak 以构造
+一个工作区 (workspace)。然后选择调试配置 (debug configuration)，构造并进行各种
+类型的调试 (设置断点，观察 (watch) 变量等)。
+
+如果你有 Visual Studio，用它来代替 VC Toolkit 和 WinDbg。
+
+如果是使用其它编译器，你应该用相应的调试器: Borland 编译器编译的 Vim 可执行文
+件使用 TD；Cygwin 和 MinGW 编译器使用 gdb (见上 |debug-gcc|)。
+
+
+								*debug-vs2005*
+3.2 用 Visual Studio 2005/Visual C++ 2005 Express 调试 Vim 的崩溃 ~
+
+首先启动 vim.exe 或 gvim.exe，然后启动 Visual Studio。(如果你没有 Visual
+Studio，按照 |get-ms-debuggers| 的指示获取免费版本 Visual C++ 2005 Express
+Edition。)
+
+在 Tools 菜单上点击 Attach to Process (连接到进程)。选择 Vim 的进程。
+
+在 Vim 里，重现崩溃。Visual Studio 这时会给出对话框，告诉你 Vim 进程出现了未处
+理的例外。点击 Break，中断该进程并进入调试。
+
+Visual Studio 这时弹出另一个对话框，告诉你无法载入符号文件所以不能显示源代码。
+点击 OK。
+
+这时会打开若干窗口。在 Call Stack (调用栈) 窗口按鼠标右键。然后选择 Load
+Symbols (载入符号)。Find Symbols (寻找符号) 对话框会打开以寻找 (g)vim.pdb。导
+航到你准备好的包含 PDB 文件的目录，然后选择 Open。
+
+此时，你应该有了完整的调用栈，其中包含了 vim 的函数名和行号。双击任何一行会给
+出 Find Source (寻找源代码) 对话框。导航到包含 Vim 源代码的目录 (如果有的话)。
+
+如果你不知道如何继续调试，按照 ":help bug-reports" 的步骤进行。把调用栈粘贴到
+漏洞报告里。
+
+如果有 Visual Studio 的付费版本，你可以用 Debug 菜单保存一个 minidump 并在漏洞
+报告里一并发送。minidump 是一个小文件 (<100KB)，里面包含进程的状态信息。
+Visual C++ 2005 Express Edition 不能保存 minidump 也不能安装成为 just-in-time
+(即时) 调试器。如果你需要保存 minidump 或者需要即时 (或 postmortem，事后) 调试
+器的话，使用 WinDbg，|debug-windbg|。
+
+								*debug-windbg*
+3.3 用 WinDbg 调试 Vim 的崩溃 ~
+
+|get-ms-debuggers| 说明如何得到 WinDbg。
+
+和 Visual Studio IDE 一样，你可以连接 WinDbg 到运行中的 Vim 进程。你也可以让系
+统自动激活 WinDbg，从而使之成为事后调试器。要设置 WinDbg 成为一个事后调试器，
+运行 "windbg -I"。
+
+要连接 WinDbg 到运行中的 Vim 进程，启动 WinDbg，在 File 菜单上点击 Attach to
+Process (连接到进程)。选择 Vim 进程然后点击 OK。
+
+这个时候，选择 File 菜单的 Symbol File Path (符号文件路径)，然后把包含 Vim PDB
+文件的目录加入 sympath。如果你有 Vim 源代码，使用 File 菜单的 Source File Path
+(源文件路径)。WinDbg 里可以打开源文件，如果你愿意，也可以设置断点。现在重现崩
+溃。WinDbg 应该会打开源文件并定位于崩溃所在的位置。使用 View 菜单，你可以检查
+调用栈、局部变量、观察窗口 (watch window) 和其它。
+
+如果把 WinDbg 用作事后调试器，你不需要把 WinDbg 连接到 Vim 进程上。只要简单地
+重现崩溃，WinDbg 就会自动启动。用上面相同的方法设置符号文件路径和源文件路径。
+
+要保存 minidump，在 WinDbg 命令行上输入: >
+        .dump vim.dmp
+<
+							*debug-minidump*
+3.4 打开 Minidump ~
+
+如果你有 minidump 文件，你可以用 Visual Studio 或 WinDbg 打开它。
+
+Visual Studio 2005 里: File 菜单上选择 Open，然后 Project/Solution。导航到该
+.dmp 文件然后将它打开。现在按 F5 打开调试器。按照 |debug-vs2005| 的指示来设置
+符号文件路径。
+
+WinDbg 里: 选择 File 菜单的 Open Crash Dump，按照 |debug-windbg| 的指示来设置
+符号文件路径。
+
+							*get-ms-debuggers*
+3.5 获得 Microsoft 调试工具 ~
+
+Debugging Tools for Windows (Windows 调试工具) 可以在这里下载
+    http://www.microsoft.com/whdc/devtools/debugging/default.mspx
+它包括 WinDbg 调试器。
+
+Visual C++ 2005 Express Edition 可以在这里免费下载:
+    http://msdn.microsoft.com/vstudio/express/visualC/default.aspx
+
+=========================================================================
+ vim:tw=78:ts=8:ft=help:norl:

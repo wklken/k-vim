@@ -1,0 +1,687 @@
+*if_pyth.txt*   For Vim version 7.4.  最近更新: 2013年8月
+
+
+		  VIM REFERENCE MANUAL    by Paul Moore
+		  译者: lang2，Willis http://vimcdoc.sf.net
+
+
+Vim 的 Python 编程接口					*python* *Python*
+
+1. 命令						|python-commands|
+2. vim 模块					|python-vim|
+3. 缓冲区对象					|python-buffer|
+4. 范围对象					|python-range|
+5. 窗口对象					|python-window|
+6. 标签页对象					|python-tabpage|
+7. vim.bindeval 对象				|python-bindeval-objects|
+8. pyeval()、py3eval() Vim 函数			|python-pyeval|
+9. 动态调入					|python-dynamic|
+10. Python 3					|python3|
+
+{Vi 无此功能}
+
+Vim 的 Python 2.x 接口仅当 |+python| 特性被编译进 Vim 时才有效。
+Vim 的 Python 3 接口仅当 |+python3| 特性被编译进 Vim 时才有效。
+可以同时使用两者，但请阅读 |python-2-and-3|。
+
+==============================================================================
+1. 命令							*python-commands*
+
+					*:python* *:py* *E205* *E263* *E264*
+:[range]py[thon] {stmt}
+			执行 Python 语句 {stmt}。一个判断 ":python" 命令是否可
+			用的简单检查: >
+				:python print "Hello"
+
+:[range]py[thon] << {endmarker}
+{script}
+{endmarker}
+			执行 Python 脚本 {script}。
+			备注: 此命令在没有编译进 Python 特性时无效。为了避免这
+			样的错误，参阅 |script-here|。
+
+{endmarker} 前面_不能_有任何空白字符。如果在 "<<" 之后省略了 {endmarker}，在
+{script} 之后一定要有一个点 '.'。这和 |:append| 及 |:insert| 命令的道理是一样
+的。这种形式的 |:python| 命令主要用于在 Vim 脚本中嵌入 Python 代码。
+
+例子: >
+	function! IcecreamInitialize()
+	python << EOF
+	class StrawberryIcecream:
+		def __call__(self):
+			print 'EAT ME'
+	EOF
+	endfunction
+<
+备注: Python 对于缩进是非常敏感的。要确保 "class" 所在行及 "EOF" 没有任何缩
+进。
+
+							*:pydo*
+:[range]pydo {body}	对 [range] 里的每一行执行 Python 函数 "def
+			_vim_pydo(line, linenr): {body}"，其中的函数参数设为每
+			行不带尾部 <EOL> 的文本，以及行号。该函数应该返回字符
+			串或者 None。如果返回字符串，它会用来替代当前执行的
+			行。缺省 [range] 为整个文件: "1,$"。
+			{Vi 无此功能}
+
+示例:
+>
+	:pydo return "%s\t%d" % (line[::-1], len(line))
+	:pydo if line: return "%4d: %s" % (linenr, line)
+<
+							*:pyfile* *:pyf*
+:[range]pyf[ile] {file}
+			执行 {file} 文件中包含的 Python 脚本。整个参数被用作一
+			个文件名。 {Vi 无此功能}
+
+这些命令根本上都差不多 － 它们都将当前范围 |python-range| 设定为指定的行范围，
+并对其执行 Python 代码。
+
+:python 的情况所执行的代码来自命令行。
+:pyfile 的情况所执行的代码来自一个指定的文件。
+
+Python 命令不能在 |sandbox| 里使用。
+
+需要传递参数的话，你得使用 sys.argv[]。例如: >
+
+	:python import sys
+	:python sys.argv = ["foo", "bar"]
+	:pyfile myscript.py
+
+下面是一些例子						*python-examples*  >
+
+	:python from vim import *
+	:python from string import upper
+	:python current.line = upper(current.line)
+	:python print "Hello"
+	:python str = current.buffer[42]
+
+(注意 如同导入 (import) 模块一样，变动对后续命令持续有效。这和 Python 的解释
+程序是一样的。)
+
+==============================================================================
+2. vim 模块						*python-vim*
+
+Python 的代码所有对 Vim 的操作 (只有一个例外 － 看下面的 |python-output|) 都是
+通过 "vim" 模块来进行的。该模块包括两个方法，三个常量，以及一个异常对象。在使
+用它们之前你得先导入 (import) vim 模块。
+
+总览 >
+	:py print "Hello"		# 显示信息
+	:py vim.command(cmd)		# 执行 Ex 命令
+	:py w = vim.windows[n]		# 获取窗口 "n"
+	:py cw = vim.current.window	# 获取当前窗口
+	:py b = vim.buffers[n]		# 获取缓冲区 "n"
+	:py cb = vim.current.buffer	# 获取当前缓冲区
+	:py w.height = lines		# 设定窗口高度
+	:py w.cursor = (row, col)	# 设定光标位置
+	:py pos = w.cursor		# 获取 tuple (行，列)
+	:py name = b.name		# 获取缓冲区的文件名
+	:py line = b[n]			# 获取缓冲区内的一行
+	:py lines = b[n:m]		# 获取数行
+	:py num = len(b)		# 获取统计的行数
+	:py b[n] = str			# 在缓冲区里写入一行文本
+	:py b[n:m] = [str1, str2, str3]	# 一次性写入多行文本
+	:py del b[n]			# 删除一行
+	:py del b[n:m]			# 删除数行
+
+"vim" 模块中的方法
+
+vim.command(str)					*python-command*
+	执行 vim (ex-模式) 命令 str。无返回值。
+	例如: >
+		:py vim.command("set tw=72")
+		:py vim.command("%s/aaa/bbb/g")
+<	下面的定义可以执行普通模式命令: >
+		def normal(str):
+			vim.command("normal "+str)
+		# 注意使用单引号标识出含有双引号的字符串
+		normal('"a2dd"aP')
+<								*E659*
+	":python" 在 Python 2.2 及之前版本上不能嵌套使用。下面命令只对 Python
+	2.3 之后版本适用: >
+		:py vim.command("python print 'Hello again Python'")
+
+
+vim.eval(str)						*python-eval*
+	使用 vim 内部的表达式处理器来对表达式 str 求值。(参阅 |expression|)。
+	返回表达式的结果:
+	-如果 Vim 表达式计算结果是字符串或者数值，那么返回一个字符串。
+	-如果 Vim 表达式计算结果是 Vim 列表，那么返回一个列表
+	-如果 Vim 表达式计算结果是 Vim 字典，那么返回一个字典
+	字典和列表被递归扩展。
+	例: >
+	    :py text_width = vim.eval("&tw")
+	    :py str = vim.eval("12+12")		# 注意: 结果是个字符串！
+						# 使用 string.atoi()
+						# 把它转换成数字
+
+	    :py tagList = vim.eval('taglist("eval_expr")')
+<	后一个将返回一个 python 类型的字典列表，例如:
+	[{'cmd': '/^eval_expr(arg, nextcmd)$/', 'static': 0, 'name':
+	'eval_expr', 'kind': 'f', 'filename': './src/eval.c'}]
+
+vim.bindeval(str)					*python-bindeval*
+	类似于 |python-eval|，但返回 |python-bindeval-objects| 中描述的特殊
+	对象。这些 python 对象可用于修改 (|List| 或 |Dictionary|) 或调用
+	(|Funcref|) vim 对象。
+
+vim.strwidth(str)					*python-strwidth*
+	类似于 |strwidth()|: 返回 str 占据的显示单元数，制表符算作一个单元。
+
+vim.foreach_rtp(callable)				*python-foreach_rtp*
+	对 'runtimepath' 的每个路径调用给定的 callable，直到某次 callable 返回
+	非 None 值、抛出例外、或者没有更多的路径为止。如果因为 callable 返回
+	非 None 而停止，vim.foreach_rtp 函数返回 callable 返回的值。
+
+vim.chdir(*args, **kwargs)				*python-chdir*
+vim.fchdir(*args, **kwargs)				*python-fchdir*
+	运行 os.chdir 或 os.fchdir，然后做合适的 vim 的事情。
+	备注: 你不应直接使用这些函数，用 os.chdir 或 os.fchdir
+	代替。如果 os.fchdir 不存在，则 vim.fchdir 的行为未定义。
+
+
+"vim" 模块中的异常对象
+
+	vim.error					*python-error*
+	当遇到 Vim 的错误时，Python 引起一个 vim.error 类的异常。
+	例: >
+		try:
+			vim.command("put a")
+		except vim.error:
+			# nothing in register a
+
+"vim" 模块中的常量
+	注意 这些其实并非真正的常量 － 你还是可以对它们赋值。但这毫无意义，因
+	为你会丢失该 vim 对象本来代表的值。
+
+vim.buffers						*python-buffers*
+	一个映射对象，用来提供对 vim 缓冲区的操作。该对象支持以下操作: >
+	    :py b = vim.buffers[i]	# 索引 (只读)
+	    :py b in vim.buffers	# 成员测试
+	    :py n = len(vim.buffers)	# 成员个数
+	    :py for b in vim.buffers:	# 遍历缓冲区列表
+<
+vim.windows						*python-windows*
+	一个序列对象，用来提供对 vim 窗口的操作。该对象支持以下操作: >
+	    :py w = vim.windows[i]	# 索引 (只读)
+	    :py w in vim.windows	# 成员测试
+	    :py n = len(vim.windows)	# 成员个数
+	    :py for w in vim.windows:	# 顺序存取
+<	注意: vim.windows 对象总是访问当前标签页。|python-tabpage|.windows 对
+	象和父 |python-tabpage| 对象绑定，总是使用该标签页的窗口 (如果该标签页
+	该删除，抛出 vim.error)。你可以得到两者的引用而无需保存 vim 模块对象或
+	|python-tabpage| 的引用。此时它们不会失去自己的属性。
+
+vim.tabpages						*python-tabpages*
+	一个序列对象，用来提供 vim 标签页的操作。该对象支持以下操作: >
+	    :py t = vim.tabpages[i]	# 索引 (只读)
+	    :py t in vim.tabpages	# 成员测试
+	    :py n = len(vim.tabpages)	# 成员个数
+	    :py for t in vim.tabpages:	# 顺序存取
+<
+vim.current						*python-current*
+	一个用来提供对各种各样当前 "current" 对象进行操作的对象。它包括一些特
+	定的属性:
+		vim.current.line	当前行 (读写)			字符串
+		vim.current.buffer	当前缓冲区 (读写)		缓冲区
+		vim.current.window	当前窗口 (读写)			窗口
+		vim.current.tabpage	当前标签页 (读写)		标签页
+		vim.current.range	当前行范围 (只读)		范围
+
+	最后一种情况需要一些额外的解释。当用 :python 或 :pyfile 命令指定一个范
+	围之后，该范围将成为 "当前范围"。一个范围就如同一个缓冲区，只不过所操
+	作的对象界限于所有行的一个子集。请参阅 |python-range|。
+
+	注意: 赋值给 vim.current.{buffer,window,tagpage} 时，分别期待合法的
+	|python-buffer|、|python-window| 或 |python-tabpage| 对象。赋值触发
+	到给定缓冲区、窗口、标签页的正常切换 (带有 |autocommand| 自动命令)。这
+	是在 python 里切换 UI 对象的唯一方法: 不能给 |python-tabpage|.window
+	属性赋值。要想进行切换但不执行自动命令，可用 >
+	    py << EOF
+	    saved_eventignore = vim.options['eventignore']
+	    vim.options['eventignore'] = 'all'
+	    try:
+	        vim.current.buffer = vim.buffers[2] # 切换到缓冲区 2
+	    finally:
+	        vim.options['eventignore'] = saved_eventignore
+	    EOF
+
+vim.vars						*python-vars*
+vim.vvars						*python-vvars*
+	类似字典的对象，分别对应全局 (|g:|) 和 vim (|v:|) 变量。等价于
+	`vim.bindeval("g:")`，但更快。
+
+vim.options						*python-options*
+	部分支持映射协议 (即读写子项目) 的对象，用于对全局选项进行读写访问。
+	注意: 和 |:set| 不同，此对象只能访问全局选项，不能用于读写局部变量的
+	值或以任何方式去访问只限局部的变量。如果没有指定名字的全局变量，抛出
+	KeyError (也即，对 |global-local| 或只限全局的选项，不会抛出此例外，
+	但对局部于窗口或局部于缓冲区的则会)。|python-buffer| 对象可用于访问局
+	部于缓冲区的选项，|python-window| 选项则可用于访问局部于窗口的选项。
+
+	可通过 vim 模块的 "Options" 属性取得此对象的类型。
+
+Python 的输出						*python-output*
+	Vim 将所有 Python 代码的输出都显示在信息区。普通的输出会以一般信息出
+	现，错误会以出错信息出现。
+
+	用具体实现的术语来讲，这表示所有 sys.stdout (包括 print 语句的输出) 以
+	一般信息形式出现，而所有 sys.stderr (包括 error tracebacks) 都会被显示
+	成出错信息。
+
+							*python-input*
+	Vim 并不支持用 Python 来输入 (通过 sys.stdin，包括 input() 和
+	raw_input())。这些调用可能会导致崩溃。这个问题可能以后会修正。
+
+		    *python2-directory* *python3-directory* *pythonx-directory*
+Python 'runtimepath' 处理				*python-special-path*
+
+在 python 中，vim.VIM_SPECIAL_PATH 特殊目录用于代表 'runtimepath' 的路径列表:
+如果 sys.path 包含此目录而且 sys.path_hooks 包含 vim.path_hooks，python 会试图
+载入 'runtimepath' 的每个 {rtp} 对应的 {rtp}/python2 (或 python3) 和
+{rtp}/pythonx (同时适用于两个 python 版本) 模块。
+
+实现大致如下，但以 C 编写: >
+
+    from imp import find_module, load_module
+    import vim
+    import sys
+
+    class VimModuleLoader(object):
+        def __init__(self, module):
+            self.module = module
+
+        def load_module(self, fullname, path=None):
+            return self.module
+
+    def _find_module(fullname, oldtail, path):
+        idx = oldtail.find('.')
+        if idx > 0:
+            name = oldtail[:idx]
+            tail = oldtail[idx+1:]
+            fmr = find_module(name, path)
+            module = load_module(fullname[:-len(oldtail)] + name, *fmr)
+            return _find_module(fullname, tail, module.__path__)
+        else:
+            fmr = find_module(fullname, path)
+            return load_module(fullname, *fmr)
+
+    # It uses vim module itself in place of VimPathFinder class: it does not 
+    # matter for python which object has find_module function attached to as 
+    # an attribute.
+    class VimPathFinder(object):
+        @classmethod
+        def find_module(cls, fullname, path=None):
+            try:
+                return VimModuleLoader(_find_module(fullname, fullname, path or vim._get_paths()))
+            except ImportError:
+                return None
+
+        @classmethod
+        def load_module(cls, fullname, path=None):
+            return _find_module(fullname, fullname, path or vim._get_paths())
+
+    def hook(path):
+        if path == vim.VIM_SPECIAL_PATH:
+            return VimPathFinder
+        else:
+            raise ImportError
+
+    sys.path_hooks.append(hook)
+
+vim.VIM_SPECIAL_PATH					*python-VIM_SPECIAL_PATH*
+	字符串常数，和 vim 路径钩联合使用。如果 vim 安装的路径钩被要求处理任何
+	非 vim.VIM_SPECIAL_PATH 常数的路径，抛出 ImportError。在唯一可能的另一
+	种情况下，使用特殊载入程序。
+
+	注意: 不能直接使用该常数的值，必须使用 vim.VIM_SPECIAL_PATH 对象。
+
+vim.find_module(...)					*python-find_module*
+vim.path_hook(path)					*python-path_hook*
+	用于实现上述路径载入的方法或对象。除非你想对 sys.meta_path 进行处理而
+	可以看看 vim.path_hook，请不要直接使用它们。将来的 vim 版本不一定保证
+	任何这里描述的对象会继续存在。
+
+vim._get_paths						*python-_get_paths*
+	用于产生给路径钩搜索的路径列表的方法。可以用于调试，但不要假定将来的
+	vim 版本中此方法会继续存在。
+
+	返回 'runtimepath' 中每个 {rtp} 对应的 {rtp}/python2 (或
+	{rtp}/python3) 和 {rtp}/pythonx 的目录列表。
+
+==============================================================================
+3. 缓冲区对象						*python-buffer*
+
+缓冲区对象代表 vim 缓冲区。你可以用以下这几种办法来获取缓冲区的列表:
+	- 通过 vim.current.buffer (|python-current|)
+	- 通过 vim.buffers 的索引访问 (|python-buffers|)
+	- 通过一个窗口的 "buffer" 属性 (|python-window|)
+
+缓冲区对象有两个只读属性 - name - 缓冲区的文件全名，还有 number - 缓冲区号。
+该对象还包括三个方法 (append，mark 及 range；见下)。
+
+你也可以将缓冲区对象视为序列对象。这样的话，它们就可以被看作字符串的列表进行存
+取 (它们是可变的)。每一个元素是缓冲区中的一行。所有通常的序列存取操作，包括索
+引，索引赋值，切片 (slice) 及切片赋值，等等，都可以被使用。注意 索引 (切片) 操
+作的结果是一个字符串 (字符串列表)。这产生了一个意想不到的结果 - b[:] 和 b 是不
+同的。确切一些，"b[:] = None" 会清空整个缓冲区，而 "b = None" 仅仅更新变量 b
+的值，完全不会影响到缓冲区。
+
+缓冲区索引从 0 开始算起，这与通常的 Python 语法一致。但这和 Vim 的行号从 1 算
+起有分歧。这一点在处理标记 (见下) 是要特别留意，因为标记是以行号区分的。
+
+缓冲区对象的属性有:
+	b.vars		类似字典的对象，可用于访问 |buffer-variable|。
+	b.options	映射对象 (支持子项目的读写和删除)，用于访问局部于缓冲
+			区的选项和 |global-local| 选项的缓冲区局部值。如果选项
+			局部于窗口，请使用 |python-window|.options，使用此对象
+			会抛出 KeyError。如果选项是 |global-local| 而没有局部
+			的部分，返回 None。
+	b.name		字符串，可读写。包含缓冲区名 (完整路径)。
+			备注: 给 b.name 赋值时激活 |BufFilePre| 和
+			|BufFilePost| 自动事件。
+	b.number	缓冲区编号。可用作 |python-buffers| 的键。只读。
+	b.valid		True 或 False。如果对应的缓冲区被删除 (wipe)，缓冲区对
+			象就成为非法。
+
+缓冲区对象的方法有:
+	b.append(str)	对缓冲区附加一行
+	b.append(str, nr)  同上，在第 "nr" 行之后
+	b.append(list)	对缓冲区附加一系列行
+			备注: append 方法可以带一个字符串列表作为参数，这和
+			Python 中内建的列表对象的对应方法是不同的。
+	b.append(list, nr)  同上，在第 "nr" 行之后
+	b.mark(name)	返回一个 tuple (行，列) 用来代表该位置上的一个命名标记
+			(也可以用于 []"<> 等标记)
+	b.range(s,e)	返回一个范围对象 (参见 |python-range|) 用来代表指定缓
+			冲区中行 s 与 行 e (包含 s 和 e |inclusive|) 之间的部
+		 	分。
+
+注意: 当增加一行的时候，这一行里一定不要含有换行符 '\n'。行尾的 '\n' 可以，
+但会被忽略，所以下面的操作是可以的:
+	:py b.append(f.readlines())
+
+可通过 vim 模块的 "Buffer" 属性取得缓冲区对象的类型。
+
+例如 (假定 b 是当前缓冲区) >
+	:py print b.name		# 输出缓冲区的名字
+	:py b[0] = "hello!!!"		# 替换最顶上的一行
+	:py b[:] = None			# 删除整个缓冲区
+	:py del b[:]			# 删除整个缓冲区
+	:py b[0:0] = [ "a line" ]	# 在第一行前添加一行
+	:py del b[2]			# 删除一行 (第三行)
+	:py b.append("bottom")		# 在缓冲区结尾添加一行
+	:py n = len(b)			# 总行数
+	:py (row,col) = b.mark('a') 	# 命名标记
+	:py r = b.range(1,5)		# 缓冲区内的一个范围
+	:py b.vars["foo"] = "bar"	# 给 b:foo 变量赋值
+	:py b.options["ff"] = "dos"	# 设置 fileformat
+	:py del b.options["ar"]		# 等同于 :set autoread<
+
+==============================================================================
+4. 范围对象						*python-range*
+
+范围对象代表一个 vim 缓冲区内的一个部分。你可以用以下的方法之一来获取一个缓冲
+区对象:
+	- 通过 vim.current.range (|python-current|)
+	- 通过一个缓冲区的 range() 方法 (|python-buffer|)
+
+一个范围对象在操作上几乎和一个缓冲区对象完全一样。不过，其操作的目标仅显于范围
+指定的行 (当然，这个行范围会随着切片赋值，行删除，或者 range.append() 等等操作
+而改变)。
+
+范围对象的属性有:
+	r.start		首行在缓冲区内的索引
+	r.end		尾行在缓冲区内的索引
+
+范围对象的方法有:
+	r.append(str)	给范围附加一行
+	r.append(str, nr)  同上，在第 "nr" 行之后
+	r.append(list)	给范围附加一系列行
+			备注: append 方法可以带一个字符串列表作为参数，这和
+			Python 中内建的列表对象的对应方法是不同的。
+	r.append(list, nr)  同上，在第 "nr" 行之后
+
+可通过 vim 模块的 "Range" 属性取得范围对象的类型。
+
+例如 (假设 r 是当前范围):
+	# 发送范围内的所有行给缺省打印机
+	vim.command("%d,%dhardcopy!" % (r.start+1,r.end+1))
+
+==============================================================================
+5. 窗口对象						*python-window*
+
+窗口对象代表一个 vim 窗口。你可以用以下几种方法来获取一个窗口对象:
+	- 通过 vim.current.window (|python-current|)
+	- 通过对 vim.windows 的索引操作 (|python-windows|)
+	- 通过对标签页的 "windows" 属性的索引操作 (|python-tabpage|)
+	- 通过标签页的 "window" 属性 (|python-tabpage|)
+
+你只能通过窗口对象的属性来控制它。这些对象没有方法，也没有序列等其它接口。
+
+窗口的属性包括:
+	buffer (只读)		窗口中显示的缓冲区
+	cursor (读写)		窗口中的当前光标位置
+				这是一个 tuple (行，列)。
+	height (读写)		行数表示的窗口高度
+	width (读写)		列数表示的窗口宽度
+	vars (只读)		窗口 |w:| 变量。不能给本属性赋值，但可以用此属
+				性修改窗口变量
+	options (只读)		局部于窗口的选项。不能给本属性赋值，但可以用此
+				属性修改窗口选项。只能用于访问局部于窗口的选
+				项，对局部于缓冲区的选项要用 |python-buffer|，
+				对全局选项用 |python-options|。如果选项是
+				|global-local| 的而没有局部值，返回 None。
+	number (只读)		窗口编号。首个窗口的编号为 1。如果不能决定才
+				会返回 0 (例如当窗口对象属于其他标签页时)。
+	row、col (只读)		窗口在屏幕上的位置，以显示单元计。首个位置为
+				零。
+	tabpage (只读)		窗口的标签页。
+	valid (读写)		True 或 False。当对应窗口关闭时窗口对象成为非
+				法。
+
+height 属性只有当屏幕被水平分割时才可写。
+width  属性只有当屏幕被垂直分割时才可写。
+
+可通过 vim 模块的 "Window" 属性取得窗口对象的类型。
+
+==============================================================================
+6. 标签页对象						*python-tabpage*
+
+标签页对象代表一个 vim 标签页。你可以用以下几种方法来获取之:
+	- 通过 vim.current.tabpage (|python-current|)
+	- 通过对 vim.tabpages 的索引操作 (|python-tabpages|)
+
+你可以通过该对象来访问标签页里的窗口。这些对象没有方法，也没有序列等其它接口。
+
+标签页的属性包括:
+	number		标签页编号，和 |tabpagenr()| 相同。
+	windows		类似于 |python-windows|，但对应当前标签页
+	vars		标签页 |t:| 变量。
+	valid		True 或 False。当对应标签页关闭时标签页对象成为非法。
+
+可通过 vim 模块的 "TabPage" 属性取得标签页对象的类型。
+
+==============================================================================
+7. vim.bindeval 对象				*python-bindeval-objects*
+
+vim.Dictionary 对象				*python-Dictionary*
+    类字典对象，用于访问 vim |Dictionary| 类型。
+    属性:
+        属性       描述 ~
+        locked     以下值之一                   *python-.locked*
+                    值              描述 ~
+                    zero            变量没有上锁
+                    vim.VAR_LOCKED  变量已上锁，但可以解锁
+                    vim.VAR_FIXED   变量已上锁，且不可以解锁
+                   读写。可以通过给本属性赋值 `True` 或 `False` 来给变量解锁。
+                   不支持递归上锁。
+        scope      以下值之一
+                    值                 描述 ~
+                    zero               字典无作用域
+                    vim.VAR_DEF_SCOPE  |g:| 或 |l:| 字典
+                    vim.VAR_SCOPE      其他作用域的字典，
+                                       见 |internal-variables|
+    方法 (备注: 方法不支持关键字参数):
+        方法        描述 ~
+        keys()      返回字典所有键的列表。
+        values()    返回字典所有值的列表。
+        items()     返回字典所有内容的二元组的列表。
+        update(iterable)、update(dictionary)、update(**kwargs)
+                    把新的键值加入字典。
+        get(key[, default=None])
+                    从字典读入 key 对应值，如果不存在返回 default。
+        pop(key[, default])
+                    从字典中删除给定 key 并返回对应值。如果找不到 key 且给出
+                    default 返回 default，不然抛出 KeyErrror。
+        popitem()
+                    从字典中删除随机键，并返回 (键, 值) 对。
+        has_key(key)
+                    检查字典中是否包含给定的键 key，类似于 `key in dict`。
+
+        __new__(), __new__(iterable), __new__(dictionary), __new__(update)
+                    用 `vim.Dictionary()` 可以建立新的 vim 字典。
+                    `d=vim.Dictionary(arg)` 等价于
+                    `d=vim.bindeval('{}');d.update(arg)`。无参数的版本构建空
+                    字典。
+
+    示例: >
+        d = vim.Dictionary(food="bar")		# 构造函数
+        d['a'] = 'b'				# 子项目赋值
+        print d['a']				# 读取子项目
+        d.update({'c': 'd'})			# .update(dictionary)
+        d.update(e='f')				# .update(**kwargs)
+        d.update((('g', 'h'), ('i', 'j')))	# .update(iterable)
+        for key in d.keys():			# .keys()
+        for val in d.values():			# .values()
+        for key, val in d.items():		# .items()
+        print isinstance(d, vim.Dictionary)	# True
+        for key in d:				# 遍历所有键
+        class Dict(vim.Dictionary):		# 子类
+<
+    注意: 遍历键时不应对字典进行修改。
+
+vim.List 对象					*python-List*
+    类序列对象，用于访问 vim |List| 类型。
+    支持 `.locked` 属性，见 |python-.locked|。还支持以下方法:
+        方法            描述 ~
+        extend(item)    给列表加入项目 item。
+
+        __new__(), __new__(iterable)
+                        用 `vim.List()` 可以建立新的 vim 列表。
+                        `l=vim.List(iterable)` 等价于
+                        `l=vim.bindeval('[]');l.extend(iterable)`。无参数的版
+                        本方法构建空列表。
+    示例: >
+        l = vim.List("abc")		# 构造函数，返回: ['a', 'b', 'c']
+        l.extend(['abc', 'def'])	# .extend() 方法
+        print l[1:]			# 分片 (slicing)
+        l[:0] = ['ghi', 'jkl']		# 分片赋值
+        print l[0]			# 读取项目
+        l[0] = 'mno'			# 赋值
+        for i in l:			# 遍历
+        print isinstance(l, vim.List)	# True
+        class List(vim.List):		# 子类
+
+vim.Function 对象				*python-Function*
+    类函数对象，相当于 vim |Funcref| 对象。支持 `.name`  属性。可以进行调用。
+    接受特殊的关键字参数 `self`，见 |Dictionary-function|。还可用
+    `vim.Function(name)` 构造函数，等价于
+    `vim.bindeval('function(%s)'%json.dumps(name))`。
+
+    示例: >
+        f = vim.Function('tr')			# 构造函数
+        print f('abc', 'a', 'b')		# 调用 tr('abc', 'a', 'b')
+        vim.command('''
+            function DictFun() dict
+                return self
+            endfunction
+        ''')
+        f = vim.bindeval('function("DictFun")')
+        print f(self={})			# 相当于 call('DictFun', [], {})
+        print isinstance(f, vim.Function)	# True
+
+==============================================================================
+8. pyeval() 和 py3eval() Vim 函数			*python-pyeval*
+
+为了访问双向接口的方便，可用 |pyeval()| 和 |py3eval()| 函数来计算 Python 表达
+式然后返回计算结果给 Vim。
+
+==============================================================================
+9. 动态调入						*python-dynamic*
+
+MS-Windows 上，可以动态调入 Python 库。|:version| 输出这时应包括
+|+python/dyn|。
+
+这意味着 Vim 只有在必要时才寻找 Python DLL 文件。如果不使用 Python 接口，你就
+不需要它。这样，即使没有该 DLL 文件，你也可使用 Vim。
+
+要使用 Python 接口，Python DLL 必须在搜索路径上。控制台窗口里输入 "path" 可以
+看到 (搜索路径) 当前使用的目录。
+
+DLL 的名字必须匹配 Vim 编译时所使用的 Python 版本。目前，该名字为
+"python24.dll"，也就是 Python 2.4。要确信这一点，编辑 "gvim.exe" 文件并查找
+"python\d*.dll\c"。
+
+==============================================================================
+10. Python 3						*python3*
+
+							*:py3* *:python3*
+`:py3` 和 `:python3` 命令和 `:python` 类似。判断 `:py3` 命令是否可用的一个简单
+检查: >
+	:py3 print("Hello")
+<							*:py3file*
+`:py3file` 命令和 `:pyfile` 类似。
+							*:py3do* *E863*
+`:py3do` 命令和 `:pydo` 类似。
+
+
+Vim 可以用四种方式编译 (:version 输出结果):
+1. 无 Python 支持	    (-python、-python3)
+2. 只有 Python 2 支持       (+python 或 +python/dyn、-python3)
+3. 只有 Python 3 支持       (-python、+python3 或 +python3/dyn)
+4. Python 2 和 3 支持       (+python/dyn、+python3/dyn)
+
+关于第四种特殊情况的更多细节:  *python-2-and-3*
+
+要同时支持 Python 2 和 Python 3，两者必须都是动态载入。
+
+在 Linux/Unix 系统上用这种方式并导入全局符号的时候，使用第二个 Python 版本会导
+致系统崩溃。所以，要么载入全局符号但只激活一个 Python 版本，要么考虑不载入全局
+符号。后者使 Python 导入 ("import") 某些期待 Vim 提供某些符号的库的时候会失
+败。
+							*E836* *E837*
+Vim 的配置脚本根据一个特定的 Python 标准库 (termios) 对所有的库进行猜测。如果
+对两个 Python 版本导入该库均成功，那么可以在 Vim 中同时使用两者。否则在一个会
+话中，只允许使用先用到的版本。使用第二个版本会得到 E836 或 E837 的错误信息。
+
+这里 Vim 的行为取决于配置所在的系统。如果两个 Python 版本都用了
+--enable-shared 进行配置，两者会同时激活。但没有链接进 libPython 的第三方库仍
+然会有问题。
+
+要回避这些问题，有以下几个方案:
+1. 重新编译有问题的库，把它链接进相应的 libpython.so 里。
+2. 重新编译 Vim，只用一个 Python 版本。
+3. 配置完后，撤销 auto/config.h 中 PY_NO_RTLD_GLOBAL 的定义。这可能会使 Vim 崩
+   溃。
+
+							*E880*
+从 python 抛出 SystemExit 例外不是退出 vim 的好方法，要用: >
+	:py vim.command("qall!")
+<
+
+							*has-python*
+以下方法可用来测试哪个 Python 版本可用: >
+	if has('python')
+	  echo '有 Python 2.x'
+  	elseif has('python3')
+	  echo '有 Python 3.x'
+	endif
+
+注意 不过，当 Python 2 和 3 同时存在且都是动态载入，这些 has() 调用会试图载入
+它们。如果两个版本不能同时载入，单单对 Python 2 或 3 是否可用的检查就会导致另
+一个版本不能调入。
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:

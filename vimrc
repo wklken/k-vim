@@ -24,8 +24,8 @@
 "==========================================
 
 " 修改leader键
-let mapleader = ','
-let g:mapleader = ','
+let mapleader = "\<Space>"
+let g:mapleader = "\<Space>"
 
 " 开启语法高亮
 syntax on
@@ -48,7 +48,7 @@ filetype plugin indent on
 
 
 " history存储容量
-set history=2000
+set history=1000
 
 " 检测文件类型
 filetype on
@@ -102,9 +102,9 @@ set t_ti= t_te=
 
 
 " 鼠标暂不启用, 键盘党....
-set mouse-=a
+" set mouse-=a
 " 启用鼠标
-" set mouse=a
+ set mouse=a
 " Hide the mouse cursor while typing
 " set mousehide
 
@@ -119,7 +119,7 @@ set title
 set novisualbell
 set noerrorbells
 set t_vb=
-set tm=500
+set tm=800
 
 " Remember info about open buffers on close
 set viminfo^=%
@@ -425,9 +425,10 @@ cnoremap <C-e> <End>
 
 " 搜索相关
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
+" map <space> /
 " 进入搜索Use sane regexes"
-nnoremap / /\v
+" nnoremap / /\v
+nnoremap / /
 vnoremap / /\v
 
 " Keep search pattern at the center of the screen.
@@ -441,8 +442,8 @@ nnoremap <silent> g* g*zz
 noremap <silent><leader>/ :nohls<CR>
 
 " switch # *
-nnoremap # *
-nnoremap * #
+" nnoremap # *
+" nnoremap * #
 
 " for # indent, python文件中输入新行时#号注释不切回行首
 autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
@@ -528,7 +529,7 @@ nnoremap <leader>v V`}
 cmap w!! w !sudo tee >/dev/null %
 
 " kj 替换 Esc
-inoremap kj <Esc>
+inoremap jj <Esc>
 
 " 滚动Speed up scrolling of the viewport slightly
 nnoremap <C-e> 2<C-e>
@@ -663,10 +664,11 @@ endif
 
 " theme主题
 set background=dark
+" set background=light
 set t_Co=256
 
-colorscheme solarized
-" colorscheme molokai
+" colorscheme solarized
+ colorscheme molokai
 " colorscheme desert
 
 

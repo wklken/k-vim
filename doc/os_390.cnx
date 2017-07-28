@@ -1,0 +1,127 @@
+*os_390.txt*    For Vim version 7.4.  最近更新: 2010年7月
+
+
+		  VIM 参考手册	  by Ralf Schandl
+				译者: Willis
+				http://vimcdoc.sf.net
+
+					*zOS* *z/OS* *OS390* *os390* *MVS*
+本文包含了 VIM 的 z/OS UNIX 版本的特点。
+
+1. 依赖于 ASCII/EBCDIC 编码的脚本	|zOS-has-ebcdic|
+2. Putty 和色彩				|zOS-PuTTY|
+3. Motif 的问题				|zOS-Motif|
+4  漏洞					|zOS-Bugs|
+5. 限制					|zOS-limitations|
+6. z/OS UNIX 上的开源软件		|zOS-open-source|
+
+贡献者: ~
+本 z/OS UNIX 的移植是由 Ralf Schandl 为了下面提到的红皮书完成的。
+
+提供修改、报告漏洞、或者两者都有者:
+
+	David Moore
+	Anthony Giorgio
+	还有其他
+
+==============================================================================
+1. 依赖于 ASCII/EBCDIC 的脚本		*OS390-has-ebcdic* *zOS-has-ebcdic*
+
+为了内部脚本语言的编写方便，增加了 "ebcdic" 特性。所以你可以用以下方式修正依赖
+于ASCII 的脚本:
+>
+    if has("ebcdic")
+	let space = 64
+    else
+	let space = 32
+    endif
+<
+==============================================================================
+2. PuTTY 和色彩				*OS390-PuTTY* *zOS-PuTTY*
+
+如果使用 PuTTY 连接到 z/OS 有语法高亮的问题或者显示不正常，可以:
+
+- 配置 Putty 使用 "vt220" 终端 (Connection->Data)
+- 在 vimrc 加入以下 3 行:
+
+>
+    set t_AB=[4%p1%dm
+    set t_AF=[3%p1%dm
+    set t_CO=8
+<
+
+注意:  是一个字符，用 <C-V><Esc> 可以输入。
+
+==============================================================================
+3. Motif 问题				*OS390-Motif* *zOS-Motif*
+
+备注: Vim 6.* 发现过，此后没有测试过。
+
+看起来，在移植 Motif 库到 z/OS 的时候，忘记把下拉菜单的快捷键从 EBCDIC 翻译成
+ASCII 了。即使在我手动修改菜单以后，快捷键也只能打开菜单 (比如 <Alt-F> 打开
+文件菜单)，但是不能打开菜单项 (比如 <Alt-F>O 打开文件浏览器)。
+
+现在还没有这个问题的解决方法。
+
+==============================================================================
+4. 漏洞					*OS390-bugs* *zOS-Bugs*
+
+- 在可视块模式，如果选择了大量的文本，Vim 一定会挂起。这可能是由一个内存错误引
+  起的。 注意 终端和 GUI 版本都存在这个问题。
+
+==============================================================================
+5. 限制		   			*OS390-limitations* *zOS-limitations*
+
+- tag 文件不能进行二进制查找。
+  /bin/sort 程序缺省按照 ASCII 值排序。通常，ctags 调用这个程序来为标签 (tag)
+  排序。也许有一个 ctags 版本能够做正确的事情，不过我们不能肯定。看起来，这是
+  个永久的限制。
+
+- 在我们的大型机上测试的版本上，cscope 接口 (|cscope|) 不能工作。我们有一个
+  15.0b12 版本的。在用 "cscope add" 命令的时候，它使得 Vim 挂起。我猜这是因为
+  cscope 数据库的二进制格式和 Vim 期待的不符所致。我试图把最新的 cscope (15.3)
+  移植到 z/OS 上，看来成效不大。如果有人有兴趣尝试并有进展，请给我个消息。
+
+- 没有 glib/gtk 支持。我不能成功在 z/OS UNIX 上编译 glib。这意味着你没法用漂亮
+  的 gtk 工具栏了。
+
+编译时关闭的功能:
+    - 多字节支持	        (|multibyte|)
+    - 从右到左模式	        (|rileft|)
+    - 波斯键盘映射	        (|Farsi|)
+    - 阿拉伯语言支持		(|Arabic|)
+    - 拼写检查		        (|spell|)
+
+还未测试:
+    - Perl 接口			(|perl|)
+    - 韩语 (Hangul) 输入	(|hangul|)
+    - 加密支持			(|encryption|)
+    - 语言映射			(|'langmap'|)
+    - Python 支持		(|Python|)
+    - 从右到左模式		(|'rightleft'|)
+    - SNiFF+ 接口		(|sniff|)
+    - TCL 接口			(|tcl|)
+    ...
+
+如果你尝试过这些特性而且成功了，告诉我们！
+
+==============================================================================
+6. z/OS UNIX 上的开源软件		*OS390-open-source* *zOS-open-source*
+
+如果你对 z/OS UNIX 上的其它开源软件感兴趣，请参考以下的红皮书:
+
+    Mike MacIsaac et al
+    "Open Source Software for z/OS and OS/390 UNIX"
+    IBM Form Number: SG24-5944-01
+    ISBN: 0738424633
+    http://www-03.ibm.com/systems/resources/servers_eserver_zseries_zos_unix_redbook_sg245944.pdf
+
+另见:
+    http://www.redbooks.ibm.com
+    http://www-03.ibm.com/systems/z/os/zos/features/unix/
+    http://www-03.ibm.com/systems/z/os/zos/features/unix/library/IBM+Redbooks/index.html
+
+
+
+------------------------------------------------------------------------------
+ vim:tw=78:fo=tcq2:ts=8:ft=help:norl:

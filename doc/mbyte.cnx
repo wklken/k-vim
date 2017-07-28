@@ -1,0 +1,1258 @@
+*mbyte.txt*     For Vim version 7.4.  最近更新: 2013年8月
+
+
+                VIM 参考手册	  by Bram Moolenaar et al.
+                译者:yemao & lang2，Willis http://vimcdoc.sf.net
+
+多字节支持					*multibyte* *multi-byte*
+						*Chinese* *Japanese* *Korean*
+本章讲述了关于使用多字节语言相关的内容。这样的语言包括汉语，日语，韩语。同时也
+讲述了 Unicode。
+
+一般性的常识，请参考用户手册 |usr_45.txt|。
+如何更改菜单语言和消息语言，请参考 |mlang.txt|。
+
+{仅当编译时加入 |+multi_byte| 特性才有效}
+
+
+1. 初步					|mbyte-first|
+2. 本地化				|mbyte-locale|
+3. 编码					|mbyte-encoding|
+4. 使用终端				|mbyte-terminal|
+5. X11 的字体				|mbyte-fonts-X11|
+6. MS-Windows 的字体			|mbyte-fonts-MSwin|
+7. 在 X11 上输入			|mbyte-XIM|
+8. 在 MS-Windows 上输入			|mbyte-IME|
+9. 使用键盘映射表输入			|mbyte-keymap|
+10. 使用 UTF-8				|mbyte-utf8|
+11. 选项总述				|mbyte-options|
+
+注意: 本文件包含 UTF-8 编码字符。如果使用其它编码，这些字符可能显示为奇怪的符
+号或者方框。
+
+==============================================================================
+1.初步						*mbyte-first*
+
+这里对 Vim 的多字节特点作总体介绍。幸运的话，你的 vim 一切都运行正常，如果不正
+常，请阅读以下内容。你可能需要花一些时间，经过多次试验才能使 vim 支持多字节。
+因为不幸的是，每个系统都有一套自己处理多字节语言的方法，而且非常复杂。
+
+
+编 译
+
+如果你有编译好的 Vim，检查它是否包含 |+multi_byte| 特性，|:version| 命令可以做
+到这一点。
+
+如果不包含该特性，你需要用 "normal"、"big" 或 "huge" 特性包重新编译 vim。你还
+可以对需要哪些特性进行微调，具体请查看源代码中的 INSTALL。
+
+
+本 地 化
+
+首先，确认当前的 locale 设置正确。如果系统已经设定了对该语言的支持，一切将正常
+工作。否则，你需要在 shell 里面设置 $LANG 变量:
+>
+	setenv LANG ja_JP.EUC
+
+很不幸，locale 的名字取决于你的系统。中文可能被叫做 "zh_CN.gbk"，也可能只是
+"zh"。这样可以查看当前的语言:
+>
+	:language
+
+修改 Vim 所用的 locale:
+>
+	:language zh_CN.gbk
+
+如果设置的 locale 不能工作，Vim 将会给出错误信息。要找出需要使用的 locale，这
+是一个好办法。不过最好是在 shell 里面设置 locale，那样，启动的时候就可以正常使
+用。具体请看 |mbyte-locale|。
+
+
+编 码
+
+如果 locale 正常工作，Vim 随后将相应设置 'encoding'，如果不能使用，你可以重新
+设置来取代之:
+>
+        :set encoding=utf-8
+
+|encoding-values| 列出了可以使用的值。
+
+设置之后，正在用 Vim 编辑的文件将使用这种编码。不仅仅是缓冲区的文件，寄存器，
+变量等都会使用这种编码。这也意味着 'encoding' 的改变使已有的文本变得无效，不过
+不是内容的变化，而是不能正常显示。
+
+你可以编辑另一种编码下的文件，Vim 在读文件的时候把从该编码转化过来，而保存时又
+按原来的编码写回。具体请看 'fileencoding'，'fileencodings' 和 |++enc|。
+
+
+字 体 和 显 示
+
+如果使用终端 (模拟)，你必须确定终端可以使用 Vim 所使用的编码。否则你必须修改
+'termencoding' 使 Vim 自动转化文件编码。
+
+在 GUI 上，你必须选择在当前编码下可以使用的字体。这并不容易。这和终端有所不
+同。它和你用的系统，locale 和一些其它的东西有关。具体请看有关字体的章节:
+|mbyte-fonts-X11| 讨论 X-Windows，而 |mbyte-fonts-MSwin| 讨论 MS-Windows。
+
+GTK+ 2 上，你可以跳过本节的大部分讨论。'guifontset' 不再存在。你只需要设置
+'guifont'，其余的一切就 "自然而然地" 解决了。如果你的系统带有 Xft2 和
+fontconfig，而当前字体缺少若干字形的话，系统会自动使用其它能找到的字体。
+'guifontwide' 选项仍然支持，但一般没有必要设置它。只有自动字体选择机制不合你心
+意时才需要如此。
+
+在 X11 上，你可以设置 'guifontset'，把要使用的字体写入列表。以韩语为例:
+>
+        :set guifontset=k12,r12
+
+同时，你可以设置 'guifont' 和 'guifontwide'。'guifont' 设置单宽字体，
+'guifontwide' 设置双宽字体。因此，'guifontwide' 字体的宽度必须是 'guifont' 字
+体的两倍。
+以 UTF-8 为例:
+>
+        :set guifont=-misc-fixed-medium-r-normal-*-18-120-100-100-c-90-iso10646-1
+        :set guifontwide=-misc-fixed-medium-r-normal-*-18-120-100-100-c-90-iso10646-1
+
+你也可以只设置 'guifont'，Vim 将尝试自动设置 'guifontwide'。
+
+输 入
+
+有多种方法输入多字节字符:
+-在 X11 上，XIM 可以输入多字节字符，具体请看 |XIM|。
+-在 MS-Windows 上，IME 可以输入多字节，具体请看 |IME|。
+-在所有的系统上都可以使用键盘映射表。具体请看 |mbyte-keymap|。
+
+设置 'iminsert'，'imsearch' 和 'imcmdline' 可以选择不同的输入方法或临时禁用它
+们。
+
+==============================================================================
+2.  Locale						*mbyte-locale*
+
+最简单的设置就是整个系统使用你想用的 locale，不过你也可以设置一个 shell 的
+locale，或者只在 Vim 内部使用特定的 locale。
+
+
+什 么 是 LOCALE?					*locale*
+
+世界上有很多种语言，而不同的文化和环境的数量至少有语言的种类那么多。一个地区对
+应的语言环境就叫 "locale"，它包括所使用的语言，文字，排序规则，时间格式，货币
+格式等信息，Vim 只和语言和文字有关。
+
+你只能使用系统支持的 locale，有的系统的只有很少的 locale，在美国特别如此。也许
+你想使用的语言系统没有，这样你就需要把它当一个额外的包来安装，具体请按系统文档
+操作。
+
+不同的系统安装 locale 的位置也不同，例如，"/usr/share/locale" 或者
+"/usr/lib/locale"，具体请看 setlocale() 的手册页。
+
+在这些目录里你可以看到每个 locale 的全称，它们也区别大小写，因此 "ja_JP.EUC"
+和 "ja_jp.euc" 不同。有的系统有一个 locale.alias 文件，它允许一个简称如 "nl"
+和它的全称 "nl_NL.ISO_8859-1" 转化。
+
+备注: X-windows 有自己的 locale 设置，不幸的是它使用的 locale 名也和其它地方不
+同。这非常混乱！Vim 使用 setlocale() 的设置，而它一般并_不_同于 X-windows 的方
+法，也许你需要经过多次测试来怎么才能工作。
+
+						*locale-name*
+locale 名的 (简单的) 格式是
+        language
+或者    language_territory
+或者    language_territory.codeset
+
+territory 表示国家 (或者它的一部份)，codeset 表示文字 (字符集) |charset|。例
+如，"ja_JP.eucJP" 表示
+        ja      语言是 Japanese
+        JP      国家是 Japan
+        ecuJP   文字是 EUC-JP
+不过它也可以是 "ja"，"ja_JP.EUC"，"ja_JP.ujis" 等等，糟糕的是，即使对一个特定
+的语言，国家和文字，locale 的名字也是不统一的，它取决于你的系统。
+
+例子如下:
+    字符集          语言                  locale 名 ~
+    GB2312	    中文 (简体)           zh_CN.EUC、zh_CN.GB2312
+    Big5	    中文 (繁体)	          zh_TW.BIG5、zh_TW.Big5
+    CNS-11643	    中文 (繁体)           zh_TW
+    EUC-JP	    日语		  ja、ja_JP.EUC、ja_JP.ujis、ja_JP.eucJP
+    Shift_JIS	    日语		  ja_JP.SJIS、ja_JP.Shift_JIS
+    EUC-KR	    韩语		  ko、ko_KR.EUC
+
+
+使 用 一 种 LOCALE
+
+使整个系统使用一个 locale，请看系统文档。大部分情况你需要在 "/etc" 下的配置文
+件中设置它。
+
+在 shell 里使用一个 locale，设置 $LANG 环境变量。你想使用韩语，|locale| 名为
+"ko"，那么:
+    sh:    export LANG=ko
+    csh:   setenv LANG ko
+
+要经常使用它，把它们写进 ~/.profile 或者 ~/.cshrc 中。
+
+要在 Vim 中使用某个 locale，用 |:language| 命令:
+>
+        :language ko
+
+把它写进 ~/.vimrc 就可以经常使用。
+
+或者在启动 vim 的时候设置 $LANG:
+
+   sh:    LANG=ko vim {vim-arguments}
+   csh:   env LANG=ko vim {vim-arguments}
+
+为此，你可以编写若干短小的 shell 脚本。
+
+==============================================================================
+3.  编码				*mbyte-encoding*
+
+Vim 用 'encoding' 来设置 vim 识别字符和编码的方法。这个设置对文本使用的地方都
+有效，包括缓冲区 (读入内存的文件)，寄存器和变量。
+
+							*charset* *codeset*
+Charset (字符集) 是 encoding (编码) 的另一种叫法，它们有一点很小的区别。但是对
+vim 来说无关紧要。"codeset" 是它的另一个别名。
+
+每个字符都被编码成为一个或者两个字节。如果所有的字符都被编码成一个字节，我们就
+称之为单字节编码。最常用的是 "latin1"。它把可用的字符数限制为 256 个。其中还有
+一部分控制字符，这使得可用于文本的字符数更少。
+
+如果某些字符使用两个或更多字节，我们称其为多字节编码。从而能够使用多得多的字
+符，这样就能符合大多数东亚语种的要求。
+
+多数多字节编码方式使用开始的 127 个字符作为一个字节。这和 ASCII 码相同，也使得
+与纯 ASCII 码之间的转换十分容易。不管你使用哪种语言，所以就算你的 encoding 设
+置错了，你也可以看到正确的文本。
+
+							*encoding-names*
+Vim 可以使用多种不同的字符编码，主要有以下三大类:
+
+1   8bit        单字节编码，256 个不同的字符。主要用于美国和欧洲。例如:
+                ISO-8859-1 (Latin1)，所有的字符占一个屏幕单元。
+
+2   2byte       双字节编码，超过 10000 个字符。主要在亚洲各国使用。例如:
+		euc-cn (中文)。所占的屏幕单元数和字节数相同。(euc-jp 第一个字
+		节是 0x8e 的编码除外)。
+
+u   Unicode     通用编码，可以取代其它所有的编码格式。ISO 10646。有几百万个字
+		符。例如: UTF-8。字节数和屏幕单元的关系很复杂。
+
+其它的编码不能在 Vim 内部使用。但是以这些编码的文件在转换之后可以被 Vim 编辑，
+具体请看 'fileencoding'。注意 所有的编码都必须对 128 之内的字符使用 ASCII 编码
+(编译时加入 EBCDIC 除外)。
+
+Vim 支持的 'encoding' 值有:				*encoding-values*
+1   latin1	8 位字符 (ISO 8859-1，也用于 cp1252)
+1   iso-8859-n	ISO_8859 变体 (n = 2 to 15)
+1   koi8-r	俄语
+1   koi8-u	乌克兰语
+1   macroman    MacRoman (Macintosh 编码)
+1   8bit-{name} 任何 8 位编码 (Vim 特定名称)
+1   cp437	类似于 iso-8859-1
+1   cp737	类似于 iso-8859-7
+1   cp775	波罗的语
+1   cp850	类似于 iso-8859-4
+1   cp852	类似于 iso-8859-1
+1   cp855	类似于 iso-8859-2
+1   cp857	类似于 iso-8859-5
+1   cp860	类似于 iso-8859-9
+1   cp861	类似于 iso-8859-1
+1   cp862	类似于 iso-8859-1
+1   cp863	类似于 iso-8859-8
+1   cp865	类似于 iso-8859-1
+1   cp866	类似于 iso-8859-5
+1   cp869	类似于 iso-8859-7
+1   cp874	泰语
+1   cp1250	捷克语、波兰语等
+1   cp1251	西里尔字母
+1   cp1253	希腊语
+1   cp1254	土耳其语
+1   cp1255	希伯来语
+1   cp1256	阿拉伯语
+1   cp1257	波罗的语
+1   cp1258	越南语
+1   cp{number}	MS-Windows: 任何已安装的单字节代码页 (codepage)
+2   cp932	日语 (仅限 Windows)
+2   euc-jp	日语 (仅限 Unix)
+2   sjis	日语 (仅限 Unix)
+2   cp949	韩语 (Unix 和 Windows)
+2   euc-kr	韩语 (仅限 Unix)
+2   cp936	简体中文 (仅限 Windows)
+2   euc-cn	简体中文 (仅限 Unix)
+2   cp950	繁体中文 (Unix 上，big5 的别名)
+2   big5	繁体中文 (Windows 上，cp950 的别名)
+2   euc-tw	繁体中文 (仅限 Unix)
+2   2byte-{name} Unix: 任何双字节编码 (Vim 专用名称)
+2   cp{number}	MS-Windows: 任何已安装的双字节代码页 (codepage)
+u   utf-8	32 位 UTF-8 编码的 Unicode (ISO/IEC 10646-1)
+u   ucs-2	16 位 UCS-2 编码的 Unicode (ISO/IEC 10646-1)
+u   ucs-2le	类似于 ucs-2，little endian (高位字节在后)
+u   utf-16	ucs-2 并带有更多字符的双词扩展
+u   utf-16le	类似于 utf-16，little endian
+u   ucs-4	32 位 UCS-4 编码的 Unicode (ISO/IEC 10646-1)
+u   ucs-4le	类似于 ucs-4，little endian
+
+{name} 可以是任何系统支持的编码名。Vim 会调用 iconv() 在该编码名及当前 locale
+之间转换。对 MS-Windows 来说，"cp{number}" 意味着使用 {number} 代码页
+(codepage)。
+例如: >
+		:set encoding=8bit-cp1252
+		:set encoding=2byte-cp932
+
+MS-Windows 代码页 1252 和 latin1 相近。从实际角度考虑，使用相同的编码，也叫
+latin1。'isprint' 可用来判断 0x80 - 0xA0 间的字符是否可显示。
+
+也可以使用别名，它们被翻译为上表中的某一个。以下是一个不完全列表:
+
+1   ansi	同 latin1 (已废弃，保留是为了后向兼容)
+2   japan	日语: Unix 上的 "euc-jp"，MS-Windows 上的 cp932
+2   korea	韩语: Unix 上的 "euc-kr"，MS-Windows 上的 cp949
+2   prc		简体中文: Unix 上的 "euc-cn"，MS-Windows 上的 cp936
+2   chinese	等同于 "prc"
+2   taiwan	繁体中文: Unix 上的 "euc-tw"，MS-Windows 上的 cp950
+u   utf8	同 utf-8
+u   unicode	同 ucs-2
+u   ucs2be	同 ucs-2 (big endian)
+u   ucs-2be	同 ucs-2 (big endian)
+u   ucs-4be	同 ucs-4 (big endian)
+u   utf-32	同 ucs-4
+u   utf-32le	同 ucs-4le
+    default     代表 'encoding' 的默认值，取决于环境变量
+
+对於 UCS 编码，字节次序会影响编码结果。这比较麻烦。因此尽可能使用 UTF-8。默认
+使用 big-endian (高位字节在前):
+	    name	bytes		char ~
+	    ucs-2	      11 22	    1122
+	    ucs-2le	      22 11	    1122
+	    ucs-4	11 22 33 44	11223344
+	    ucs-4le	44 33 22 11	11223344
+
+在 MS-Windows 系统上你经常需要使用 "ucs-2le"，因为它使用了 little-endian UCS-2
+编码。
+
+有一些编码看起来相似，实际上是不完全相同的。Vim 把它们当不同的编码来处理，必要
+时做转换。当转换不必要或者需要避免时，你可以使用相近的编码名。
+
+	cp932、shift-jis、sjis
+	cp936、euc-cn
+
+							*encoding-table*
+一般情况下，'encoding' 和当前的 locale 相同，'termencoding' 为空，这意味着键盘
+和显示方式以当前 locale 编码字符，Vim 内部也使用相同的字符。
+
+你可以通过设置 'encodng' 为不同的值来使 Vim 使用另一种编码方式。但是由於键盘和
+显示仍用当前的 locale，这就需要编码之间的转换。这时 'termencoding' 替代了当前
+locale 值，而 Vim 负责在 'encoding' 和 'termencoding' 之间转换。例如:
+>
+        :let &termencoding = &encoding
+        :set encoding=utf-8
+
+尽管如此，并不是所有组合都可以转换。下面这个表列出 9 种组合如何转换。这还受到
+iconv() 的功能影响。因为这取决于你所用的系统，这里无法给出具体的信息。
+
+('tenc' 是 'termencoding' 的缩写，'enc' 是 'encoding' 的缩写)
+
+'tenc'	    'enc'	解释 ~
+
+ 8bit	    8bit	可以转换，当 'termencoding' 和 'encoding' 不同时，有些
+			字符的输入和显示会有问题，Vim _不_做转换 (把
+			'encoding' 设成 "utf-8" 可以解决)。
+ 8bit      2byte	MS-Windows: 系统上安装的所有代码页都可以转换，同时，你
+ 			只能输入 8bit 字符，在其它的系统上都不行。
+ 8bit	   Unicode	可以转换，但是你只能直接输入 8bit 字符 (其它字符可以通
+ 			过二合字母、键盘映射表等方式输入)，在终端下你只能看到
+			8bit 字符，GUI 上可以看到 'guifont' 支持的所有字符。
+
+ 2byte	    8bit	可以转换，但是输入非 ASCII 字符可能会有问题。
+ 2byte	   2byte	MS-Windows: 支持系统安装的所有的代码页之间的转换，当
+ 			locale 和 'encoding' 不同时输入可能会有问题。
+			在其它系统上，只有当 'termencoding' 和 'encoding' 相同
+			或者为空时可以转换。
+ 2byte	   Unicode	可以转换。Vim 会转换输入的字符。
+
+ Unicode    8bit	可以转换 (很少见)
+ Unicode    2byte	_不能_转换
+ Unicode   Unicode	转换非常好 ('termencoding' 为空也可，因为所有的
+ 			Unicode 内部使用 UTF-8)
+
+转 换    						*charset-conversion*
+
+以下情况，Vim 会自动把一种编码转换成另一种编码:
+- 读文件时 'fileencoding' 和 'encoding' 不同
+- 写文件时 'fileencoding' 和 'encoding' 不同
+- 显示字符时 'termencoding' 和 'encoding' 不同
+- 读取输入时 'termencoding' 和 'encoding' 不同
+- 显示信息时 LC_MESSAGE 使用的编码和 'encoding' 不同 (需要支持此功能的
+  gettext)
+- Vim 脚本 |:scriptencoding| 和 'encoding' 不同
+- 读写一个 |viminfo| 文件
+以上很多都需要 |+iconv| 特性，读写文件的转换也可以通过指定 'chaconvert' 来完
+成。
+
+转换字符集一些有用的工具:
+    所有语言:       iconv
+       GNU iconv 可以转换很多编码，Unicode 作为中间编码，它可以和其它所有的编
+       码相互转换。具体请看 http://www.gnu.org/directory/libiconv.html。
+
+    日文:	    nkf
+	Nkf 是 "Network Kanji code conversion Filter" 的缩写，nkf 最特别的地方
+	是它可以猜测输入的 Kanji 的编码。所以，你不必知道输入文件的 |charset|
+	是什么。要从 ISO-2202-JP 或 Shift_JIS 转换成 EUC-JP，在 Vim 里输入以下
+	命令:
+            :%!nkf -e
+        Nkf 可以在下面地址找到:
+        http://www.sfc.wide.ad.jp/~max/FreeBSD/ports/distfiles/nkf-1.62.tar.gz
+
+    中文:           hc
+	Hc 是 "Hanzi Converter" 的简写，Hc 把一个 GB 文件转换成 Big5 文件，或
+	者把一个 Big5 文件转换成 GB 文件。Hc 可以在以下地址找到:
+        ftp://ftp.cuhk.hk/pub/chinese/ifcss/software/unix/convert/hc-30.tar.gz
+
+    韩文:           hmconv
+	Hmconv 是一套 E-mail 文字转换的工具，它可以在 EUC-KR 和 ISO-2202-KR 之
+	间转换。Hmconv 可以在以下地址找到:
+        ftp://ftp.kaist.ac.kr/pub/hangul/code/hmconv/
+
+    多语言:         lv
+	Lv 是一个强大的多语言文件查看器，它还可以作为 |charset| 转换器，支持的
+	|charset| 有: ISO-2202-CN，ISO-2202-JP，ISO-2202-KR，EUC-CN，EUC-JP，
+	EUC-KR，EUC-TW，UTF-7，UTF-8，ISO-8859 系列，Shift_JIS，Big5 和 HZ。Lv
+	可以在以下地址找到:
+	http://www.ff.iij4u.or.jp/~nrt/lv/index.html
+
+
+							*mbyte-conversion*
+如果读入和写回文件所用的编码和 'encoding' 不同，需要进行转换。支持下面的转换:
+- 所有 Latin-1 (ISO-8859-1)，UTF-8，UCS-2 和 UCS-4 之间的转换都是内部完成的。
+- MS-Windows 上，如果 'encoding' 是 Unicode 的编码，从/到任何代码页的转换都应
+  该没有问题。
+- 'charconvert' 指定的转换。
+- 如果可用的话，使用 iconv 库进行的转换。
+	旧版本的 GNU iconv() 可能会使得转换失败 (它们需要一个很大的缓冲区，比
+	Vim 能够提供的还有大)。试试获得别的 iconv() 的实现。
+
+							*iconv-dynamic*
+MS-Windows 上，Vim 可以带 |+iconv/dyn| 特性编译。这意味着 Vim 会搜索
+"iconv.dll" 和 "libiconv.dll" 库。如果两者都找不到，Vim 依然可以运行，但是某些
+编码转换就无法完成了。
+
+==============================================================================
+4. 使用终端     					*mbyte-terminal*
+
+GUI 版本的 Vim 全面支持多字节字符。在终端内使用多字节编码需要终端本身的支持。
+因此灵活性不高。
+
+举个例子，你可以在支持多字节及/或 |XIM| 的 xterm 里使用 Vim。这样的终端有:
+kterm (Kanji term)，hanterm (Korean)，Eterm (Enlightened terminal) 和 rxvt。
+
+如果你的终端不支持正确的编码，可以通过设置 'termencoding' 来解决。Vim 会将输入
+的字符从 'termencoding' 转化成 'encoding'，而把显示的字符从 'encoding' 转化成
+'termencoding'。如果终端所支持的编码不包含 Vim 所使用的字符，会导致字符丢失，
+也会引起显示混乱。如果你的终端支持 Unicode，如以下提到的 xterm，应该就可以正常
+工作，因为几乎所有的编码都可以无损地转换为 Unicode。
+
+
+在 XFREE86 XTERM 中 使 用 UTF-8				*UTF8-xterm*
+
+下面是一个简要的关于如何在 XFree86 所带 xterm 中使用 UTF-8 的说明。XFree86 的
+作者是 Thomas Dickey (本段来自 Markus Kuhn)。
+
+从以下地址获得最新的支持 UTF-8 的 xterm:
+
+	http://invisible-island.net/xterm/xterm.html
+
+带以下参数编译 "./configure --enable-wide-chars;make"
+
+从以下地址获得 ISO 10646-1 所支持的各种字体:
+
+       http://www.cl.cam.ac.uk/~mgk25/download/ucs-fonts.tar.gz
+
+并按照 README 文件安装那些字体。
+
+现在，用以下命令启动 xterm >
+  xterm -u8 -fn -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso10646-1
+要使用大一点的字体，用以下命令: >
+  xterm -u8 -fn -misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1
+
+现在，你就拥有一个支持 UTF-8 的模拟终端了。用以下两种方法测试一下 >
+>
+   cat utf-8-demo.txt
+   vim utf-8-demo.txt
+
+示例文件来自于 ucs-fonts.tar.gz，它的目的是测试你的 xterm 使用 UTF-8 是否有问
+题。
+
+对於 Vim 你可能还需设置 'encoding' 为 "utf-8"。
+
+==============================================================================
+5. X11	中的字体        				*mbyte-fonts-X11*
+
+不幸的是，在 X11 下使用字体是非常复杂的。单字节字体的名称是一个长字符串，而多
+字节字体还有需要多个...
+
+备注: 这里的说明多数和 GTK+ 2 已经无关。那里不支持通过 XLFD 选择字体；
+'guifont' 提供了此时如何设置字体的例子。为了你好，忽略下面的 |XLFD| 和
+|xfontset| 小节。
+
+首先，Vim 显示文本只能使用等宽的字体。你不能使用按比例缩放 (proportionally
+spaced) 字体，包括许多可用的字体 (也许还很好看)。尽管如此，菜单和工具栏可以使
+用任何字体。
+
+备注: 显示和输入是独立的，就算没有输入你所使用的语言的输入法，你也可能看到你所
+使用的语言。
+
+你可以使用默认的字体来设置菜单和工具栏，但可能非常丑陋，阅读以下内容，你可以学
+到怎样选择一个较好的字体。
+
+
+X LOGICAL FONT DESCRIPTION (XLFD)
+							*XLFD*
+XLFD 是 X 中使用的包括字体大小，字符集等信息的字体名。格式如下:
+
+FOUNDRY-FAMILY-WEIGHT-SLANT-WIDTH-STYLE-PIXEL-POINT-X-Y-SPACE-AVE-CR-CE
+
+每个字段的意思是:
+- FOUNDRY:  FOUNDRY 字段，编写字体的公司名称。
+- FAMILY:   FAMILY_NAME 字段，基本的字体族名称 (helvetica、gothic、times 等等)
+- WEIGHT:   WEIGHT_NAME 字段，字母的粗细。(浅 light、中等 medium、粗 bold 等)
+- SLANT:    SLANT 字段。
+		r:  罗马体 Roman (没有倾斜度)
+		i:  斜体 Italic
+		o:  倾斜体 Oblique
+		ri: 反向斜体 Reverse Italic
+		ro: 反向倾斜体 Reverse Oblique
+		ot: 其他
+		number:	可缩放字体
+- WIDTH:    SETWIDTH_NAME 字段，字符宽度 (正常 normal、压缩 condensed、窄
+	    narrow、双宽度 double wide 等)
+- STYLE:    ADD_STYLE_NAME 字段，字体的额外信息 (Serif、Sans-Serif、
+            Informal、Decorated 等等)。
+- PIXEL:    PIXEL_SIZE 字段，字体以像素计的高度。
+- POINT:    POINT_SIZE 字段，10 倍字体以 point 数计的高度。
+- X:        RESOLUTION_X 字段，X 的位数 (每英寸多少点)
+- Y:        RESOLUTION_Y 字段，Y 的位数 (每英寸多少点)
+- SPACE:    SPACING 字段
+                p: 比例 (Proportional)
+                m: 等宽 (Monospaced)
+                c: 等宽等高 (CharCell)
+- AVE:      AVERAGE_WIDTH 字段，10 倍字体的以像素计的宽度。
+- CR:       CHARSET_REGISTRY 字段。字符集的组名。
+- CE:	    CHARSET_ENCODING 字段。字符集名的其余部分。对有些字符集，比如 JIS
+	    X 0208，来说，如果该字段为 0，编码点 (code point) 取 GL 的值， 若
+            为 1，则取 GR 的值。
+
+举个例子，设置大小为 16，对应 JIS X 0208 编码，可以写成以下格式
+    -misc-fixed-medium-r-normal--16-110-100-100-c-160-jisx0208.1990-0
+
+
+X FONTSET
+						*fontset* *xfontset*
+单字节字符通常只用一个字体，而对多字节来讲，经常用到字体的组合，这意味着一组字
+符使用了一种字体，而另一组字符使用别的字体 (也许是双宽度)，字体的集合就叫做字
+体集 (fontset)。
+
+字体集里的字体依赖于你系统的 locale，X windows 维护着这个 locale 所需要的字符
+组信息的表，你需要在 'guifontset' 里指定 locale 所需要的全部字体。
+
+备注: 字体集总是使用当前的 locale，即使 'encoding' 已设置成另一种编码。在那种
+情况下，你要设置 'guifont' 和 'guifontwide' 而不是 'guifontset'。
+
+例如:
+    |charset| 语言		    "字符组" ~
+    GB2312    中文 (简体)           ISO-8859-1 及 GB 2312
+    Big5      中文 (繁体)           ISO-8859-1 及 Big5
+    CNS-11643 中文 (繁体)           ISO-8859-1、CNS 11643-1 及 CNS 11643-2
+    EUC-JP    日语		    JIS X 0201 及 JIS X 0208
+    EUC-KR    韩语		    ISO-8859-1 及 KS C 5601 (KS X 1001)
+
+
+你可以用 xlsfonts 命令来查找字体，例如，你需要找 KS C 5601 的一种字体: >
+    xlsfonts | grep ksc5601
+<
+这个比较复杂，也令人迷惑，也许你需要阅读 X-Windows 的文档，它可以帮助你理解你
+不懂的地方。
+
+						*base_font_name_list*
+当你找到你所需要的字体以后，你就可以通过设置 'guifontset' 来设置字体。要使用一
+系列的字体，你可以用逗号把它们隔开。
+
+例如，如果你要使用 ja_JP.eucJP locale，你需要 JIS X 0201 和 JIS X 0208。你可以
+提供显式指定字符集的字体列表，就像这样:
+>
+ :set guifontset=-misc-fixed-medium-r-normal--14-130-75-75-c-140-jisx0208.1983-0,
+	\-misc-fixed-medium-r-normal--14-130-75-75-c-70-jisx0201.1976-0
+
+另外，你也可以设置一个省略编码名的基本字体名列表，让 X-Windows 选择 locale 所
+需要的字体字符。例如: >
+
+ :set guifontset=-misc-fixed-medium-r-normal--14-130-75-75-c-140,
+	\-misc-fixed-medium-r-normal--14-130-75-75-c-70
+
+另外，你也可以提供单个基本字体名，让 X-Windows 选择系统可用的所有字体，例
+如: >
+
+ :set guifontset=-misc-fixed-medium-r-normal--14-*
+<
+另外，你也可以指定字体别名，请参考 fonts 目录下的 fonts.alias 文件 (例如，
+/usr/X11R6/lib/X11/fonts)。例如: >
+
+ :set guifontset=k14,r14
+<
+                                                                *E253*
+在东亚字体中，正规的字符单元是正方形，当你混合 Latin 字体和东亚字体的时候，东
+亚字体的宽度应该是 Latin 字体的两倍。
+
+如果 'guifontset' 不为空，|:highlight| 命令的 "font" 参数也被解释为字体集。例
+如，你可以设置高亮显示: >
+	:hi Comment font=英文_字体,你的_字体
+如果你使用了一个错误的 "font" 参数，你会收到错误信息。
+也要确定你在设置高亮组的字体之前设置 'guifontset'。
+
+
+使 用 资 源 文 件
+
+除了设置 'guifontset' 以外，你也可以设置 X11 资源，Vim 会从它们中取值。这仅仅
+对了解 X 资源的人有用。
+
+如果你使用 Motif 和 Athena，把以下三行插入 $HOME/.Xdefaults 文件:
+
+	Vim.font: |base_font_name_list|
+	Vim*fontSet: |base_font_name_list|
+	Vim*fontList: your_language_font
+
+备注: Vim.font 设置文本。
+      Vim*fontSet 设置菜单。
+      Vim*fontList 设置 Moitf GUI 的菜单。
+
+举个例子，你使用日语，14 号字体
+>
+	Vim.font: -misc-fixed-medium-r-normal--14-*
+	Vim*fontSet: -misc-fixed-medium-r-normal--14-*
+	Vim*fontList: -misc-fixed-medium-r-normal--14-*
+<
+或者: >
+
+	Vim*font: k14,r14
+	Vim*fontSet: k14,r14
+	Vim*fontList: k14,r14
+<
+要使它们立即生效，你可以这样做
+>
+	xrdb -merge ~/.Xdefaults
+
+不然，你要关闭 X 之后重新启动 X 来使它们生效。
+
+
+GTK+ 版的 GUI Vim 不使用 .Xdefaults，它使用 ~/.gtkrc，大多数都可以正常工作，但
+菜单可能需要修改。例如: >
+
+	style "default"
+	{
+		fontset="-*-*-medium-r-normal--14-*-*-*-c-*-*-*"
+	}
+	widget_class "*" style "default"
+
+==============================================================================
+6.  MS-Windows 上的字体				*mbyte-fonts-MSwin*
+
+最简单的方法就是用对话框来选择字体。你可以在菜单 "Edit/Select Font..." 中找
+到该对话框。一旦你找到一个好用的字体，你可以使用以下命令来查看它的名字: >
+
+        :set guifont
+
+然后你可以在 |gvimrc| 中添加一个命令来设置 'guifont': >
+
+	:set guifont=courier_new:h12
+
+==============================================================================
+7.  X11 上的输入				*mbyte-XIM*
+
+X INPUT METHOD (XIM) 背景			*XIM* *xim* *x-input-method*
+
+XIM 是 X 的多语种输入模块。有两种构架，Xlib unit 类型和 |IM-server|
+(Input-Method server 输入法服务器) 类型。|IM-server| 类型适用于复杂的输入，比
+如 CJK。
+
+- IM-server
+							*IM-server*
+  在 |IM-server| 类型的输入结构中，输入事件的处理有两种方式: FrontEnd 系统和
+  BackEnd 系统。在 FrontEnd 系统中，输入事件先被 |IM-server| 捕获，待处理之
+  后， |IM-server| 为应用程序提供输入结果。BackEnd 系统处理的顺序则完全相反。
+  MS Windows 选择了 BackEnd 系统。在 X 中，大多数的 |IM-server| 选择 FrontEnd
+  系统。BackEnd 系统的缺点在于通讯的支出较大，但是它提供比较安全的同步，并且
+  对应用程序没有什么特殊的限制。
+
+  例如，有两种 FrontEnd 系统的日语输入法，xwnmo 和 kinput2 |IM-server|。Xwnmo
+  是和 Wnn 一起发布的 (见下)，kinput2 可以在这里找到:
+  ftp://ftp.sra.co.jp/pub/x11/kinput2/
+
+  还有另外一个 XIM 服务器名叫 "xcin"。你可以输入简体和繁体的中文。如果你有合适
+  的输入表，也可以接受其他 locale。Xcin 可以在这里找到:
+  http://cle.linux.org.tw/xcin/
+  其他的有 scim: http://scim.freedesktop.org/ 和 fcitx: http://www.fcitx.org/
+
+- 转换服务器
+							*conversion-server*
+  有的系统需要额外的服务器: 转换服务器。大多数日文 |IM-server| 需要它，即
+  Kana-Kanji (假名->汉字) 转换器。对于中文输入来说，这取决于输入的方法。有些方
+  法需要拼音或注音到汉字的转换服务器。对于韩语输入来说，如果你想输入汉字
+  (Hanja)，就需要 Hangul-Hanja (谚文->汉字) 转换器。
+
+  举例来说，日文输入分为两部分。首先，我们预先输入平假名 (Hira-gana)，然后进行
+  Kana-Kanji (假名->汉字) 的转换。日本汉字很多 (JIS X 0208 标准定义了 6349 个
+  汉字)，而假名字符的数目只有 76 个。所以，首先我们预输入平假名发音的文本。然
+  后，我们把平假名转换成汉字或者需要的话，片假名 (Kata-Kana)。有很多
+  Kana-Kanji 的服务器: jserver (随 Wnn 发布，见下) 和  canna。Canna 可以在这里
+  找到:
+  http://canna.sourceforge.jp/
+
+Wnn4.2 是一个好输入系统。Wnn 4.2 包括，
+    xwnmo (|IM-server|)
+    jserver (日语 Kana-Kanji 转换器)
+    cserver (中文拼音或者注音到简体汉字转换器)
+    tserver (中文拼音或者注音到繁体汉字转换器)
+    kserver (Hangul-Hanja 转换器)
+不同系统上的 Wnn 4.2 可以在网上不同地方找到。使用合适你的系统的 RPM 或其它包。
+
+
+- 输入风格
+							*xim-input-style*
+  在输入 CJK 字符时，有四个屏幕区域:
+      1. 显示键盘输入的区域
+      2. 显示当前输入模式的区域
+      3. 显示备选项的选择区域
+      4. 显示其它工具的区域
+
+  第三个区域在转换时会被用到。例如，在中文输入时，多个中文字符可能拥有同样的发
+  音。这样一个序列的拼音字母就可以唯一的对应一个中文字符。
+
+  在 X 的国际化输入中，第一和第二个区被分别称为 "预编辑区" 和 "状态区"。第三和
+  第四个区未被定义，而是留给输入法服务器 |IM-server| 来控制。在国际化输入中，
+  根据预编辑区与状态区的组合，划分出了四种输入风格: |OnTheSpot|，
+  |OffTheSpot|，|OverTheSpot| 和 |Root|。
+
+  目前 GUI Vim 支持三种输入方式:  |OverTheSpot|，|OffTheSpot| 和 |Root|。
+
+*.  on-the-spot						*OnTheSpot*
+    客户软件在其所用显示区内执行预编辑区和状态区。客户软件由 |IM-server| 控制
+    在文本插入位置显示所有预编辑所用数据。客户软件注册的回调函数在预编辑时被调
+    用。
+*.  over-the-spot					*OverTheSpot*
+    状态区是客户程序显示区内的一个固定的位置。对于 Vim 而言，这个位置是一个另
+    加的状态行。预编辑区出现在程序的当前插入位置。输入法程序在插入位置上方的一
+    个窗口显示预编辑数据。
+*.  off-the-spot					*OffTheSpot*
+    预编辑区和状态区都在客户程序的显示区内。对于 Vim 而言，这个区域是一个另加
+    的状态行。客户程序提供输入法程序预编辑所需的显示窗口，而预编辑程序直接控制
+    这些窗口的显示。
+*.  root-window						*Root*
+    预编辑区和状态区位于程序之外。输入法程序在一个专有的窗口中显示所有预编辑
+    数据。
+
+
+使 用 XIM			*multibyte-input* *E284* *E286* *E287* *E288*
+				*E285* *E289*
+
+注意 显示和输入是独立的。很可能你能读用你的语言写的文字但无法输入。但是，当输
+入法和你显示方法不匹配时，文本就不会被正常地显示。
+
+	备注: 你只有在指定了 'guifontset' 之后才能使用 IM。所以，Latin 用户，
+	      如果你想用 IM，你也要使用 'guifontset' (GTK2 版本不在限制之内:
+	      译者)。
+
+要输入你的语言你应该运行支持你所用语言的输入法服务器 |IM-server|，必要时还要
+运行转换服务器 |conversion-server|。
+
+你应该将下面三行放到你的 ~/.Xdefaults 文件中。所有用到 |XIM| 的 X 应用程序都会
+用到这些设定。如果你已经用了 |XIM|，你可以跳过这一步。 >
+
+	*international: True
+	*.inputMethod: your_input_server_name
+	*.preeditType: your_input_style
+<
+input_server_name	是你的 |IM-server| 名。
+your_input_style	是三种输入风格 |OverTheSpot|，|OffTheSpot|，|Root| 之
+			一。另见 |xim-input-style|。
+
+*international 对于 X11R6 的用户来说是不必要的。
+*.inputMethod 和 *.preeditType 对于 X11R6 来说是可选的。
+
+例如，当你用 kinput2 作为 |IM-server| 时， >
+
+	*international: True
+	*.inputMethod: kinput2
+	*.preeditType: OverTheSpot
+<
+当使用 |OverTheSpot| 风格时，GUI Vim 即使在普通模式也会连接到 IM 服务器，所以
+你可以将类似 "f" 和 "r" 等命令与你的语言联用。但当使用另外两种方法时，GUI Vim
+只在不处于普通模式时才会连接到 IM 服务器。
+
+如果你的 IM 服务器不支持 |OverTheSpot|，而你又想在 Vim 中对你的语言使用普通模
+式命令 "f" 或 "r"，那么你需要一个本地化的 xterm 或一个支持 |XIM| 的 xterm。
+
+如果需要，你可以设定 XMODIFIERS 环境变量:
+
+	sh:  export XMODIFIERS="@im=input_server_name"
+	csh: setenv XMODIFIERS "@im=input_server_name"
+
+例如，当你使用 kinput2 作为 |IM-server| 而用 sh 作为 shell 时， >
+
+	export XMODIFIERS="@im=kinput2"
+<
+
+完 全 控 制 XIM
+
+你可以象使用 MS-Windows IME (见 |multibyte-ime|) 那样完全的控制 XIM。目前此特
+性仅对 GTK GUI 版本有效。
+
+在使用完全控制之下的 XIM 前，需要设定一个选项: 'imactivatekey'。该选项所指定的
+热键会被用来激活输入法。例如，当你使用 SCIM 作为 IM Server，激活键很可能是
+Ctrl+Space: >
+
+	:set imactivatekey=C-space
+
+具体的格式参阅 'imactivatekey'。
+
+==============================================================================
+8.  MS-Windows 上的输入					*mbyte-IME*
+
+(Windows IME 支持)				*multibyte-ime* *IME*
+
+{仅对 Windows GUI 有效，而且编译时需加入 |+multi_byte_ime| 特性}
+
+要在 Windows 上输入多字节字符，你可以使用输入法编辑器 Input Method Editor
+(IME)。在输入的过程中，你必须多次打开／关闭 IME。因为在打开状态的 IME 对任何的
+输入动作都起作用，你不能在 Vim 中直接使用 'j'，'k' 等几乎所有的键。
+
+|+multi_byte_ime| 特性在这个问题上很有用。它减少了手动切换 IME 状态的次数。
+Vim 在普通状态下几乎不需要 IME，即使是在编辑多字节文本也是如此。因此当你用 ESC
+离开插入模式时，Vim 会记住 IME 的状态并强制关闭 IME。当再次进入插入模式时，Vim
+会自动的恢复上次的 IME 状态。
+
+这不仅对插入-普通模式有效，同时也对查找命令的输入和替换模式有效。
+设置 'iminsert'，'imsearch' 和 'imcmdline' 可以选择不同的输入方法，也可以临时
+禁用它们。
+
+什 么 是 IME
+    IME 是东亚版 Windows 的一个部件。用来帮助输入多字节字符。英语和其它语言版
+    本的 Windows 不包括 IME (通常也没有需要)。但是有一个版本叫做 Microsoft
+    Global IME。Global IME 是 Internet Exproler 4.0 或以上的一个组件。你可以在
+    以下的地址找到有关 Global IME 更多的信息。
+
+什 么 是 GLOBAL IME					*global-ime*
+    Global IME 允许用户在任何版本的 Windows 98，Windows 95，和 Windows NT 4.0
+    上在 Vim 中输入中文，日文，及韩文文字。
+    Windows 2000 和 XP 也应该可以用 (无需下载)。在 Windows 2000 Professional
+    上，Global IME 是内建的，而输入法可以在控制面板/区域选项/输入法里设置。
+
+    更详细的请参考下面的地址。 你也可以在这些地方找到不同版本的 Global IME。
+
+    - Global IME 详细信息。
+	http://search.microsoft.com/results.aspx?q=global+ime
+
+    - Active Input Method Manager (Global IME)
+	http://msdn.microsoft.com/en-us/library/aa741221(v=VS.85).aspx
+
+    对 Global IME 的支持是实验性的。
+
+备注: 要使 IME 工作，你需要将输入语言的 locale 加到你的系统里。具体如何操作根
+据 Windows 的版本不同而不同。比如，在我的 Windows 2000 机器里:
+1. 控制面板
+2. 区域设置
+3. 语言与输入法 (译者注: 此处似乎不同版本不同。但大致可以参考)
+4. 加入安装的输入语言 -> Chinese(PRC) (中文/中国)
+   缺省仍然 (可以) 是 English (United Stated) (英语/美国)
+
+
+当 IME 或 XIM 打开时光标的色彩				*CursorIM*
+    这是一个很 cute 的特性。光标可以改变色彩来指示 IME 的状态。通常 IME 的状态
+    是被桌面或任务栏上的一个小图标来指示的。这不是很方便。有了这个特性就容易多
+    了。
+    XIM 也是如此。
+
+    你可以使用高亮组 CursorIM 来选择光标的色彩。例如，在 |gvimrc| 中加入下面几
+    行: >
+
+	if has('multi_byte_ime')
+	    highlight Cursor guibg=Green guifg=NONE
+	    highlight CursorIM guibg=Purple guifg=NONE
+	endif
+<
+    光标会在 IME 关闭时显示绿色，而在开启时显示紫色。
+
+==============================================================================
+9. 使用键盘映射表输入					*mbyte-keymap*
+
+如果键盘不能提供你需要输入的字符时，你可以使用 'keymap' (键盘映射表) 选项。它
+会把一个或多个 (英语) 字符翻译成另外一个 (非英语) 字符。这只会在输入文本，而不
+是输入 Vim 命令时发生。这样可以避免在两个键盘设置之间来回切换。
+
+'keymap' 选项的值指定所使用的键盘映射表的文件名。该文件名可以是两者之一:
+
+	keymap/{keymap}_{encoding}.vim
+	keymap/{keymap}.vim
+
+这里，{keymap} 是 'keymap' 选项的值，而 {encoding} 是 'encoding' 选项的值。带
+有 {encoding} 的文件名先被尝试。
+
+查找这些文件时，要用到 'runtimepath'。要查看可用的键盘映射表文件，可以: >
+	:echo globpath(&rtp, "keymap/*.vim")
+
+在插入和命令行模式下，你可以用 CTRL-^ 切换是否使用键盘映射表。
+|i_CTRL-^| |c_CTRL-^|
+插入模式下的这个标志位记录在 'iminsert' 选项中。每次退出和进入插入模式的时候，
+该值被记住和再次使用。相同的值也用于需要单个字符输入的命令，如 |f| 和 |r|。
+命令行模式的标志位_不_会被记住。因为你需要先输入一个 ASCII 的 Ex 命令。
+搜索模式的输入则使用 'imsearch' 选项。它可以设置为 'iminsert' 相同的值。
+
+								*lCursor*
+在使用语言映射的时候，GUI 光标可以指定另外的颜色。缺省不使用这个功能，以防你使
+用非标准的背景颜色时光标不可见。这里是一个使用更亮颜色的例子: >
+	:highlight Cursor guifg=NONE guibg=Green
+	:highlight lCursor guifg=NONE guibg=Cyan
+<
+		*keymap-file-format* *:loadk* *:loadkeymap* *E105* *E791*
+键盘映射表的格式如下: >
+
+	" Maintainer:	name <email@address>
+	" Last Changed:	2001 Jan 1
+
+	let b:keymap_name = "short"
+
+	loadkeymap
+	a	A
+	b	B	注释
+
+" 开始的行是注释行，会被忽略掉。空行也被忽略。定义映射的行在有用的文本之后也可
+以有注释。
+
+"b:keymap_name" 可以是个短的名字，它会在提示行上显示。这样可以减少用于直接显示
+'keymap' 的值所需的空间，为了区别不同的语言，键盘和编码，该值可能很长。
+
+实际的映射是 "loadkeymap" 之后的行。在这个例子里，"a" 被映射成 "A" 而 "b" 被映
+射成 "B"。亦即，第一项被映射成第二项。每一行都如此处理，直到文件末。
+这些项和 |:lnoremap| 命令所用的参数完全相同，可以使用 "<buffer>" 是的映射局部
+于缓冲区。
+你可以用这个命令查看映射的结果: >
+	:lmap
+两项之间必须用空白分隔。你不能在某项内部插入空白，而应该用特殊的名字
+"<Tab>" 和 "<Space>"。两项的长度之和不能超过 200 个字节。
+
+第一列可以超过一个字符。这类似于一个死键 (dead key)。例如: >
+                    'a     *
+因为 Vim 不知道引号之后的字符是不是真的是 "a"，它会等待下一个字符。要插入单个
+引号，同时加入以下一行: >
+	''	'
+既然映射是用 |:lnoremap| 定义的，这里产生的引号不能用来引导另外一个字符。
+"accents" 键盘映射表用到这一点。			*keymap-accents*
+
+第一列也可使用 |<>| 形式:
+	<C-c>		Ctrl-C
+	<A-c>		Alt-c
+	<A-C>		Alt-C
+注意 取决于键盘和终端的设置，Alt 映射未必可用。
+
+在第二列虽然可以有多个字符，但是并不常见。你可以用多种方式指定所产生的字符: >
+	A	a		按本义出现的字符
+	A	<char-97>	十进制编码
+	A	<char-0x61>	十六进制编码
+	A	<char-0141>	八进制编码
+	x	<Space>		特殊键名
+
+字符假定是用 'encoding' 的当前值编码的。如果所有的字符都按本义出现，可以用
+":scriptencoding" 命令。这不适用于 <char-> 的构造，因为转换针对的是键盘映射表
+文件本身，而不是产生的字符。
+
+"loadkeymap" 之后的行的解释时，'cpotions' 假设为 "C"。这意味着不能用继续行，而
+反斜杠在映射中有特殊含义。例如: >
+
+	" 注释行
+	\"	x	把 " 映射为 x
+	\\	y	把 \ 映射为 y
+
+如果你写了一个键盘映射表文件，而且对别人也有帮助，希望你能把它发给 Vim 的维护
+者，以便在其后的版本中能够发行: <maintainer@vim.org>
+
+
+希 伯 来 键 盘 映 射 表					*keymap-hebrew*
+
+这个文件说明在 UTF-8 和 CP1255 编码中可用的字符，也说明如何使用键盘映射得到这
+些字符:
+
+字型   编码方式	      键盘映射 ~
+字符 utf-8 cp1255  hebrew hebrewp   名字 ~
+א    0x5d0  0xe0     t	      a     'alef
+ב    0x5d1  0xe1     c	      b     bet
+ג    0x5d2  0xe2     d	      g     gimel
+ד    0x5d3  0xe3     s	      d     dalet
+ה    0x5d4  0xe4     v	      h     he
+ו    0x5d5  0xe5     u	      v     vav
+ז    0x5d6  0xe6     z	      z     zayin
+ח    0x5d7  0xe7     j	      j     het
+ט    0x5d8  0xe8     y	      T     tet
+י    0x5d9  0xe9     h	      y     yod
+ך    0x5da  0xea     l	      K     kaf sofit
+כ    0x5db  0xeb     f	      k     kaf
+ל    0x5dc  0xec     k	      l     lamed
+ם    0x5dd  0xed     o	      M     mem sofit
+מ    0x5de  0xee     n	      m     mem
+ן    0x5df  0xef     i	      N     nun sofit
+נ    0x5e0  0xf0     b	      n     nun
+ס    0x5e1  0xf1     x	      s     samech
+ע    0x5e2  0xf2     g	      u     `ayin
+ף    0x5e3  0xf3     ;	      P     pe sofit
+פ    0x5e4  0xf4     p	      p     pe
+ץ    0x5e5  0xf5     .	      X     tsadi sofit
+צ    0x5e6  0xf6     m	      x     tsadi
+ק    0x5e7  0xf7     e	      q     qof
+ר    0x5e8  0xf8     r	      r     resh
+ש    0x5e9  0xf9     a	      w     shin
+ת    0x5ea  0xfa     ,	      t     tav
+
+元音符号和特殊标点:
+הְ    0x5b0  0xc0     A:      A:   sheva
+הֱ    0x5b1  0xc1     HE      HE   hataf segol
+הֲ    0x5b2  0xc2     HA      HA   hataf patah
+הֳ    0x5b3  0xc3     HO      HO   hataf qamats
+הִ    0x5b4  0xc4     I       I    hiriq
+הֵ    0x5b5  0xc5     AY      AY   tsere
+הֶ    0x5b6  0xc6     E       E    segol
+הַ    0x5b7  0xc7     AA      AA   patah
+הָ    0x5b8  0xc8     AO      AO   qamats
+הֹ    0x5b9  0xc9     O       O    holam
+הֻ    0x5bb  0xcb     U       U    qubuts
+כּ    0x5bc  0xcc     D       D    dagesh
+הֽ    0x5bd  0xcd     ]T      ]T   meteg
+ה־   0x5be  0xce     ]Q      ]Q   maqaf
+בֿ    0x5bf  0xcf     ]R      ]R   rafe
+ב׀   0x5c0  0xd0     ]p      ]p   paseq
+שׁ    0x5c1  0xd1     SR      SR   shin-dot
+שׂ    0x5c2  0xd2     SL      SL   sin-dot
+׃    0x5c3  0xd3     ]P      ]P   sof-pasuq
+װ    0x5f0  0xd4     VV      VV   double-vav
+ױ    0x5f1  0xd5     VY      VY   vav-yod
+ײ    0x5f2  0xd6     YY      YY   yod-yod
+
+以下符号只有在 utf-8 下才有
+
+吟咏符号:
+字型
+字符 utf-8 hebrew 名字
+ב֑    0x591   C:   etnahta
+ב֒    0x592   Cs   segol
+ב֓    0x593   CS   shalshelet
+ב֔    0x594   Cz   zaqef qatan
+ב֕    0x595   CZ   zaqef gadol
+ב֖    0x596   Ct   tipeha
+ב֗    0x597   Cr   revia
+ב֘    0x598   Cq   zarqa
+ב֙    0x599   Cp   pashta
+ב֚    0x59a   C!   yetiv
+ב֛    0x59b   Cv   tevir
+ב֜    0x59c   Cg   geresh
+ב֝    0x59d   C*   geresh qadim
+ב֞    0x59e   CG   gershayim
+ב֟    0x59f   CP   qarnei-parah
+ב֪    0x5aa   Cy   yerach-ben-yomo
+ב֫    0x5ab   Co   ole
+ב֬    0x5ac   Ci   iluy
+ב֭    0x5ad   Cd   dehi
+ב֮    0x5ae   Cn   zinor
+ב֯    0x5af   CC   masora circle
+
+混合形式:
+ﬠ    0xfb20  X`   Alternative `ayin
+ﬡ    0xfb21  X'   Alternative 'alef
+ﬢ    0xfb22  X-d  Alternative dalet
+ﬣ    0xfb23  X-h  Alternative he
+ﬤ    0xfb24  X-k  Alternative kaf
+ﬥ    0xfb25  X-l  Alternative lamed
+ﬦ    0xfb26  X-m  Alternative mem-sofit
+ﬧ    0xfb27  X-r  Alternative resh
+ﬨ    0xfb28  X-t  Alternative tav
+﬩    0xfb29  X-+  Alternative plus
+שׁ    0xfb2a  XW   shin+shin-dot
+שׂ    0xfb2b  Xw   shin+sin-dot
+שּׁ    0xfb2c  X..W  shin+shin-dot+dagesh
+שּׂ    0xfb2d  X..w  shin+sin-dot+dagesh
+אַ    0xfb2e  XA   alef+patah
+אָ    0xfb2f  XO   alef+qamats
+אּ    0xfb30  XI   alef+hiriq (mapiq)
+בּ    0xfb31  X.b  bet+dagesh
+גּ    0xfb32  X.g  gimel+dagesh
+דּ    0xfb33  X.d  dalet+dagesh
+הּ    0xfb34  X.h  he+dagesh
+וּ    0xfb35  Xu  vav+dagesh
+זּ    0xfb36  X.z  zayin+dagesh
+טּ    0xfb38  X.T  tet+dagesh
+יּ    0xfb39  X.y  yud+dagesh
+ךּ    0xfb3a  X.K  kaf sofit+dagesh
+כּ    0xfb3b  X.k  kaf+dagesh
+לּ    0xfb3c  X.l  lamed+dagesh
+מּ    0xfb3e  X.m  mem+dagesh
+נּ    0xfb40  X.n  nun+dagesh
+סּ    0xfb41  X.s  samech+dagesh
+ףּ    0xfb43  X.P  pe sofit+dagesh
+פּ    0xfb44  X.p  pe+dagesh
+צּ    0xfb46  X.x  tsadi+dagesh
+קּ    0xfb47  X.q  qof+dagesh
+רּ    0xfb48  X.r  resh+dagesh
+שּ    0xfb49  X.w  shin+dagesh
+תּ    0xfb4a  X.t  tav+dagesh
+וֹ    0xfb4b  Xo   vav+holam
+בֿ    0xfb4c  XRb  bet+rafe
+כֿ    0xfb4d  XRk  kaf+rafe
+פֿ    0xfb4e  XRp  pe+rafe
+ﭏ    0xfb4f  Xal  alef-lamed
+
+==============================================================================
+10. 使用 UTF-8				*mbyte-utf8* *UTF-8* *utf-8* *utf8*
+							*Unicode* *unicode*
+Unicode 字符集的设计就是要包含所有其他的字符集。这样你就可以用 Unicode 写任何
+文字 (除了少数偏僻的语种以外)。它也最大限度的提供了在一个文件里混合各种语言的
+能力，这用其他编码是不可能的。
+
+Unicode 可以有几种编码方式。最流行的是 UTF-8 编码，它使用一到多字节编码单个字
+符，和 ASCII 后向兼容。MS-Windows 上也使用 UTF-16 (以前的 UCS-2) 编码，它使用
+16-位字。Vim 支持所有的编码，但内部使用的总是 UTF-8。
+
+Vim 有完整的 UTF-8 支持。它在以下环境下工作得很好:
+- 带有 utf-8 支持的 xterm
+- Athena、Motif 和 GTK GUI
+- MS-Windows GUI
+- 若干其它的平台
+
+支持双宽度的字符。如能配合 'guifontwide' 和 'guifontset' 最好。如果只使用
+'guifont'，宽字符使用正常宽度显示，而空格用来填补之间的空隙。注意 'guifontset'
+选项不再用于 GTK+ 2 GUI。
+
+							*bom-bytes*
+读文件时 BOM (字节顺序标识) 可以用来识别 Unicode 编码方式:
+	EF BB BF     utf-8
+	FE FF        utf-16 big endian (高位字节在前)
+	FF FE        utf-16 little endian
+	00 00 FE FF  utf-32 big endian
+	FF FE 00 00  utf-32 little endian
+
+utf-8 是推荐的编码方式。注意 很难把 utf-16 和 utf-32 区别开。utf-16 常用于
+MS-Windows，utf-32 并不是常用的文件格式。
+
+					*mbyte-combining* *mbyte-composing*
+合成用或组合用字符用来改变前面字符的含义。组合用字符显示在前导字符之上。
+缺省至多可以使用两个组合用字符。但可以用 'maxcombine' 选项改变其最大值。
+编辑文本时，合成用字符多数被认为是前导字符的一部分。例如，"x" 缺省删除一个字符
+和它后面的合成用字符。
+如果 'delcombine' 选项打开，那么 'x' 第一次删除一个组合用字符，下一次再删除基
+本字符。但在插入时，你先输入第一个字符，然后再输入后面的合成用字符，最后它们被
+合并在一起。不能用 "r" 命令输入组合用字符，因为它不知道这些字符会不会出现。应
+该用 "R"。
+
+不属于合法 UTF-8 编码的字符序列并作为单个字符处理，并显示为 <xx>，其中的 "xx"
+是该字节的十六进制值。
+
+过长的序列不会被特殊处理，显示的和合法的字符差不多。不过，模式搜索不会匹配过长
+的序列 (过长序列指包含多过字符的编码需要的字节)。一个例外是 NUL (零) 被显示为
+"<00>"。
+
+在文件和缓冲区里，可以使用 Unicode 字符的整个范围 (31 位)。不过，在显示的时候
+只限于当前所选字体支持的字符。
+
+有用的命令:
+- "ga" 显示光标下字符的十、十六、和八进制值。如果有合成用字符，也一并显示。(如
+  果消息被截断，用 ":messages" 命令)。
+- "g8" 显示 UTF-8 字符的相应字节，包括合成用字符，以十六进制表示。
+- ":set encoding=utf-8 fileencodings=" 强制为所有文件使用 UTF-8。缺省使用
+  'encoding' 的当前 locale，并自动设置 'fileencodings' 为文件使用的编码。
+
+
+启 动 VIM
+
+如果你当前的 locale 就是 utf-8，Vim 会自动以 utf-8 模式启动。
+
+如果你使用别的 locale: >
+
+	set encoding=utf-8
+
+你也需要设置菜单所需的字体。不幸的是这不总是能行。参见以下特定系统的参考，和
+'langmenu' 选项。
+
+
+在 X-Windows 上 使 用  UTF-8				*utf-8-in-xwindows*
+
+注意: 本节不适用于 GTK+ 2 GUI。
+
+你需要指定要用的字体。如果需要显示双宽度的字符，还要指定两倍宽度的另一个字体。
+有三种指定的方法:
+
+1. 设置 'guifont' 并让 Vim 找到合适的 'guifontwide'
+2. 设置 'guifont' 和 'guifontwide'
+3. 设置 'guifontset'
+
+参见每个选项的文档以了解详情。示例: >
+
+   :set guifont=-misc-fixed-medium-r-normal--15-140-75-75-c-90-iso10646-1
+
+你可能需要设置菜单所需的字体。目前，这只适用于 Motif。你可以用
+":hi Menu font={fontname}" 命令。 |:highlight|
+
+
+输 入 UTF-8						*utf-8-typing*
+
+如果你使用 X-Windows，你应该找一下能支持 utf-8 的输入法。
+
+如果你的系统不支持 utf-8 的输入，你可以用 'keymap' 特性。通过写一个键盘映射表
+文件，你可以用 ASCII 字符的序列来定义 utf-8 的字符。见 |mbyte-keymap|。
+
+另外一个方法是设置当前的 locale 为你需要的语言，并且提供该语言相应的 XIM。然后
+设置 'termencoding' 为该语言，Vim 会把输入的语言转换成 'encoding' 指定的编码。
+
+如果这些都不行，你可以用四位十六进制输入任何字符: >
+
+	CTRL-V u 1234
+
+"1234" 被解释成十六进制数。你必须要输入四位字符，有必要的话前面加零。
+
+
+命 令 行 参 数						*utf-8-char-arg*
+
+|f|、|F|、|t| 和 |r| 这样的命令接受单个字符作为参数。UTF-8 的字符可能意味着该
+参数需要包括一到两个合成用字符。它们需要和基本字符组合。但是，Vim 不会等待下个
+字符的输入然后再判断它是不是合成用字符。'keymap' 或者 |:lmap| 是一个输入这些字
+符的好办法。
+
+在行中搜索字符的命令这样处理合成用字符。当搜索不带合成用字符的字符时，带或不带
+合成用字符的文本都可能被搜索到。当搜索带合成用字符的字符时，只会搜索到带
+合成用字符的文本。之所以这样实现，是因为不是每个人都能输入合成用字符。
+
+
+==============================================================================
+11. 选项总述						*mbyte-options*
+
+以下的各选项会影响对多字节文件的编辑。更详细的信息请参考 options.txt。
+
+'encoding'	键盘和显示使用的编码。同时也是文件的缺省编码。
+
+'fileencoding'	某一文件的编码。在该选项的值与 'encoding' 不同的情况下，读写文
+		件时会有编码转换。
+
+'fileencodings'	文件可能编码的列表。当打开一个文件时，Vim 会尝试该列表并使用第
+		一个找到的无错的编码。'fileencoding' 会被设为该编码。
+
+'charconvert'	用于将文件转码的表达式。
+
+'formatoptions' 'm' 标志位可以用来改变文本断行的方式: 在一个多字节字符处可以断
+		行。这对与那些可以在任意字符处断行的语言很有用。
+
+'guifontset'	一个用于多字节编码的字体的列表。当该选项值不为空时，'guifont'
+		被它取代。
+
+'keymap'	给定所用键盘映射表名字。
+
+==============================================================================
+
+对多字节功能作出特别贡献的有:
+	Chi-Deok Hwang <hwang@mizi.co.kr>
+	SungHyun Nam <goweol@gmail.com>
+	K.Nagano <nagano@atese.advantest.co.jp>
+	Taro Muraoka  <koron@tka.att.ne.jp>
+	Yasuhiro Matsumoto <mattn@mail.goo.ne.jp>
+
+ vim:tw=78:ts=8:ft=help:norl:

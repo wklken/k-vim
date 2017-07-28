@@ -1,0 +1,57 @@
+*os_unix.txt*   For Vim version 7.4.  最近更新: 2005年3月
+
+
+			VIM 用户手册  Bram Moolenaar 著
+		      译者: yemao http://vimcdoc.sf.net
+
+
+							*unix* *Unix*
+本文件介绍了 Unix 版本的 vim 的一些特殊之处。
+
+首先，要在 Unix 上编译 vim，请参考 src 目录下的 "INSTALL" 文件和 "Makefile" 文
+件。
+
+默认帮助文件名为 "/usr/local/lib/vim/help.txt"
+同时，vim 会使用 "$HOME/.vimrc" 和 "$HOME/.exrc" 而不是 "s:.vimrc" 和
+"s:.exrc"。另外它会首先使用 /usr/local/etc/vimrc 文件。注意，如果
+"/usr/local/share" 已经存在，就会使用它来代替 "/usr/local/lib"。
+
+临时文件 (用于过滤程序) 默认会放在 "/tmp" 下，如果你想把它们放在别处，那么必须
+设置环境变量 $TMPDIR 为你放临时文件的目录。
+
+通过扩展通配符，你可以使用 '~' (用户主目录) 及 '$' (系统环境变量)。
+
+							*fork* *spoon*
+执行外部命令时，会尽可能调用 fork()/exec()，不然会调用 system()。使用后者速度
+会有所减慢。正因为有两个函数可以被调用，":version" 输出信息就有两种，当调用
+fork()/exec() 时，输出 |+fork|，否则输出 |+system()|。编译时可以修改。
+(GUI 上关于 fork (进程分叉) 的详细信息参考 |gui-fork|。)
+
+Unix 上的终端刷新常常比较慢 (比如串行终端和 suntools 下的 shell 窗口)，所以默
+认情况下的 'showcmd' 选项和 'ruler' 选项都是关闭的。如果你所使用的终端比较快的
+话，可以把它们打开。甚至可以试试 'ttyfast' 选项。
+
+在 xterm 下使用 Vim，只要把 'mouse' 选项设成 "a" 就可以使用鼠标了。如果你有权
+限使用 X-server，当你用鼠标拖动的时候，可以进行 gui 风格的复制和粘贴，而你还会
+看到可视反馈。如果你还是想用 xterm 的复制和粘贴，使用鼠标时按住 shift 键，具体
+请参考 |mouse-using|。只要你的 xterm 版本够新，设置一下 'ttymouse' 选项就可以
+在拖动的时候得到可视反馈。
+
+							*terminal-colors*
+要在 Vim 里显示彩色，可以参考以下例子 (假定你的终端支持色彩显示，而 "T_Co" 为
+空或零): >
+   :set t_me=^[[0;1;36m     " 正常模式 (撤销 t_mr 和 t_md)
+   :set t_mr=^[[0;1;33;44m  " 反转 (逆转) 模式
+   :set t_md=^[[1;33;41m    " 粗体模式
+   :set t_se=^[[1;36;40m    " 突出模式结束
+   :set t_so=^[[1;32;45m    " 突出模式开始
+   :set t_ue=^[[0;1;36m     " 下划线模式结束
+   :set t_us=^[[1;32m       " 下划线模式开始
+[注意，^[ 是 <Esc>，可以用 CTRL-V <Esc> 来输入。]
+
+而在真正的彩色终端下，可以使用 ":highlight" 命令。
+
+另外，文件 "tools/vim132" 是一个 shell 脚本。在 vt100 和与其类似的终端下，它可
+以使 Vim 使用 132 列模式。
+
+ vim:tw=78:ts=8:ft=help:norl:

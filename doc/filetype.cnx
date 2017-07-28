@@ -1,0 +1,539 @@
+*filetype.txt*  For Vim version 7.4.  最近更新: 2013年8月
+
+
+		  VIM 参考手册    by Bram Moolenaar
+				译者: Willis, tocer
+				http://vimcdoc.sf.net
+
+
+文件类型						*filetype* *file-type*
+
+1. 文件类型					|filetypes|
+2. 文件类型插件					|filetype-plugins|
+3. 缺省文件类型插件的文档			|ftplugin-docs|
+
+另见 |autocmd.txt|。
+
+{Vi 没有这些命令}
+
+==============================================================================
+1. 文件类型					*filetypes* *file-types*
+
+Vim 可以检测要编辑的文件类型。这是通过检查文件名完成的，有的时候也检查文本里是
+否包含特定的文本。
+
+							*:filetype* *:filet*
+要打开文件类型的检测，在你的 vimrc 里加入以下命令: >
+	:filetype on
+每次一个新的或者已经存在的文件被编辑时，Vim 会试图识别文件的类型，并设置
+'filetype' 选项。同时，也触发 FileType 事件。该事件可以设置语法高亮，特定选
+项，等等。
+
+注意: 文件类型和 'compatibile' 不能很好的一起工作。因为 Vi 兼容意味着所有的选
+项都是全局的。如果你还那么做，建议复位 'compatible' 选项。
+
+详情: ":filetype on" 命令会加载以下文件中的一个:
+		Amiga	    $VIMRUNTIME/filetype.vim
+		Mac	    $VIMRUNTIME:filetype.vim
+		MS-DOS	    $VIMRUNTIME\filetype.vim
+		RiscOS	    Vim:Filetype
+		Unix	    $VIMRUNTIME/filetype.vim
+		VMS	    $VIMRUNTIME/filetype.vim
+	该文件是一个 Vim 脚本，其中定义了 BufNewFile 和 BufRead 事件的自动命
+	令。如果根据文件名不能检测到文件类型，则使用 $VIMRUNTIME/scripts.vim
+	来根据文件内容检测之。
+	正在或即将启动 GUI 时，同时也会执行 menu.vim 脚本。如果不想要，参见
+	|'go-M'|。
+
+要加入你自己的文件类型，见下面的 |new-filetype|。要查找一种文件类型的帮助，加
+上 "ft-" 前缀和可选的 "-syntax"、"-indent" 或者 "-plugin" 后缀。例如: >
+	:help ft-vim-indent
+	:help ft-vim-syntax
+	:help ft-man-plugin
+
+如果文件类型没有被自动识别，或者找到的是错误的类型，你可以手动设置 'filetype'
+选项，或者在文件里加入模式行。例如，对于 IDL 文件，可以使用 >
+	:set filetype=idl
+
+或者在文件中加入模式行 |modeline|:
+	/* vim: set filetype=idl : */ ~
+
+						*:filetype-plugin-on*
+你可以为特定的文件类型允许插件文件的载入: >
+	:filetype plugin on
+如果文件类型检测以前尚未打开，载入该文件后就被打开了。该命令实际上载入了
+'runtimepath' 里的 "ftplugin.vim" 文件。其结果是，在文件编辑时，相应的插件文件
+也会载入 (如果文件类型能检测到)。|filetype-plugin|
+
+						*:filetype-plugin-off*
+你可以如此关闭之: >
+	:filetype plugin off
+文件类型检测此时没有关闭。但如果你关闭了，相应的插件就不会被自动载入。该命令实
+际上载入了 'runtimepath' 里的 "ftplugof.vim" 文件。
+
+						*:filetype-indent-on*
+你可以为特定的文件类型载入缩进文件: >
+	:filetype indent on
+如果文件类型检测以前尚未打开，载入该文件后就被打开了。该命令实际上载入了
+'runtimepath' 里的 "indent.vim" 文件。其结果是，在文件编辑时，相应的缩进文件
+也会载入 (如果文件类型能检测到)。|indent-expression|
+
+						*:filetype-indent-off*
+你可以如此关闭之: >
+	:filetype indent off
+文件类型检测此时没有关闭。但如果你关闭了，相应的缩进文件就不会被自动载入。该命
+令实际上载入了 'runtimepath' 里的 "indoff.vim" 文件。
+这会关闭你后面所打开的文件中的自动缩进。在已经打开的文件中，自动缩进还依然有
+效。要在已打开的文件中关闭缩进，复位 'autoindent'、'cindent'、'smartindent'
+和/或 'indentexpr'。
+
+						*:filetype-off*
+要关闭文件类型检测，使用如下命令: >
+	:filetype off
+"plugin" 和 "indent" 的标志位还会保持，但是因为没有文件类型被检测到，直到下次
+":filetype on" 为止，它们不会真的工作。
+
+
+总览:						*:filetype-overview*
+
+命令				检测	plugin	indent ~
+:filetype on			打开	未改变	未改变
+:filetype off			关闭	未改变	未改变
+:filetype plugin on		打开	打开	未改变
+:filetype plugin off		未改变	关闭	未改变
+:filetype indent on		打开	未改变	打开
+:filetype indent off		未改变	未改变	关闭
+:filetype plugin indent on	打开	打开	打开
+:filetype plugin indent off	未改变	关闭	关闭
+
+要查看当前的状态，只需输入: >
+	:filetype
+输出结果看起来大概如此: >
+	filetype detection:ON  plugin:ON  indent:OFF
+
+文件类型也用于语法高亮。如果使用 ":syntax on" 命令，文件类型检测也被安装。所
+以，没有必要在 ":syntax on" 之后再执行 ":filetype on"。
+
+要关闭某种文件类型，在你的文件类型文件里加入一行。见 |remove-filetype|。
+
+							*filetype-detect*
+要再次检测文件类型: >
+	:filetype detect
+使用这个命令可以使你先编辑一个空白文件，任何输入足够的文本，使得文件类型能够被
+识别。例如，你以此开始输入一个新的外壳脚本: "#!/bin/csh"。
+   如果文件类型检测被关闭，它会先被打开。就像用了 "on" 参数那样。
+
+							*filetype-overrule*
+如果两个不同的文件类型使用了相同的扩展名，Vim 试图猜测到底该文件属于哪个类型。
+这并不总行。一些全局变量可以用来为某些特定的扩展名决定具体的文件类型:
+
+	文件名		变量 ~
+	*.asa		g:filetype_asa	|ft-aspvbs-syntax| |ft-aspperl-syntax|
+	*.asp		g:filetype_asp	|ft-aspvbs-syntax| |ft-aspperl-syntax|
+	*.asm		g:asmsyntax	|ft-asm-syntax|
+	*.prg		g:filetype_prg
+	*.pl		g:filetype_pl
+	*.inc		g:filetype_inc
+	*.w		g:filetype_w	|ft-cweb-syntax|
+	*.i		g:filetype_i	|ft-progress-syntax|
+	*.p		g:filetype_p	|ft-pascal-syntax|
+	*.sh		g:bash_is_sh	|ft-sh-syntax|
+	*.tex		g:tex_flavor	|ft-tex-plugin|
+
+							*filetype-ignore*
+要避免检测某些文件，用 g:ft_ignore_pat 变量。缺省值是: >
+	:let g:ft_ignore_pat = '\.\(Z\|gz\|bz2\|zip\|tgz\)$'
+这意味着压缩文件的内容不会被检测。
+
+							*new-filetype*
+如果你想使用的文件没检测到文件类型，有四种方法。不管如何，最好不要修改
+$VIMRUNTIME/filetype.vim 文件。再安装新的 Vim 版本的时候它会被覆盖。
+
+A. 如果你想否决所有的缺省文件类型检查。
+   这里，每种文件类型需要写一个文件。缺点就是，你需要很多文件。优点就是，你只
+   需要把文件放到合适的目录就可以了。
+							*ftdetect*
+   1. 建立你自己的运行时目录。通常，你会用 'runtimepath' 选项的第一项。然后，
+      在其中建立 "ftdetect" 目录。Unix 上的例子: >
+	:!mkdir ~/.vim
+	:!mkdir ~/.vim/ftdetect
+<
+   2. 建立包含检测文件类型的自动命令的文件。例如: >
+	au BufRead,BufNewFile *.mine		set filetype=mine
+<     注意 这里没有 "augroup" 命令。在执行你的文件的时候这点已经做好了。你可以
+      使用 "*" 模式，然后分析文件内容来检测其类型。
+      把该文件叫做 "mine.vim"，并把它放在用户运行时目录的 "ftdetect" 目录里。
+      例如，在 Unix 上: >
+	:w ~/.vim/ftdetect/mine.vim
+
+<  3. 要使用新的文件类型检测，你需要重新启动 Vim。
+
+   "ftdetect" 目录的文件在所有的缺省检查之后进行，这样它们就能否决之前进行的文
+   件类型检测。但是你还可以用 |:setfiletype| 保持前一个检测到的文件类型。
+
+B. 如果你想在缺省文件类型检查之后检测自己的文件。
+
+   和上述的 A 类似。但不是无条件的设置 'filetype'，而是使用 ":setfiletype"。该
+   命令只有在没有文件类型被监测到的前提下才会设置 'filetype'。例如: >
+	au BufRead,BufNewFile *.txt		setfiletype text
+<
+   在你的命令里，你可以使用已经检测到的文件类型。例如，在 "pascal" 类型已经被
+   检测到的前提下，要使用文件类型 "mypascal": >
+	au BufRead,BufNewFile *		if &ft == 'pascal' | set ft=mypascal
+								       | endif
+
+C. 如果你的文件类型可以通过文件名检测。
+   1. 建立你自己的运行时目录。通常，你会用 'runtimepath' 选项的第一项。Unix 上
+      的例子: >
+	:!mkdir ~/.vim
+<
+   2. 创建包含自动命令的文件用于检测文件类型。示例: >
+	" my filetype file
+	if exists("did_load_filetypes")
+	  finish
+	endif
+	augroup filetypedetect
+	  au! BufRead,BufNewFile *.mine		setfiletype mine
+	  au! BufRead,BufNewFile *.xyz		setfiletype drawing
+	augroup END
+<     在用户运行时目录下，把该文件存为 "filetype.vim"。例如，在 Unix 上: >
+	:w ~/.vim/filetype.vim
+
+<  3. 要使用新的文件类型检测，你需要重新启动 Vim。
+
+   这里，你的 filetype.vim 会在缺省的 FileType 自动命令安装前被执行。所以，你
+   的自动命令会先被匹配，而 ":setfiletype" 命令的时候保证了其后没有其他的自动
+   命令会改变 'filetype'。
+							*new-filetype-scripts*
+D. 如果你的文件类型只能通过分析文件内容来检测。
+
+   1. 建立你的用户运行时目录。通常，你会用 'runtimepath' 选项的第一项。Unix 上
+      的例子: >
+	:!mkdir ~/.vim
+<
+   2. 创立一个 vim 脚本，来实现需要的功能。示例: >
+	if did_filetype()	" filetype 已经设立..
+	  finish		" ..不需要这些检测
+	endif
+	if getline(1) =~ '^#!.*\<mine\>'
+	  setfiletype mine
+	elseif getline(1) =~? '\<drawing\>'
+	  setfiletype drawing
+	endif
+<     更多的例子可以参见 $VIMRUNTIME/scripts.vim。
+      把该文件命名为 "scripts.vim"，并保存在你的用户运行时目录。例如，在 Unix
+      上: >
+	:w ~/.vim/scripts.vim
+<
+   3. 检测会立即生效，无须重新启动 Vim。
+
+   你的 scripts.vim 在文件类型的缺省之前被载入，这意味着你的规则会覆盖
+   $VIMRUNTIME/scripts.vim 的缺省规则。
+
+						*remove-filetype*
+如果某个文件类型检测有问题，安装一个 filetype.vim 或者 scripts.vim 去捕获这个
+问题 (见上)。你可以把 'filetype' 设成一个不存在的名字，使得以后不会被设置: >
+	:set filetype=ignored
+
+如果你为许多用户设置系统，而不想为每个用户分别增加/删除相同的为件类型，考虑把
+filetype.vim 和 scripts.vim 写到一个大家都能用的运行时目录里。查看
+'runtimepath' 里有没有能用的目录。如果没有，在 |system-vimrc| 里设置
+'runtimepath'。切记要保存缺省的目录。
+
+
+						*autocmd-osfiletypes*
+备注: 现在此段代码已不再用，因为我们已移除了 RISC OS 实现。将来就用 'filetype'
+选项便可。
+
+如果操作系统支持在文件里存储文件类型，你可以指定某一文件类型专用的自动命令。
+
+实际的类型检查决定于你运行 Vim 所处的平台；详情参见你的系统文档。
+
+要在自动命令里使用 osfiletype 检查，你应该把待匹配类型的模式串用尖括号括起来，
+就像这样: >
+
+	:au BufRead *.html,<&faf;HTML>  runtime! syntax/html.vim
+
+这会匹配:
+
+- 任何名字以 ".html" 结尾的文件
+- 任何类型为 "&faf" 或者 "HTML" 的文件，这些类型的具体含义取决于你使用的 Vim
+  的版本。
+  未知的类型被认为是_不_匹配。
+
+你可以同时自动指定类型和模式 (这时两者必须都匹配): >
+
+	:au BufRead <&fff>diff*
+
+这个例子会匹配类型为 "&fff" 而且文件名以 "diff" 开始的文件。
+
+
+							*plugin-details*
+"plugin" 目录可以在 'runtimepath' 选项里的任何一个目录里。所有这些目录都会被搜
+索，查找到的插件会被全部调入。例如，如果命令: >
+
+	set runtimepath
+
+产生这样的输出:
+
+	runtimepath=/etc/vim,~/.vim,/usr/local/share/vim/vim60 ~
+
+那么 Vim 会调入以下目录及其下的所有插件:
+
+	/etc/vim/plugin/ ~
+	~/.vim/plugin/ ~
+	/usr/local/share/vim/vim60/plugin/ ~
+
+注意 最后一项是 $VIMRUNTIME 被扩展的值。
+
+有没有可能你的插件好像没有被调入呢？通过 |-V| 参数，你可以看看 Vim 启动的时候
+发生了什么: >
+
+	vim -V2
+
+你会看到很多信息。其中有关于调入插件的一行注释。它这样开始:
+
+	Searching for "plugin/**/*.vim" in ~
+
+这样，你就能看到 Vim 在哪里查找你的插件脚本了。
+
+==============================================================================
+2. 文件类型插件						*filetype-plugins*
+
+如果允许载入文件类型插件 |:filetype-plugin-on|，相应的选项会被设置，映射会被定
+义。它们都局部于缓冲区，不会影响其他的文件。
+
+定义文件类型的映射可能会影响你自己定义的映射。有一些方法可以避免这一点:
+1. 设置 "maplocalleader" 变量为你想映射开始的键序列。例如: >
+	:let maplocalleader = ","
+<  所有的映射现在都以逗号开始，而不是缺省的反斜杠。另见 |<LocalLeader>|。
+
+2. 定义你自己的映射。例如: >
+	:map ,p <Plug>MailQuote
+<  你需要检查下面给出的插件文件的描述，以了解它们的功能和映射到的字符串。
+   你需要在插件载入之前定义自己的映射。 (在编辑该类型的文件之前)。该插件就可以
+   跳过缺省映射的安装了。
+
+3. 屏蔽特定文件类型的映射可以通过设置一个变量进行。该变量包含文件类型的名字。
+   对于 "mail" 文件类型它可能是: >
+	:let no_mail_maps = 1
+
+4. 通过设置变量屏蔽所有文件类型的映射: >
+	:let no_plugin_maps = 1
+<
+
+							*ftplugin-overrule*
+如果某个全局文件类型插件不完全符合你的期待，有三个办法可以改变:
+
+1. 增加一些设置。
+   你必须在 'runtimepath' 靠前的一个目录里建立一个新的文件类型插件。Unix 上，
+   你可以使用这个文件: >
+	vim ~/.vim/ftplugin/fortran.vim
+<  你可以设置你希望有的选项和映射。注意，全局插件会在其后进行。它可能会否决你
+   做的那些设置。如果发生了，你有以下两种方法。
+
+2. 建立一个插件的备份，并改变之。
+   你需要把该备份放在 'runtimepath' 靠前的位置。Unix 上，你可以这么做: >
+	cp $VIMRUNTIME/ftplugin/fortran.vim ~/.vim/ftplugin/fortran.vim
+<  这样你可以自由的编辑你的备份文件。因为 b:did_ftplugin 会被设置，全局的插件
+   就不会载入自身。这样做的一个缺点是，如果发行的插件版本更新，你需要重新复制
+   并再次进行修改。
+
+3. 在载入全局插件以后否决一些设置。
+   你需要在 'runtimepath' 的尾部建立一个新的文件类型插件。Unix 上，你可以使用
+   这个文件: >
+	vim ~/.vim/after/ftplugin/fortran.vim
+<  在这个文件里，你可以对需要的设置进行改变。
+
+==============================================================================
+3.  缺省文件类型插件的文档				*ftplugin-docs*
+
+
+CHANGELOG						*ft-changelog-plugin*
+
+允许方便的输入 Changlog 文件的 Changelog 段 (entry)。有些命令，映射和变量值得
+探索一下:
+
+选项:
+'comments'		置为空，以免影响排版。
+'textwidth'		设为 78，这是标准。
+'formatoptions'		增加 't' 标志位，使得插入文本时能进行回绕。
+
+命令:
+NewChangelogEntry	智能地增加新的 Changelog 段 (见下)。
+
+局部映射:
+<Leader>o		同样智能地开始一个新的 Changlog 段  (见下)。
+
+全局映射:
+			注意: 全局设置是通过先执行 ftplugin/changelog.vim 文件
+			设置的。例如在你的 |.vimrc| 里加上: >
+				runtime ftplugin/changelog.vim
+<
+<Leader>o		切换到为当前目录打开的 ChangeLog 缓冲区。如果当前目录
+			已存在该文件，在新的缓冲区打开之。然后执行上述局部
+			<Leader>o 的功能。
+
+变量:
+g:changelog_timeformat	已废弃；请用 g:changelog_dateformat 代替。
+g:changelog_dateformat	Changelog 段使用的日期 (和时间) 格式。该格式和
+			|strftime()| 函数使用的语法相同。
+			缺省值是 "%Y-%m-%d"，这是许多 ChangeLog 排版所使用的标
+			准格式。
+g:changelog_username	用户的名字和 email 地址。缺省值从环境变量和系统文件里
+			推得。它先搜索当前用户 /etc/passwd 的注释部分。非正式
+			地，该项在第一个分隔的逗号之前的部分包含了用户的实际名
+			字。然后它再检查 $NAME 环境变量，最后运行 `whoami' 和
+			`hostname' 来构造一个 email 地址。最终形式是 >
+				Full Name  <user@host>
+<
+g:changelog_new_date_format
+			建立新的日期项目时所用的格式。下表描述字符串中的特殊记
+			号:
+				%%	插入单个 '%' 号
+				%d	插入上述的日期
+				%u	插入上述的用户
+				%c	完成时光标的位置
+			缺省值是 "%d  %u\n\n\t* %c\n\n"，它会产生如下的结果
+			 (| 是光标键要到的位置，除非出现在行首。那里它就是意味
+			着一行的开始) >
+				|2003-01-14  Full Name  <user@host>
+				|
+				|        * |
+<
+g:changelog_new_entry_format
+			建立新段所用的格式。下表描述字符串里的特殊记号:
+				%c	完成时光标的位置
+			缺省值是 "\t*%c"，产生的结果如下 >
+				|        * |
+<
+g:changelog_date_entry_search
+			搜索日期项所用的搜索模式。
+			g:changelog_new_date_format 所使用的特殊记号这里也可以
+			使用。
+			缺省值是 '^\s*%d\_s*%u'，它能找到匹配如下形式的行 >
+				|2003-01-14  Full Name  <user@host>
+<			和一些类似的格式。
+
+g:changelog_date_end_entry_search
+			搜索日期项结尾所用的搜索模式。
+			g:changelog_new_date_format 所使用的特殊记号这里也可以
+			使用。
+			缺省值是 '^\s*$'，它匹配只包含空白或全空的行。
+
+b:changelog_name					*b:changelog_name*
+			寻找的 ChangeLog 文件名。缺省是 'ChangeLog'。
+
+b:changelog_path
+			当前缓冲区使用的 ChangeLog 路径。缺省为空，也就是寻找
+			和当前缓冲区同一目录的名为 |b:changelog_name| 的文件。
+			如果没找到，搜索当前缓冲区的父目录，如此递归直到找到文
+			件或者没有更多的父目录可供搜索。
+
+b:changelog_entry_prefix
+			函数名，用于生成新段的前缀。该函数没有参数，而应返回包
+			含前缀的字符串。
+			可以返回空前缀。
+			缺省生成 ChangeLog 的路径名和当前缓冲区路径名两者的较
+			短者。此变量将来应该可以使用其它变量上下文，例如 g:。
+
+Changelog 段插入时，只需要输入最少量的文本。在确定当前日期和用户后，在该文件里
+会搜索以当前日期和用户开头的一段，如果找到了，则在其后添加一个新项。如果没有，
+则从 Changelog 文件开始处添加新的段和项目 (item)。
+
+
+FORTRAN							*ft-fortran-plugin*
+
+选项:
+'expandtab'	被打开，按照 Fortran 标准的要求，不应出现制表字符。用户在
+		.vimrc 文件里设置 fortran_have_tabs 除外。
+'textwidth'	按照 Fortrean 标准要求， 固定宽度源文件格式设为 72，自由格式的
+		源代码设为 80。
+'formatoptions' 设为能断开代码和注释行，并保留长行。你可以用 |gq| 排版注释。
+更多的关于 fortran_have_tabs 和检测源代码格式的方法的讨论，可见
+|ft-fortran-syntax|。
+
+
+GIT COMMIT                                              *ft-gitcommit-plugin*
+
+提供了一个命令 :DiffGitCached 来在预览窗口中显示当前提交的差异部分。等价于
+"git diff --cached" 加上此命令后面的参数。
+
+
+MAIL							*ft-mail-plugin*
+
+选项:
+'modeline'	被关闭，以防特洛伊木马。也防止含有 "Vim:" 字样的标题会引起错误
+		信息。
+'textwidth'	设为 72。这是 e-mail 推荐的格式。
+'formatoptions' 设为能断开文本行，并且在新行里重复注释的前导符，这样引用开头的
+		">" 就可以重复了。你也可以用 |gq| 排版引用文本。
+
+局部映射:
+<LocalLeader>q   或者  \\MailQuote
+	引用可视模式下的选择文本，或者在普通模式下从光标位置到文件末的文本。这
+	意味着 "> " 会插到每行的开始。
+
+MAN							*ft-man-plugin* *:Man*
+
+较好地显示手册页。另见用户手册中的 |find-manpage|。
+
+要在调入任何手册页之前就能使用 ":Man" 命令，你需要在启动的 vimrc 文件里先执行
+以下脚本: >
+
+	runtime ftplugin/man.vim
+
+选项:
+'iskeyword'	加入 '.' 字符，以便能在手册页名字上使用 CTRL-]。
+
+命令:
+Man {name}	在窗口里显示 {name} 的手册页
+Man {number} {name}
+		在第 {number} 节里显示 {name} 的手册页。
+
+全局映射:
+<Leader>K	显示当前光标下的单词的相应手册页。
+
+局部映射:
+CTRL-]		跳到当前光标下的单词的相应手册页。
+CTRL-T		跳回前一次的手册页。
+
+
+PDF							*ft-pdf-plugin*
+
+提供两个映射， <C-]> 和 <C-T>，来模拟用于 PDF 浏览的标签栈。以下内容视为标签:
+
+- "startxref" 后指向 xref 表的字节位移
+- 文件尾部中 /Prev 键后指向以前 xref 表的字节位移
+- xref 表中形如 "0123456789 00000 n" 的行
+- PDF 任意位置上形如 "1 0 R" 的对象引用
+
+可以关闭这些映射 >
+	:let g:no_pdf_maps = 1
+<
+
+RPM SPEC						*ft-spec-plugin*
+
+因为这个插件的文本相当长，它被单独列出: |pi_spec.txt|。
+
+
+SQL							*ft-sql*
+
+因为这个插件的文本相当长，它被单独列出: |ft_sql.txt|。
+
+
+TEX						*ft-tex-plugin* *g:tex_flavor*
+
+如果 *.tex 文件的首行是如下的形式 >
+	%&<format>
+那么它决定了文件类型:  plaintex (普通的 TeX)、context (ConTeXt)、或者 tex
+(LaTeX)。否则在文件里搜索关键字以判断是 context 还是 tex。如果找不到关键字，缺
+省是 plaintex。可以通过定义变量 g:tex_flavor 改变缺省值为最常用的格式 (不是文
+件类型)。使用下列选择之一: >
+	let g:tex_flavor = "plain"
+	let g:tex_flavor = "context"
+	let g:tex_flavor = "latex"
+目前还不能识别其它格式。
+
+
+ vim:tw=78:ts=8:ft=help:norl:

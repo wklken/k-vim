@@ -1,0 +1,746 @@
+*message.txt*   For Vim version 7.4.  最近更新: 2013年8月
+
+
+		  VIM 参考手册    by Bram Moolenaar
+				译者: Willis, tocer
+				http://vimcdoc.sf.net
+
+
+本文件包含一个 Vim 产生的消息和错误信息按字母排序的列表。如果你不理解消息的含
+义，可以在这里查找。不过，本列表未必完整。
+
+1. 以前的消息		|:messages|
+2. 错误信息		|error-messages|
+3. 消息			|messages|
+
+==============================================================================
+1. 以前的消息			*:messages* *:mes* *message-history*
+
+:messages" 命令可以查看以前给出的消息。根据 'shortmess' 选项的设置，消息可能被
+覆盖或者截断。这时该命令尤其有用。
+
+使用微小 (tiny) 特性集的版本，记住的消息数目固定是 20。其它版本是 200。
+
+								*g<*
+这个命令用于察看前一个命令输出的最后一页。如果你在提示按回车的时候不小心按了空
+格 <Space> 键，那么该命令尤其有用。此时你将回到输入回车的提示画面，并可重新回
+滚。
+注意: 如果在提示显示更多信息时使用 "q" 停止输出，那么只显示已输出的那部分显
+示。当另一个命令输出结果时，会清空前一个命令的输出。
+
+如果使用翻译的消息，显示的第一行会告诉你谁维护这个消息翻译。如果你发现问题，可
+以联系该维护者。
+
+如果你想要查找特定 (错误) 消息，使用消息开始的 ID 号。比如，要得到下面消息的帮
+助: >
+
+	E72: Close error on swap file
+
+或者 (经翻译的): >
+
+	E72: Errore durante chiusura swap file
+
+使用: >
+
+	:help E72
+
+如果你很忙，不按 shift 键也可以: >
+
+	:help e72
+
+==============================================================================
+2. 错误信息					*error-messages* *errors*
+
+显示的错误信息，如果在你没读到之前就已经消失了，你可以这样重新看到: >
+  :echo errmsg
+或者查看最近的消息列表: >
+  :messages
+
+
+消 息 列 表
+			*E222* *E228* *E232* *E256* *E293* *E298* *E304* *E317*
+			*E318* *E356* *E438* *E439* *E440* *E316* *E320* *E322*
+			*E323* *E341* *E473* *E570* *E685*  >
+  Add to read buffer
+  makemap: Illegal mode
+  Cannot create BalloonEval with both message and callback
+  Hangul automata ERROR
+  block was not locked
+  Didn't get block nr {N}?
+  ml_upd_block0(): Didn't get block 0??
+  pointer block id wrong {N}
+  Updated too many blocks?
+  get_varp ERROR
+  u_undo: line numbers wrong
+  undo list corrupt
+  undo line missing
+  ml_get: cannot find line {N}
+  cannot find line {N}
+  line number out of range: {N} past the end
+  line count wrong in block {N}
+  Internal error
+  Internal error: {function}
+  fatal error in cs_manage_matches
+
+内部错误。如果你能够使之重现，请发送漏洞报告。|bugs|
+
+>
+  ATTENTION
+  Found a swap file by the name ...
+
+见 |ATTENTION|。
+
+							*E92*  >
+  Buffer {N} not found
+
+你请求的缓冲区不存在。在你清除了一个缓冲区，而它包含一个位置标记或者有其它途径
+还被引用的时候，也会出现这个错误。			 |:bwipeout|
+
+							*E95*  >
+  Buffer with this name already exists
+
+你不能有两个同名的缓冲区。
+
+							*E72*  >
+  Close error on swap file
+
+用来保存编辑文本的备份的 |swap-file| 不能被正确关闭。大多数情况下这不会有什么
+问题。
+
+							*E169*  >
+  Command too recursive
+
+当 Ex 命令执行了一个 Ex 命令，后者又执行一个 Ex 命令，如此反复的时候，就可能发
+生。最多能有 200 层。这很有可能是无穷循环。可能涉及的命令是 |:execute| 或
+|:source|。
+
+							*E254*  >
+  Cannot allocate color {name}
+
+颜色名 {name} 未知。多数系统中可用的颜色列表可以参见 |gui-colors|。
+
+							*E458*  >
+  Cannot allocate colormap entry, some colors may be incorrect
+
+这意味着 Vim 没有足够的颜色可以分配。虽然 Vim 还能运行，但是有的颜色可能不会以
+指定的颜色出现。试试停止其它使用很多颜色的应用程序，或者在启动 gvim 之后启动它
+们。已知很多浏览器会消耗很多颜色。要避免这个问题，你可以告诉 netscape 使用自己
+的颜色映射表: >
+	netscape -install
+或者告诉它只使用有限种的颜色 (64 应该足够了): >
+	netscape -ncols 64
+这也可以通过 Xdefaults 文件设置: >
+	Netscape*installColormap: Yes
+或者 >
+	Netscape*maxImageColors:  64
+<
+							*E79*  >
+  Cannot expand wildcards
+
+文件名包含特殊的字符组合，Vim 因而试图进行通配符扩展但不成功。这_不_意味着没有
+匹配的文件名，只是说该模式是非法的。
+
+							*E459*  >
+  Cannot go back to previous directory
+
+在扩展文件名的时候，Vim 不能回到最近用过的目录名。所有正在使用的文件名现在都可
+能成为非法！你需要得到当前目录的可执行 (遍历) 权限。
+
+							*E190* *E212*  >
+  Cannot open "{filename}" for writing
+  Can't open file for writing
+
+由于某种原因，你要写入的文件不能建立或者覆盖。这可能是因为你没有目录的写权限，
+或者该文件名不合法。
+
+							*E166*  >
+  Can't open linked file for writing
+
+你试图写入文件，但该文件无法被覆盖，且该文件是链接类型 (硬链接或者符号链接)。
+其实，包含该链接或文件的目录可写的时候并非不可写入。只不过 Vim 不知道你是要删
+除该链接并在同样的位置写入实际文件呢，还是要删除链接到的文件并用新文件覆盖之。
+如果你确实需要用这个名字写入文件，请手动删除这个链接或者文件，或者改变权限，使
+得 Vim 可以对它进行覆盖。
+
+							*E46*  >
+  Cannot change read-only variable "{name}"
+
+你试图给一个函数参数 |a:var| 或者 Vim 的内部只读变量 |v:var| 赋值。
+
+							*E90*  >
+  Cannot unload last buffer
+
+Vim 要求必须有一个载入的缓冲区，不然窗口中就没有东西可以显示了。
+
+							*E40*  >
+  Can't open errorfile <filename>
+
+使用 ":make" 或者 ":grep" 命令时: 不能打开用于保存错误信息或者 grep 的输出结果
+的文件。可能原因如下:
+- 'shellredir' 的值不正确。
+- 外壳改变了目录，使得错误文件写到别的目录里。这可以通过改变 'makeef' 修正，但
+  是 make 命令还是在错误的目录下执行。
+- 'makeef' 的值不正确。
+- 'grepprg' 或者 'makeprg' 不能执行。这一点不一定总能检测到 (尤其在 MS-Windows
+  上)。检查你的 $PATH。
+
+ >
+  Can't open file C:\TEMP\VIoD243.TMP
+
+MS-Windows 上，期待读入外部命令输出的结果但是命令没有正确执行时会显示此信息。
+这可能有多种原因。检查 'shell'、'shellquote'、'shellxquote'、 'shellslash' 和
+相关的选项。这个消息也有可能是由找不到外部命令引起的。但错误信息无法区别。
+
+							*E12*  >
+  Command not allowed from exrc/vimrc in current dir or tag search
+
+因为安全原因，有的命令不允许被执行。这些命令通常来自当前目录的 .exrc 或者
+.vimrc 文件或标签文件。另见 'secure'。
+
+							*E74*  >
+  Command too complex
+
+某个映射产生了太长的命令行字符串。可能是因为一个映射间接的引用了自己。
+
+>
+  CONVERSION ERROR
+
+写入文件时，这个错误消息的出现意味着部分内容在从内部 UTF-8 格式转化到文件本身
+格式的过程中丢失。文件因此不会被标为未修改。如果你关心丢失的信息，把
+'fileencoding' 选项设为别的能够处理缓冲区的字符的值并重新写一次。如果你觉得无
+所谓，直接放弃缓冲区或者复位 'modified' 选项。
+
+							*E302*  >
+  Could not rename swap file
+
+如果文件名改变，Vim 试图对 |swap-file| 也进行换名。如果不成功，那么依然使用旧
+的交换文件。一般情况下这没有什么问题。
+
+							*E43* *E44*  >
+  Damaged match string
+  Corrupted regexp program
+
+Vim 的内部问题并因而产生了一个不合法的正规表达式。如果你知道如何重现，请报告。
+|bugs|
+
+							*E208* *E209* *E210*  >
+  Error writing to "{filename}"
+  Error closing "{filename}"
+  Error reading "{filename}"
+
+如果 Vim 试图给一个文件换名，但是简单的文件名更名不能工作时，会尝试进行文件复
+制，这些错误消息出现在这一步也失败的时候。结果可能是，原始文件和目标文件都存
+在，但是目标文件不完整。
+
+>
+  Vim: Error reading input, exiting...
+
+Vim 在需要输入却不能读入键入的字符时，就会报错。Vim 没法继续，除了退出以外别无
+选择。这可能发生在标准输入和标准错误 (stderr) 都被重定向，而一个自身不会退出
+Vim 的脚本被执行的情况。
+
+							*E47*  >
+  Error while reading errorfile
+
+不能读入错误文件。此消息的发生_不_是因为错误信息不能识别。
+
+							*E80*  >
+  Error while writing
+
+文件的写入不能成功完成，该文件可能不完整。
+
+							*E13* *E189*  >
+  File exists (add ! to override)
+  "{filename}" exists (add ! to override)
+
+系统为了保护你，不让你不小心覆盖已存在文件。如有必要，使用相同的命令但在其后加
+"!"。例如: >
+	:w /tmp/test
+可以改成: >
+	:w! /tmp/test
+<
+							*E768*  >
+  Swap file exists: {filename} (:silent! overrides)
+
+系统能够保护你不去覆盖一个正在被 Vim 编辑的文件。在使用 ":w! filename" 并且发
+现一个交换文件时会出现这种情况。
+- 如果交换文件是由以前某个崩溃的编辑对话留下的，也许你希望删除这个交换文件。编
+  辑 {filename} 来找出关于该交换文件的信息。
+- 如果你希望强行保存，那么在命令前加 ":silent!"。例如: >
+	:silent! w! /tmp/test
+< 之所以需要这个特殊命令，是因为你已经用 ! 来覆盖已经存在的文件了。
+
+							*E139*  >
+  File is loaded in another buffer
+
+你试图写入文件，但是别的缓冲区正在使用你写入的名字。不这么做会导致相同文件的两
+个版本。
+
+							*E142*  >
+  File not written: Writing is disabled by 'write' option
+
+'write' 选项被关闭。这使得所有试图写入文件的命令都会产生这个消息。这可能由
+|-m| 命令行参数引起。你可以用 ":set write" 打开 'write' 选项。
+
+							*E25*  >
+  GUI cannot be used: Not enabled at compile time
+
+你运行的 Vim 版本不支持 GUI 代码。所以 "gvim" 和 ":gui" 都不工作。
+
+							*E49*  >
+  Invalid scroll size
+
+这是由 'scroll'、'scrolljump' 或者 'scrolloff' 选项的值不正确引起的。
+
+							*E17*  >
+  "{filename}" is a directory
+
+你试图写入一个和目录名字相同的文件。这是不可以的。你可能想要附加一个文件名。
+
+							*E19*  >
+  Mark has invalid line number
+
+你使用一个位置标记，但它所指的行号不存在。这可能是因为你使用了指向别的文件的位
+置标记，而别的程序删除了其中的一些行引起的。
+
+							*E219* *E220*  >
+  Missing {.
+  Missing }.
+
+在文件名中使用了 {} 构造，但只有 { 而没有匹配的 } 或者相反。该构造的使用方法
+是: 用 {foo,bar} 匹配 "foo" 和 "bar"。
+
+							*E315*  >
+  ml_get: invalid lnum: {number}
+
+内部错误。如果你知道如何重现该问题，请提交漏洞报告。|bugreport.vim|。
+
+							*E173*  >
+  {number} more files to edit
+
+你试图退出，但是参数列表里的末项还没有被编辑到。这保护你在还有文件要编辑的时候
+意外的退出。见 |argument-list|。如果你坚持想退出，再试一次就行了。
+
+							*E23* *E194*  >
+  No alternate file
+  No alternate file name to substitute for '#'
+
+轮换文件还没有定义。见 |alternate-file|。
+
+							*E32*  >
+  No file name
+
+当前的缓冲区还没有名字。要写入，可用 ":w fname"。或者用 ":file fname" 先给出缓
+冲区的名字。
+
+							*E141*  >
+  No file name for buffer {number}
+
+一个被改变的缓冲区没有文件名。所以不能被写入。你需要先给缓冲区一个文件名: >
+	:buffer {number}
+	:file {filename}
+<
+							*E33*  >
+  No previous substitute regular expression
+
+在 ":substitute" 命令里，模式里使用的 '~' 字符会被替换成上次用到的模式。如果这
+个命令还没用过，就会失败。见 |/~|。如果使用 ":s/pat/%/"，也会发生类似问题，其
+中的 "%" 表示上次的替代字符串。
+
+							*E35*  >
+  No previous regular expression
+
+使用空搜索模式会引用上次用到的模式。如果没有上一次搜索，那么就会失败。
+
+							*E24*  >
+  No such abbreviation
+
+你使用了 ":unabbreviate" 命令，但是所带的参数不是一个已有的缩写。这个命令的各
+种变形 ":cunabbrev"、":iunabbrev" 等都会给出相同的消息。检查一下尾部的空白。
+
+>
+  /dev/dsp: No such file or directory
+
+只有在带 Gnome 支持的 GTK GUI 才会给出。Gnome 试图使用音频设备但是它不存在。你
+可以忽略这个错误。
+
+							*E31*  >
+  No such mapping
+
+你使用了 ":unmap" 命令，但是所带的参数不是已有的映射。这个命令的各种变形
+":cunmap"、":unmap!" 等都会给出相同的消息。一些提示:
+- 检查一下尾部的空白。
+- 如果是局部于缓冲区的映射，需要使用 ":unmap <buffer>"。
+  |:map-<buffer>|
+
+							*E37* *E89*  >
+  No write since last change (add ! to override)
+  No write since last change for buffer {N} (add ! to override)
+
+你试图放弃 |abandon| 一个有过改动的文件。Vim 不让你这么做，以免丢失你的工作。
+你可以把改动的部分用 ":w" 写回，如果你坚持要放弃而不介意并丢失所有的改变，可以
+在使用的命令之后加上 '!' 字符。例如: >
+	:e other_file
+可以改为: >
+	:e! other_file
+<
+							*E162*  >
+  No write since last change for buffer "{name}"
+
+如果你退出 Vim 时有的缓冲区已经被改变了就会发生这个错误。你或者可以写入改动过
+的缓冲区 (用 |:w|)，或者可以用一个强迫放弃缓冲区的命令，比如，":qa!"。要小心，
+不要丢掉你想保留的改变。有些缓冲区可能已经被忘记了，尤其是置位了 'hidden' 的时
+候。
+
+>
+  [No write since last change]
+
+如果你执行 Shell 命令时至少一个缓冲区被改变了，就会发生这个错误。要不想显示这
+个信息，可以复位 'warn' 选项。
+
+							*E38*  >
+  Null argument
+
+Vim 内部出错，产生一个 NULL 指针。如果你知道如何重现，请报告。|bugs|
+
+							*E172*  >
+  Only one file name allowed
+
+":edit" 命令只支持一个文件名。如果你需要指定多个，可用 ":next" |:next|。
+
+						*E41* *E82* *E83* *E342*  >
+  Out of memory!
+  Out of memory!  (allocating {number} bytes)
+  Cannot allocate any buffer, exiting...
+  Cannot allocate buffer, using other one...
+
+噢，噢。你可能作了一些特别复杂的操作，或者有其它程序正在占用你的内存。小心！
+Vim 没有完全准备好内存溢出的情况。首先确保所有的改变被保存。然后试图解决内存的
+短缺问题。要确保安全无虞，先退出 Vim，再重新开始。
+
+缓冲区只是部分保存在内存里，所以编辑一个很大的文件不太可能导致内存溢出错误。撤
+销信息则是完全保存在内存里，可以用以下选项减少内存的占用:
+- 'undolevels'  设为较小的值，或 -1 以完全关闭之。对影响所有行的改变这会很有帮
+  助。
+- 'undoreload' 设为零以关闭之。
+
+另见 |msdos-limitations|。
+
+							*E339*  >
+  Pattern too long
+
+这发生在 16 位整数的系统上: 编译的正规表达式模式超过了 65000 个字节。试试短一
+些的模式。
+这也可能发生在某个规则的偏移量超出了可用的空间。试试对模式进行简化。
+
+							*E45*  >
+  'readonly' option is set (add ! to override)
+
+你试图写入一个标为只读的文件。如果要坚持这么做，或者复位 'readonly' 选项，或者
+在你用的命令后面增加 '!' 字符。例如: >
+	:w
+可以改为: >
+	:w!
+<
+							*E294* *E295* *E301*  >
+  Read error in swap file
+  Seek error in swap file read
+  Oops, lost the swap file!!!
+
+Vim 试图从 |swap-file| 里读取文本时出了问题。相关缓冲区的文本现在可能已经没法
+用了！在写入缓冲区之前仔细检查。你可以先写到别的文件上，然后比较两者的差异。
+
+							*E192*  >
+  Recursive use of :normal too deep
+
+你在使用 ":normal" 命令，而它的参数又递归使用 ":normal" 命令。'maxmapdepth' 限
+制最高的递归层数。下例显示如何得到这个消息: >
+	:map gq :normal gq<CR>
+如果你输入 "gq"，就会执行这个映射，它又会再次调用 "gq"。
+
+							*E22*  >
+  Scripts nested too deep
+
+脚本可以通过 "-s" 命令行参数或者 ":source" 命令读取。脚本又可以读取别的脚本。
+这可以继续大概 14 层。如果需要更多的嵌套，Vim 假设其中出现了递归的循环，所以用
+此错误信息停止。
+
+							*E319*  >
+  Sorry, the command is not available in this version
+
+你使用了目前使用的 Vim 版本不存在的命令。在编译 Vim 的时候，许多不同的特性可以
+打开或者关闭。这取决于编译时选择要多大的 Vim，还有具体操作系统。能用的特性可见
+|+feature-list|。|:version| 命令显示 Vim 编译时所带的特性。
+
+							*E300*  >
+  Swap file already exists (symlink attack?)
+
+当 Vim 试图打开交换文件并发现它已经存在，而且是一个符号链接时，显示该错误。这
+不应该发生，因为 Vim 已经检查过该文件不存在。除非别人同时打开了相同的文件 (非
+常不太可能) 或者有人试图一个符号链接攻击 (如果编辑 /tmp 下的文件或者
+'directory' 以 "/tmp" 开始时可能发生。这是一个坏的选择)。
+
+							*E432*  >
+  Tags file not sorted: {file name}
+
+Vim (和 Vi) 期待标签文件以 ASCII 顺序排序。然后可以使用二分法搜索，这比线性查
+找快很多。如果你的标签文件没有适当的排序，复位 |'tagbsearch'| 选项。
+这个消息只有在 Vim 在搜索标签时发生问题的时候才会给出。有的时候即使标签文件没
+有适当排序，这个消息也不会给出。
+
+							*E460*  >
+  The resource fork would be lost (add ! to override)
+
+在 Macintosh (classic) 上，在写入文件时，Vim 试图保留文件的所有信息，包括它的
+资源派生。如果这做不到，你就会得到这个错误信息。在命令之后附加 "!" 强迫写入
+(但丢失了该项信息)。
+
+							*E424*  >
+  Too many different highlighting attributes in use
+
+Vim 只能处理 223 种不同的高亮。如果遇到了这个限制，你一定用了太多的带不同参数
+的 |:highlight| 命令。":highlight link" 不计算在内。
+
+							*E77*  >
+  Too many file names
+
+在扩展文件名的时候，找到了多于一个的匹配。而使用的命令只支持单一匹配的参数。
+
+							*E303*  >
+  Unable to open swap file for "{filename}", recovery impossible
+
+Vim 不能建立交换文件。你可以继续编辑该文件，但如果 Vim 不正常地退出，你所有的
+改变就丢失了。同时，Vim 可能在编辑大文件时消耗大量的内存。要避免这个错误，你可
+能想改变 'directory' 选项。见 |swap-file|。
+
+							*E140*  >
+  Use ! to write partial buffer
+
+将区域对应缓冲区的部分内容写到一个已有的文件是不常见的。这可能是个错误 (比如，
+如果在可视模式下使用 ":w" 的时候)，所以 Vim 需要在命令后使用 !，比如:
+":3,10w!"。
+>
+
+  Warning: Cannot convert string "<Key>Escape,_Key_Cancel" to type
+  VirtualBinding
+
+启动时的时候可能出现这样的错误。这不是 Vim 的问题，而是你的 X11 配置有问题。你
+可以在这里看到如何解决这个问题的提示:
+http://groups.yahoo.com/group/solarisonintel/message/12179。
+[此 URL 已不可用]
+
+							*W10*  >
+  Warning: Changing a readonly file
+
+文件是只读的，而你坚持要修改它。你可以用 |FileChangedRO| 自动命令事件来避免这
+个消息 (该自动命令必须复位 'readonly' 选项)。'modifiable' 可以完全禁止修改文
+件。
+只有 'readonly' 置位后第一次作改变时，才显示这条消息。
+
+							*W13*  >
+  Warning: File "{filename}" has been created after editing started
+
+你在 Vim 里开始编辑文件时它并不存在，但是现在存在了。你可以决定保留 Vim 的版本
+还是新建的文件。这个消息在 'buftype' 非空的时候不会给出。
+
+							*W11*  >
+  Warning: File "{filename}" has changed since editing started
+
+你已经开始编辑的文件现在有了别的时间戳 (修改时间)，而且内容也发生了改变 (更精
+确地说，使用当前选项设置和自动命令重新读入文件会给你不同的文本)。这可能是因为
+别的程序修改了文件。你需要自己研究发生了什么事，并决定保留哪个版本的内容。如果
+你想自动处理，参见 'autoread' 选项。如果 'buftype' 不为空，该消息不会给出。
+
+有一种情况即使没发生任何错误也会得到这个消息: 在 Windows 上，你在夏令时开始的
+那天保存一个文件。有几种方法可以修正之:
+- 在你的 autoexec.bat 增加这行: >
+	   SET TZ=-1
+< 根据你的时区调整 "-1" 为其它值。
+- 关闭 "根据夏令时时间自动调整时钟"。
+- 第二天再次写入文件。或者把时钟设为第二天，写入文件两次，再把时钟调回来。
+
+							*W12*  >
+  Warning: File "{filename}" has changed and the buffer was changed in Vim as well
+
+和上面类似，而这个 Vim 里这个文件的缓冲区也改变了。你必须决定要保留这个 Vim 的
+版本还是磁盘上的。这个消息在 'buftype' 非空时不会给出。
+
+							*W16*  >
+  Warning: Mode of file "{filename}" has changed since editing started
+
+缓冲区的时间戳发生了改变时，内容保持不变但是模式 (许可权限) 发生了改变。这通常
+是从版本控制系统里取出文件而复位了只读位引起的。重读文件应该是安全的选择。置位
+'autoread' 可以自动重读文件。
+
+							*E211*  >
+  File "{filename}" no longer available
+
+你已经开始编辑的文件现在不再存在或不能访问。确定你把缓冲区写到某处，以免丢失改
+动。如果 'buftype' 非空，该消息不会给出。
+
+							*W14*  >
+  Warning: List of file names overflow
+
+你一定用了太多的缓冲区了。可能两个缓冲区使用相同的号码，这会引起问题。你可能要
+退出 Vim 并重启。
+
+							*E296* *E297*  >
+  Seek error in swap file write
+  Write error in swap file
+
+这通常是因为磁盘空间满引起的。Vim 不能把文本写入 |swap-file| 。它本身并无害，
+但如果 Vim 意外退出，有些文本可能丢失，而无法恢复。如果这个问题持续存在，Vim
+可能会内存溢出。
+
+						*connection-refused*  >
+  Xlib: connection to "<machine-name:0.0" refused by server
+
+当 Vim 试图连接到 X 服务器，但是 X 服务器不允许连接的时候，就会发生这个错误。
+只有建立 X 服务器的连接才能恢复标题和得到 xterm 的剪贴板的支持。不幸的是，这
+个错误信息无法避免，除非关闭 |+xterm_clipboard| 和 |+X11| 特性。
+
+							*E10*  >
+  \\ should be followed by /, ? or &
+
+命令行以反斜杠开始，或者命令的范围包含了在错误位置出现的反斜杠。通常，这是因为
+命令行的续行功能被关闭了。从 'cpoptions' 选项里去掉 'C' 标志位就可以打开这一功
+能。使用 ":set nocp" 也可。
+
+							*E471*  >
+  Argument required
+
+这是由 Ex 命令执行时需要的参数没有提供引起的。
+
+							*E474* *E475*  >
+  Invalid argument: {arg}
+
+执行 Ex 命令时使用了非法的参数。
+
+							*E488*  >
+  Trailing characters
+
+在不允许有参数的 Ex 命令后带了参数。
+
+							*E477* *E478*  >
+  No ! allowed
+  Don't panic!
+
+给不支持带 ! 后缀的 Ex 命令加了 "!" 命令。
+
+							*E481*  >
+  No range allowed
+
+在不支持范围参数的 Ex 命令前加了范围。见 |cmdline-ranges|。
+
+							*E482* *E483*  >
+  Can't create file {filename}
+  Can't get temp file name
+
+Vim 不能建立临时文件。
+
+							*E484* *E485*  >
+  Can't open file {filename}
+  Can't read file {filename}
+
+Vim 不能读临时文件。特别是在 Windows 上，这可能由错误转义 cmd.exe 的中特殊字符
+引起。 7.3.443 补丁对转义的方法有所改变。对 |system()| 的所有外壳参数应有
+|shellescape()| 进行转义，或直接用 ^ 转义。另见 'shellxquote' 和
+'shellxescape'。
+
+							*E464*  >
+  Ambiguous use of user-defined command
+
+有两个用户定义的命令，它们有相同的前缀，而你用命令行补全来执行其中的一个。
+|user-cmd-ambiguous|
+示例: >
+	:command MyCommand1 echo "one"
+	:command MyCommand2 echo "two"
+	:MyCommand
+<
+							*E492*  >
+  Not an editor command
+
+你试图执行一个既不是 Ex 命令也不是用户定义的命令。
+
+==============================================================================
+3. 消息							*messages*
+
+这是一个 (不完全) Vim 给出的各种消息的总览:
+
+			*hit-enter* *press-enter* *hit-return*
+			*press-return* *hit-enter-prompt*
+
+  Press ENTER or type command to continue
+
+如果屏幕上有东西要你阅读，而屏幕即将刷新的时候，就会给出该消息:
+- 执行完外部命令以后 (例如，":!ls" 和 "=")。
+- 状态行显示的内容超过了窗口的宽度或者跨越到 'showcwd' 或者 'ruler' 的输出位
+  置。
+
+-> 按 <Enter> 或者 <Space> 可以重画屏幕并继续，除此以外就像该键没按过一样。
+-> 按 ":" 或者其它普通模式的命令字符开始执行该命令。
+-> 按 'k'、<Up>、'u'、'b' 或 'g' 可以使消息回滚。这和 |more-prompt| 中的工作方
+   式一样。只有关闭 'compatible' 并且打开 'more' 时才有效。
+-> 消息的滚动离开屏幕的顶部时，按 'j'、'f'、'd' 或 <Down> 没有效果，
+   'compatible' 关闭且 'more' 打开。这是为了避免按 'j' 或 'f' 太多而使得消息完
+   全消失。
+-> 按 <C-Y> 复制 (抽出) 一个无模式的选择到剪贴板寄存器中。
+-> 使用菜单。应用命令行模式定义的字符。
+-> 如果 'mouse' 包含 'r' 标志位，按鼠标左键和按 <Space> 效果相同。不过这使得选
+   择文本成为不可能。
+-> GUI 模式上，在末行按鼠标左键和按 <Space> 效果相同。
+{Vi: 只有 ":" 命令得到处理}
+
+如果你不小心按了 <Enter> 或 <Space>，而你还想看显示的消息，可以使用 |g<|。这个
+命令只有 'more' 置位时才有效。
+
+要减少 hit-enter 提示的次数:
+- 把 'cmdheight' 设为 2 或者更高。
+- 在 'shortmess' 里增加标志位。
+- 复位 'showcmd' 和/或 'ruler'。
+
+如果脚本导致出现按回车的提示而你不明所以，|v:scrollstart| 变量可能很有用。
+
+另见 'mouse'。hit-enter 消息使用 |hl-Question| 高亮组。
+
+
+						*more-prompt* *pager*  >
+  -- More --
+  -- More -- SPACE/d/j: screen/page/line down, b/u/k: up, q: quit
+
+如果屏幕被消息全部占据，本消息就可能出现。只有在 'more' 选项打开的时候它才会出
+现。它的显示使用 |hl-MoreMsg| 高亮组。
+
+输入					效果 ~
+     <CR> 或 <NL> 或 j 或 <Down>	下一行
+     d					下一页 (半屏)
+     <Space> 或 f 或 <PageDown>		下一屏
+     G					一直往下，直到出现按回车的提示
+
+     <BS> 或 k 或 <Up>			往回一行 (*)
+     u					往上一页 (半屏) (*)
+     b 或 <PageUp>			上一屏 (*)
+     g					回到开始处 (*)
+
+     q、<Esc> 或 CTRL-C			终止列表
+     :					终止列表并进入命令行
+    <C-Y>				抽出 (复制) 无模式的选择
+					|modeless-selection| 到剪贴板
+					("* 和 "+ 寄存器)
+    {menu-entry}			命令行模式里定义的菜单项。
+    <LeftMouse> (**)			下页
+
+所有其它的键保留它们本来的含义。
+
+(*)  反向滚动在 {Vi 中无此功能}。只回滚到消息开始滚动时的位置。
+(**) 鼠标左键的点击只有在以下情况下才生效:
+     - GUI: 屏幕的最后一行。
+     - 'mouse' 里定义了 'r' (不过这时文本选择不会工作)。
+
+
+注意: 键的输入是直接从终端取得的。它不通过映射，预输入也被忽略。
+
+|g<| 命令用于查看前一个命令输出的最后一页。如果在提示按回车的时候不小心按了空
+格 <Space> 键，那么该命令尤其有用。
+
+ vim:tw=78:ts=8:ft=help:norl:
