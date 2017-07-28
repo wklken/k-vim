@@ -1,0 +1,885 @@
+*gui.txt*       For Vim version 7.4.  最近更新: 2013年8月
+
+
+		  VIM 参考手册    by Bram Moolenaar
+				译者: Willis
+				http://vimcdoc.sf.net
+
+
+Vim 的图形用户界面					*gui* *GUI*
+
+1. 启动 GUI			|gui-start|
+2. 滚动条			|gui-scrollbars|
+3. 鼠标控制			|gui-mouse|
+4. 使用 GUI 进行选择		|gui-selections|
+5. 菜单				|menus|
+6. 附加				|gui-extras|
+7. 外壳命令			|gui-shell|
+
+其它的 GUI 文档:
+|gui_x11.txt|	关于 X11 GUI 的特定内容。
+|gui_w32.txt|	关于 Win32 GUI 的特定内容。
+
+{Vi 没有这里的任何命令}
+
+==============================================================================
+1. 启动 GUI					*gui-start* *E229* *E233*
+
+首先，需要确定你确实有包含 GUI 代码的 Vim 版本。你可以用 ":version" 命令检查这
+一点。它应该输出 "with xxx GUI"，而 "xxx" 是 X11-Motif、X11-Athena、Photon、
+GTK、GTK2 等，或者 "MS-Windows 32 bit GUI version"。
+
+如何启动 GUI 决定于你的系统。多数情况下，你可以这样启动 Vim 的 GUI 版本:
+    gvim [options] [files...]
+
+GUI 和非 GUI 版本在 Vim 的 X11 版本上都可以运行。见 |gui-x11-start|。
+
+			*gui-init* *gvimrc* *.gvimrc* *_gvimrc* *$MYGVIMRC*
+gvimrc 文件是 GUI 专用的启动命令应该放置的地方。它总在 |vimrc| 文件之后执行。
+如果你有这样的文件，$MYGVIMRC 环境变量保存它的名字。
+
+当 GUI 开始时，开展以下初始化操作 (按照给出的顺序):
+- 'term' 选项设为 "builtin_gui"，复位终端选项到其 GUI 的缺省值
+  |terminal-options|。
+- 如果存在系统菜单文件，执行之。该文件名通常是 "$VIMRUNTIME/menu.vim"。你需要
+  用 ":version" 检查这一点。另见 |$VIMRUNTIME|。要跳过菜单载入，在
+  'guioptions' 里加入 'M'。		*buffers-menu* *no_buffers_menu*
+  系统菜单文件包含 "Buffers" 菜单。如果你不需要，在你的 .vimrc (不是
+  .gvimrc！) 里，设置 "no_buffers_menu" 变量: >
+	:let no_buffers_menu = 1
+< 注意: 切换语法高亮也会载入菜单文件，因此屏蔽 Buffers 菜单必须在 ":syntax on"
+  之前。
+  路径名被截短到 35 个字符。你可以截短到不同的长度，例如 50:
+	:let bmenu_max_pathlen = 50
+- 如果启动 Vim 时 使用 "-U {gvimrc}" 命令行选项，初始化过程会读入 {gvimrc} 文
+  件。以下的步骤被跳过。如果 {gvimrc} 为 "NONE"，初始化过程不读入任何文件。
+- 对 Unix 和 MS-Windows 而言，如果系统 gvimrc 存在，执行之。该文件的名字通常是
+  "$VIM/gvimrc"。你可以用 ":version" 检查这一点。另见 |$VIM|。
+- 尝试以下步骤，只使用第一个可用的:
+  - 如果 GVIMINIT 环境变量存在而且非空，把它作为 Ex 命令执行之。
+  - 如果用户 gvimrc 文件存在，执行之。该文件的名字通常是 "$HOME/.gvimrc"。用
+    ":version" 检查之。
+  - 对 Win32 而言，如果没设置 $HOME，使用 "$VIM\_gvimrc"。
+  - 如果 "_gvimrc" 文件没找到，尝试 ".gvimrc"。反之亦然。
+  第一个找到的文件名保存在 $MYGVIMRC 里，除非后者已经被设置。
+- 如果置位 'exrc' 选项 (缺省_并非_如此)，执行文件 ./.gvimrc。如果该文件不属于
+  你，有一些安全的限制。如果 ".gvimrc" 找不到，尝试 "_gvimrc"。Macintosh 和
+  DOS/Win32 环境下先尝试 "_gvimrc"。
+
+注意: 如果 Vim 启动时使用 "-u NONE" 而且没有给出 "-U" 参数，或者使用 "-U
+NONE"，则除了第一步以外，都不执行。
+
+这些步骤都在普通 Vim 初始化之_后_执行，比如读取 .vimrc 文件。见
+|initialization|。
+GUI 窗口只在全部的初始化执行完毕后才会打开。如果你希望在打开 GUI 窗口后执行某
+些命令，使用 |GUIEnter| 自动事件。例如: >
+	:autocmd GUIEnter * winpos 100 50
+
+你可以使用 gvimrc 文件设置你自己定制的菜单 (见 |:menu|)，并初始化其它你希望和
+终端版本不同的设置。
+
+建议你把自己的 GUI 初始化部分放在:
+	Unix		    $HOME/.gvimrc 或 $HOME/.vim/gvimrc
+	OS/2		    $HOME/.gvimrc、$HOME/vimfiles/gvimrc 或
+			    $VIM/.gvimrc
+	MS-DOS 和 Win32     $HOME/_gvimrc、$HOME/vimfiles/gvimrc 或
+			    $VIM/_gvimrc
+	Amiga		    s:.gvimrc、home:.gvimrc、home:vimfiles:gvimrc 或
+			    $VIM/.gvimrc
+
+按上述的顺序依次查找个人化的初始文件，只读入第一个找到的文件。
+
+若干选项只有在 GUI 版本的 Vim 里才有意义。它们是 'guicursor'、'guifont'、
+'guipty' 和 'guioptions'。和其它选项一样，他们的文档在 |options.txt|。
+
+如果使用 Motif 或者 Athena 版本的 GUI (不适用于 GTK+ 或 Win32 版本)，可以使用
+一些 X 资源。见 |gui-resources|。
+
+另外一个在不同场合下设置颜色的方法是使用高亮组。"Normal" 组用来设置背景和前景
+色。示例 (看上去很悦目): >
+
+	:highlight Normal guibg=grey90
+
+"guibg" 和 "guifg" 设置覆盖正常的背景和前景设置。其它 Normal 高亮组的设置都没
+有用到。使用 "guifont" 选项设置字体。
+
+要设置光标在不同模式下的颜色，也请查看 'guicursor' 选项。
+
+Vim 试图在启动时使窗口在屏幕上的大小合适，以免部分内容不可见。在 X 窗口系统
+下，这需要一些猜测。使用 'guiheadroom' 选项，你可以改变窗口标题和任务栏的高
+度。
+
+						*:winp* *:winpos* *E188*
+:winp[os]
+		显示 GUI vim 窗口以像素计的当前左上角位置。并非在所有系统上都
+		可以。
+
+:winp[os] {X} {Y}							*E466*
+		把 GUI vim 窗口放在给定 {X} 和 {Y} 坐标。坐标应指定以像素计的
+		窗口左上角的位置。并非在所有系统上都可以。
+		可以在 (新版的) xterm 里使用 |xterm-color|。
+		如果 GUI 窗口还没有打开，坐标值被记住，直到窗口打开为止。该位
+		置会被调整，使得窗口在屏幕上大小合适 (如果可能)。
+
+						    *:win* *:winsize* *E465*
+:win[size] {width} {height}
+		设置窗口高度为 {width} 宽 {height} 高，以字符计。
+		已废弃，应使用 ":set lines=11 columns=22"。
+		如果你得到比期待中少的行数，检查 'guiheadroom' 选项。
+
+如果你运行 X 窗口系统，你可以这样得到关于 Vim 运行所在的窗口的信息: >
+	:!xwininfo -id $WINDOWID
+<
+							*gui-IME* *iBus*
+在 X 里依赖于 XIM 框架输入国际字符的输入法，尤其是 iBus，已知会给 gVim 带来一
+些不良效果。包括不能输入空格，输入字符间有长时间的延迟，或者输入的字符不能为
+应用所识别等。
+
+一个可行的解决方法，虽然不知什么原因，是启动时用 |-f| 参数，不让 gvim 进入后台
+执行。
+
+==============================================================================
+2. 滚动条						*gui-scrollbars*
+
+系统有若干垂直滚动条和一个水平滚动条。你可以用 'guioptions' 选项设置会出现哪一
+个。
+
+界面看起来是这样 (使用 ":set guioptions=mlrb" 的情形下):
+
+		       +------------------------------+ `
+		       | File  Edit		 Help | <- 菜单栏 (m) `
+		       +-+--------------------------+-+ `
+		       |^|			    |^| `
+		       |#| 文本区域		    |#| `
+		       | |			    | | `
+		       |v|__________________________|v| `
+ Vim 窗口间的       -> |-+ File.c	       5,2  +-| `
+ 普通状态行            |^|""""""""""""""""""""""""""|^| `
+		       | |			    | | `
+		       | | 另一个文件缓冲区。       | | `
+		       | |			    | | `
+		       |#|			    |#| `
+ 左滚动条 (l)       -> |#|			    |#| <- 右滚动条  (r) `
+		       |#|			    |#| `
+		       | |			    | | `
+		       |v|			    |v| `
+		       +-+--------------------------+-+ `
+		       | |< ####		   >| | <- 底部滚动条  (b) `
+		       +-+--------------------------+-+ `
+
+任何滚动条或者菜单都可以关闭，只要在 'guioptions' 字符串里没有相应的字母就行
+了。底部滚动条只有在置位 'nowrap' 时才有用。
+
+
+垂 直 滚 动 条						*gui-vert-scroll*
+
+每个 Vim 窗口都有紧挨着的滚动条，可以上下滚动来实现缓冲区内文本的位置移动。滚
+动条拇指 (thumb) 指示缓冲区可见的部分。如果滚动条被一直往下拖动，最后文件的末
+行会出现在窗口的顶部。
+
+如果窗口被缩小到零高度 (因为另一个窗口的增大)，其滚动条消失。在窗口恢复时才重
+新出现。
+
+如果窗口被垂直分割，该窗口会在成为当前窗口时得到滚动条。想象当前窗口的正中间有
+一条贯穿窗口的垂直线。如果两边都有滚动条，而当前窗口的中间线属于左半边，那么
+右面的滚动条列包含当前窗口右边各窗口的滚动条。另外一侧也是如此。
+
+水 平 滚 动 条						*gui-horiz-scroll*
+
+水平滚动条 (出现在 Vim GUI 的底部) 可以在 'wrap' 选项关闭时用来水平滚动文本。
+滚动条拇指的大小设置会使得最长可见行的文本可以最大限度的左右滚动。光标在有必要
+时才会移动，使得它总保持在一个可视的字符上 (除非置位了 'virtualedit')。
+
+计算最长可见行的长度需要若干计算，而且每次有改变的时候对需要进行。如果这需要太
+多时间，或者你不希望光标跳到别的行上，在 'guioptions' 里包含 'h' 标志位。这
+样，滚动限于当前光标所在文本行上。
+
+							*athena-intellimouse*
+如果你有 Intellimouse 鼠标并且 X 服务器支持滚轮，那你就可以用滚轮在 gvim 里上
+下滚动文本。XFree86 4.0 和以后的版本都没有问题，一些老的版本里你需要加上补丁。
+见 |scroll-mouse-wheel|。
+
+对较老的 XFree86 版本你需要给 X 服务器打上补丁。以下页面有关于 Linux 上使用
+Intellimouse 的一点信息，还有补丁和 X 服务器可执行文件的链接 (后者也许不一定有
+你需要的):
+    http://www.inria.fr/koala/colas/mouse-wheel-scroll/
+
+==============================================================================
+3. 鼠标控制						*gui-mouse*
+
+鼠标只有在 'mouse' 选项设置合适的标志位时才会工作。如果打开了 GUI 的时候还没有
+设置 'mouse'，'mouse' 选项会自动设为 "a"，使得它除了在 |hit-enter| 提示以外的
+所有的模式下都能使用。如果你不希望这样，修改 'mouse' 选项的一个好地方是在
+"gvimrc" 文件里。
+
+其它相关的选项:
+'mousefocus'	窗口焦点随鼠标指针改变 |gui-mouse-focus|
+'mousemodel'	哪个鼠标按钮执行什么动作
+'mousehide'	输入文本时隐藏鼠标指针
+'selectmode'	开始选择模式还是可视模式
+
+一个设置这些选项的快速方法是使用 ":behave" 命令。
+							*:behave* *:be*
+:be[have] {model}	设置鼠标和选择的行为。可接受的参数是:
+			   mswin	MS-Windows 行为
+			   xterm	Xterm 行为
+
+			":behave" 的使用改变了以下选项:
+			选项		mswin			xterm	~
+			'selectmode'	"mouse,key"		""
+			'mousemodel'	"popup"			"extend"
+			'keymodel'	"startsel,stopsel"	""
+			'selection'	"exclusive"		"inclusive"
+
+在 $VIMRUNTIME 目录下，有一个脚本叫 |mswin.vim|。它会定义一些 MS-Windows 的剪
+切/复制/粘贴的键盘映射，但这是_不_兼容的，因为它使用了 CTRL-V、 CTRL-X 和
+CTRL-C 键。不过如果你不在意，使用这个命令: >
+	:so $VIMRUNTIME/mswin.vim
+
+关于使用鼠标滚轮进行滚动的部分，见 |scroll-mouse-wheel|。
+
+
+3.1 使用鼠标移动光标					*gui-mouse-move*
+
+在文本缓冲区某处点击鼠标左键，就会移动光标到那里！
+在此模式下工作	    当 'mouse' 包含...时 ~
+普通模式	    'n' 或 'a'
+可视模式	    'v' 或 'a'
+插入模式	    'i' 或 'a'
+
+选择模式和可视模式一样处理。
+
+你可以和操作符一起使用这个功能，比如 'd' 删除从当前光标位置到你用鼠标指向的位
+置。即，按 'd'，然后在某处点击鼠标。
+
+							*gui-mouse-focus*
+可以置位 'mousefocus' 选项使得键盘焦点随着鼠标指针转移。这意味着，鼠标在哪个窗
+口，哪个窗口就被激活。警告: 使用菜单的时候，这并不完善，因为菜单命令总是针对最
+顶上的窗口。
+
+如果你在 ':' 行上 (或者 '/' 或 '?')，那么点击鼠标左键或右键只会把光标定位在
+':' 行上 (如果 'mouse' 包含 'c'、'a' 或 'A' 的话)。
+
+任何情况下，点击鼠标中键可以用来粘贴当前的选择内容。
+
+
+3.2 使用鼠标进行选择					*gui-mouse-select*
+
+鼠标可以用来开始选择。怎样开始决定于 'mousemodel' 选项:
+'mousemodel' 是 "extend": 使用鼠标右键
+'mousemodel' 是 "popup":  使用鼠标左键，按住 Shift 键。
+
+如果还没有开始选择，那么选择范围从以前的光标位置开始，到鼠标所点击的位置。如果
+已经有选择，那么离鼠标最近的那端会被扩展。
+
+如果 'selectmode' 包含 "mouse"，那么选择区处于选择模式。这意味着输入正常的文本
+会替代选择内容。见 |Select-mode|。不然，选择区处于可视模式。
+
+双击可以选择单词，三击可以选择行，四击可以选择矩形块。
+
+关于如何使用选择区，见 |gui-selections|。
+
+
+3.3 另一种鼠标的文本选择				*gui-mouse-modeless*
+							*modeless-selection*
+以下情形使用另一种选择:
+- 在命令行模式下
+- 在命令行窗口中，指针在另外一个窗口
+- 在 |hit-enter| 提示时
+- 当前模式不在 'mouse' 选项里
+- 在 GUI 模式里，按住 CTRL 和 SHIFT 键
+因为 Vim 就像没有选择区那样继续，而且没有和选择区相关联的模式，这种选择称为无
+模式的选择。可以选择任何在 Vim 窗口里的文本。在文本开始的地方鼠标左键，拖到尾
+部再释放。要扩展选择，在 'mousemodel' 为 "extend" 的时候，使用鼠标右键；在
+'mousemodel' 为 "popup" 的时候，使用鼠标左键并按住 Shift 键。
+
+选择区在选择文本滚动或者改变时被撤销。
+
+在命令行上 CTRL-Y 可以用来复制选择区到剪贴板里。在插入模式下，可以使用
+CTRL-O : CTRL-Y <CR>。如果 'guioptions' 包含 a 或 A (X11 上的缺省值)，选择被自
+动复制到 "* 寄存器里。
+
+这时用鼠标中键就可以粘贴文本。非 X11 系统上，可以使用 CTRL-R +。
+
+
+3.4 在状态行上使用鼠标					*gui-mouse-status*
+
+在 Vim 窗口下方的状态行上点击鼠标左键或者右键使得该窗口成为当前窗口。实际上，
+这发生在鼠标释放的时候 (以区别拖动时的点击操作)。
+
+使用鼠标左键，状态行可以上下拖动，从而调整上下窗口的大小。这样并不改变窗口焦
+点。
+
+这同样适用于垂直分割线: 点击把焦点给左侧的窗口，左右拖动使得两侧窗口更宽和更
+窄。
+
+
+3.5 各种鼠标点击					*gui-mouse-various*
+
+    <S-LeftMouse>	正向搜索鼠标点击所在的单词。
+			当 'mousemodel' 为 "popup" 时，该操作开始或者扩展选择
+			区。
+    <S-RightMouse>	反向搜索鼠标点击所在的单词。
+    <C-LeftMouse>	跳转到鼠标点击所在的标签上。
+    <C-RightMouse>	跳回上次标签跳转之前的位置 (等同于 "CTRL-T")
+
+
+3.6 鼠标映射						*gui-mouse-mapping*
+
+鼠标事件，包括各种修饰符，可以被映射。例如: >
+   :map <S-LeftMouse>     <RightMouse>
+   :map <S-LeftDrag>      <RightDrag>
+   :map <S-LeftRelease>   <RightRelease>
+   :map <2-S-LeftMouse>   <2-RightMouse>
+   :map <2-S-LeftDrag>    <2-RightDrag>
+   :map <2-S-LeftRelease> <2-RightRelease>
+   :map <3-S-LeftMouse>   <3-RightMouse>
+   :map <3-S-LeftDrag>    <3-RightDrag>
+   :map <3-S-LeftRelease> <3-RightRelease>
+   :map <4-S-LeftMouse>   <4-RightMouse>
+   :map <4-S-LeftDrag>    <4-RightDrag>
+   :map <4-S-LeftRelease> <4-RightRelease>
+这些映射使得选择的使用方式符合和 Motif 应用方式，Shift + 鼠标左键允许扩展可视
+区域，而不是鼠标右键。
+
+带修饰符的鼠标映射不适用于无模式的选择。
+
+
+3.7 拖放							*drag-n-drop*
+
+你可以拖放一个或多个文件到 Vim 窗口里，这样，它们就会被打开，如果执行了
+|:drop| 命令那样。
+
+如果这么做的时候你按住 Shift，Vim 改变到第一个放下的文件所在的目录。如果你按住
+Ctrl，Vim 总会为文件分割出一个新的窗口。不然，只有当前缓冲区被改变的时候才会这
+么做。
+
+你可以在 Vim 里放下目录。这会为该目录启动探索器插件 (假设该插件被打开，不然你
+会得到错误信息)。按住 Shift 这改变到该目录。
+
+如果 Vim 碰巧在编辑命令行，放下文件的名字和目录会插入在光标位置上。这使得你在
+任何 Ex 命令上都可以使用这些名字。特殊字符 (空格、制表、双引号、'|'、非
+MS-Windows 系统上的反斜杠) 会被转义。
+
+==============================================================================
+4. 使用 GUI 进行选择					*gui-selections*
+
+							*quotestar*
+你可以用鼠标进行选择 (见 |gui-mouse-select|)，或者使用 Vim 的可视模式 (见
+|v|)。如果 'guioptions' 里包含 'a'，那么无论什么时候开始选择 (可视或选择模
+式)，或者选择内容发生改变的时候，Vim 成为窗口系统的主选择区的拥有者
+(MS-Windows 上使用 |gui-clipboard|；X11 上使用 |x11-selection| - 不管具体哪个
+更合适，你应该据此理解所谓的主选择区)。
+
+							*clipboard*
+有一个特殊的寄存器可以存放选择内容，这就是 "* 寄存器。除非选择文本的相关信息发
+生改变 (比如你在某处按了鼠标左键)，或者另一个应用想要粘贴选择文本。这时，文本
+被放到 "* 寄存器里。例如，剪切一行并使之当前的选择区并放到剪贴板上: >
+
+	"*dd
+
+类似的，你想粘贴别的应用的选择内容，比如通过点击鼠标中键，的时候，该选择内容被
+先放到 "* 寄存器上，然后再像其它寄存器那样被 'put' (放置)。例如，放置选择内容
+(剪贴板的内容) 可以这样: >
+
+	"*p
+
+如果在 X11 中使用该寄存器，另见 |x11-selection|。那里也解释了相关的 "+ 寄存
+器。
+
+注意 在从一个 Vim 粘贴文本到另一个单独的 Vim 的时候，选择类型 (字符、行、或块)
+也会被复制。对于其它应用，类型总是面向字符的。不过，如果文本通过
+|x11-cut-buffer| 传输，选择类型_总_会丢失。
+
+当 'clipboard' 选项包含了 "unnamed" 字符串的时候，无名寄存器和 "* 相同。这样，
+你可以抽出和粘贴选择内容，而无须在这些命令前面附加 "*。
+
+==============================================================================
+5. 菜单							*menus*
+
+用户手册 |usr_42.txt| 有本节内容的简单介绍。
+
+
+5.1 使用菜单						*using-menus*
+
+基本上，菜单和映射类似。你可以定义自己的菜单，多少都可以。
+Vim  的长期用户不太用菜单。但是它的优势在你可以增加自己的菜单和菜单项。它们在
+你记不住键序列的功能的时候很有用。
+
+关于如何创建不同语言的菜单，见 |:menutrans|。
+
+							*menu.vim*
+缺省菜单从 "$VIMRUNTIME/menu.vim" 文件里读取。关于该路径从何而来，见
+|$VIMRUNTIME|。 你可以设置你自己的菜单。从缺省菜单开始是一个好主意。你可以增加
+更多项目，或者如果完全不喜欢缺省菜单，从删除所有菜单开始 |:unmenu-all|。你可以
+把下行加到 .vimrc (不是 .gvimrc) 文件以禁止缺省的菜单的调入: >
+	:let did_install_default_menus = 1
+如果你也不想载入 Syntax 菜单: >
+	:let did_install_syntax_menu = 1
+Syntax 菜单第一项可以用来显示包含所有可用的文件类型的菜单 (载入需要不少时间)。
+如果你确实想要启动时就同时得到所有文件类型，加入: >
+		:let do_syntax_sel_menu = 1
+
+<
+							*console-menus*
+尽管本文档讨论 GUI，你其实也可以在控制台模式使用菜单。你需要自行载入
+|menu.vim|，因为在那里，这一步不是自动进行的。你可以使用 |:emenu| 命令和带
+'wildmenu' 的命令行补全，从而能像真实的菜单系统那样对菜单项进行访问。要做到这
+一点，在你的 .vimrc 文件里放入如下命令: >
+	:source $VIMRUNTIME/menu.vim
+	:set wildmenu
+	:set cpo-=<
+	:set wcm=<C-Z>
+	:map <F4> :emenu <C-Z>
+按 <F4> 会启动菜单。你可以用光标移动键来选择菜单项。按 <Enter> 执行。如果你想
+取消，按 <Esc>。
+本功能需要在编译时加入 |+menu| 特性。
+
+							*tear-off-menus*
+GTK+ 和 Motif 支持可撕下的菜单。它们是一种有粘性的菜单，亦即一直在屏幕上存在的
+弹出式菜单。如果它们不能调整大小，可能你在 defaults 文件里使用了类似于
+"Vim*geometry" 的设置。你应该使用 "Vim.geometry"。
+
+Win32 GUI 版本模拟 Motif 的可撕下菜单。实际上，Motif 用户很容易说出两者的区
+别，但我们只希望能一样有用就够了。你也可以同时使用 |:tearoff| 命令和
+|hidden-menus|，来创建不在主菜单栏出现的浮动菜单。
+
+
+5.2 创建新的菜单					*creating-menus*
+
+				*:me*  *:menu*  *:noreme*  *:noremenu*
+				*:am*  *:amenu* *:an*      *:anoremenu*
+				*:nme* *:nmenu* *:nnoreme* *:nnoremenu*
+				*:ome* *:omenu* *:onoreme* *:onoremenu*
+				*:vme* *:vmenu* *:vnoreme* *:vnoremenu*
+				*:xme* *:xmenu* *:xnoreme* *:xnoremenu*
+				*:sme* *:smenu* *:snoreme* *:snoremenu*
+				*:ime* *:imenu* *:inoreme* *:inoremenu*
+				*:cme* *:cmenu* *:cnoreme* *:cnoremenu*
+				*E330* *E327* *E331* *E336* *E333*
+				*E328* *E329* *E337* *E792*
+要创建新的菜单项，使用 ":menu" 命令群。它们和 ":map" 命令群非常类似，但是第一
+个参数是菜单项名。形式为 '.' 分隔的菜单或子菜单的路径，例如: >
+
+   :menu File.Save  :w<CR>
+   :inoremenu File.Save  <C-O>:w<CR>
+   :menu Edit.Big\ Changes.Delete\ All\ Spaces  :%s/[ ^I]//g<CR>
+
+最后一项会在菜单栏里创建一个新的项目 "Edit"，在它上面按下鼠标键，会弹出菜单，
+里面包含 "Big Changes" 一项，这又是包含 "Delete All Spaces" 项的一个子菜单。如
+果选择了该项，执行操作。
+
+菜单名里可用的特殊字符:
+
+	&	下一个字符是快捷键。确信该快捷键在 (子) 菜单里只使用一次。如果
+		你想插入按本义出现的 "&"，使用 "&&"。
+	<Tab>	分隔菜单名和右对齐的文本。这被用来显示等价的命令输入。为了方便
+		起见，这里可以使用文本 "<Tab>"。如果你使用真正的制表键，别忘了
+		在前面加上反斜杠！
+示例: >
+
+   :amenu &File.&Open<Tab>:e  :browse e<CR>
+
+[按文本直接输入]
+通过快捷键 "F" (按着 <Alt> 键)，然后 "O"，就可以使用这个菜单。第二部分显示为
+"Open     :e"。这里 ":e" 右对齐，而 "O" 有下划线，指示这是那个快捷键。
+
+":amenu" 命令可以用来一次定义所有模式下的菜单项。要使得该命令正确工作，在有些
+模式下需要自动插入一个字符:
+	模式		前面插入	后面附加	~
+	普通		不需要		不需要
+	可视		<C-C>		<C-\><C-G>
+	插入		<C-\><C-O>
+	命令行		<C-C>		<C-\><C-G>
+	等待操作符	<C-C>		<C-\><C-G>
+
+附加 CTRL-\ CTRL-G 是为了能在置位 'insertmode' 的时候回到插入模式。
+|CTRL-\_CTRL-G|
+
+示例: >
+
+   :amenu File.Next	:next^M
+
+等价于: >
+
+   :nmenu File.Next	:next^M
+   :vmenu File.Next	^C:next^M^\^G
+   :imenu File.Next	^\^O:next^M
+   :cmenu File.Next	^C:next^M^\^G
+   :omenu File.Next	^C:next^M^\^G
+
+小心: 插入模式下，因为使用 CTRL-O，只对单个普通模式的命令有效。如果你有两个或
+多个命令，必须使用 ":imenu" 命令。要在任何模式下插入文本，可以使用表达式寄存器
+: >
+
+   :amenu Insert.foobar   "='foobar'<CR>P
+
+注意这里使用 'cpoptions' 里的 '<' 和 'k' 标志位 (如果包含了它们，<> 形式和原始
+的键码都不会被识别)。
+
+注意 命令行模式下的 <Esc> 执行该命令，和映射的情况相同。这是 Vi 兼容的行为。使
+用 CTRL-C 退出命令行模式。
+
+						*:menu-<silent>* *:menu-silent*
+要定义在命令行上不会回显的菜单，增加 "<silent>" 作为第一个参数。例如: >
+	:menu <silent> Settings.Ignore\ case  :set ic<CR>
+":set ic" 在使用该菜单时不会回显。但是执行命令时给出的消息仍然会。要把那些也去
+掉，在执行命令时增加 ":silent": >
+	:menu <silent> Search.Header :exe ":silent normal /Header\r"<CR>
+"<silent>" 也可以出现 (但只能) 在 "<special>" 或 "<script>" 之后。
+
+					*:menu-<special>* *:menu-special*
+定义菜单时，特殊键可用 <> 记法，即使 'cpoptions' 包含了 "<" 标志位也没问题。可
+用于不希望看到设置 'cpoptions' 时出现副作用的场合。例如: >
+	:menu <special> Search.Header /Header<CR>
+"<special>" 必须是第一个参数或出现 (但只能) 在 "<silent>" 或 "<script>" 之后。
+
+						*:menu-<script>* *:menu-script*
+菜单的 "to" 部分会检查映射。如果你不想这样。使用 ":noremenu" 命令 (或者特定模
+式下的类似命令)。
+如果你需要局部于脚本的映射，增加 "<script>" 作为 ":menu" 的第一个或紧跟在
+"<silent>" 或 "<special>" 之后的参数。
+
+							*menu-priority*
+你可以给菜单指定优先级。高优先级的菜单出现在右边。优先级在 ":menu" 命令之前以
+数字形式给出。例如: >
+	:80menu Buffer.next :bn<CR>
+
+缺省菜单有如下的优先级:
+	File		10
+	Edit		20
+	Tools		40
+	Syntax		50
+	Buffers		60
+	Window		70
+	Help		9999
+
+如果没有或者给出优先级为零，则使用 500。
+弹出菜单不使用优先级。
+
+如果系统支持 (Motif 和 GTK+)，Help 菜单会出现在菜单栏的最右侧。GTK+ 2 版本已经
+不再继续这么做，因为该环境现在不再鼓励右对齐帮助菜单的界面设计风格。
+
+你可以使用超过 9999 的优先级，使得菜单能出现在 Help 菜单之后。但这是不合标准的
+做法，并不鼓励。最高的可能优先级大约是 32000。最低为 1。
+
+							*sub-menu-priority*
+相同的机制可以用来定位子菜单。这里，优先级用出现在菜单名前且用句号分隔的优先级
+列表给出: >
+	:menu 80.500 Buffer.next :bn<CR>
+子菜单优先级只有在不想该项目在正常的位置出现的时候才需要。例如，把某个子菜单放
+在其它项目之前: >
+	:menu 80.100 Buffer.first :brew<CR>
+也可以把子菜单放在其它项目之后，并期望使用缺省优先级的未来项目会加在它之前: >
+	:menu 80.900 Buffer.last :blast<CR>
+如果不给出某个数字，使用缺省值 500: >
+	:menu .900 myMenu.test :echo "text"<CR>
+菜单优先级只有在建立新菜单时才会用到。一旦已经存在 (比如，在别的模式下)，优先
+级不会改变。因此，优先级只有在菜单第一次用到的时候才需要给出。弹出菜单是一个例
+外。每个模式都有单独的菜单 (普通、操作符等待、可视、插入、命令行)。每个菜单里
+的顺序可以不同。这和菜单栏的菜单不同，那里所有模式下都使用相同的顺序。
+注意: 现在，子菜单优先级不是在所有版本的 GUI 上都能工作。
+
+							*menu-separator* *E332*
+菜单项可以用一个特殊项目分隔，它在项目间插入一些空白。根据不同系统情况，有的显
+示为一条线，有的显示为虚线。这些项目必须以 '-' 开始和结尾。两者之间的部分用来
+给出一个独一无二的名字。和正常的项目一样，也可以使用优先级。例如: >
+	:menu Example.item1	:做些事
+	:menu Example.-Sep-	:
+	:menu Example.item2	:做些别的事
+注意分隔符也需要一个右手边的表达式。是什么没有关系，因为该项目永远不会选到。简
+单点，用单个冒号就可以了。
+
+							*gui-toolbar*
+目前，只有 Win32、Athena、Motif、GTK+ (X11) 和 Photon GUI 才有工具栏。适当的时
+候，在其它 GUI 上也会开放这一功能。缺省的工具栏在 menu.vim 里定义。
+工具栏显示与否有 'guioptions' 里的 'T' 字母控制。你可以同时有菜单和工具栏，或
+者只用其中一项，甚至全不要。其外观通过 'toolbar' 选项控制。你可以在图像、文本
+或者两者兼有之间选择。
+
+							*toolbar-icon*
+工具栏定义为一个特殊的菜单，名为 ToolBar。它只有一层。Vim 如此解释该菜单里面的
+项目:
+1)  如果给出 "icon=" 参数，则使用该名字指定的文件。这个文件可以给出完整路径，
+    或者只是基础名。如果是后者，在 'runtimepath' 的 "bitmaps" 目录里搜索该文
+    件，就像第三点那样。例如: >
+	:amenu icon=/usr/local/pixmaps/foo_icon.xpm ToolBar.Foo :echo "Foo"<CR>
+	:amenu icon=FooIcon ToolBar.Foo :echo "Foo"<CR>
+<   注意在第一个例子里，需要包含扩展名，而第二个例子就不需要。
+    如果该文件不能打开，则尝试下面的步骤。
+    文件名里的空格必须用反斜杠转义。
+    菜单优先级必须在 icon 参数_之后_给出: >
+	:amenu icon=foo 1.42 ToolBar.Foo :echo "42!"<CR>
+2)  名为 'BuiltIn##' 的项目，其中 ## 是一个数字，用来指定 Vim 第 ## 个内建的位
+    图。目前，有 31 个编号的位图，从 0 到 30。它们包含了多数常见的编辑操作
+    |builtin-tools|。 >
+	:amenu ToolBar.BuiltIn22 :call SearchNext("back")<CR>
+3)  首先在 'runtimpath' 里的 "bitmaps" 里搜索某个其它名字的项目。如果找到，该
+    位图文件被用作工具按钮的图像。注意 准确的文件名和具体的操作系统有关: 例
+    如，Win32 上命令 >
+	:amenu ToolBar.Hello :echo "hello"<CR>
+<   会找到文件 'hello.bmp'。在 GTK+/X11 上则是 'Hello.xpm'。在 GTK+ 2 上则按序
+    查找文件 'Hello.png'、'Hello.xpm' 和 'Hello.bmp'，最先找到的被使用。
+    MS-Windows 和 GTK+ 2 上位图被缩放到合适的按钮大小。在 MS-Windows 上，18 乘
+    18 像素最好。
+    在 MS-Windows 上，位图使用标准的调色板，使用 16 色。浅灰色的像素会被替换成
+    窗口框架的颜色，而深灰色像素被换成窗口阴影的颜色。根据你的系统，也许可以使
+    用比这个更多的颜色。
+4)  如果该位图找不到，Vim 在内建名字的列表里查找该名字。因为每个内建按钮图像都
+    有名字。
+    因此，如果没有 open.bmp 的话，命令 >
+	:amenu ToolBar.Open :e
+<   会显示内建的 "open a file" 按钮图标。
+    在 menu.vim 里可以看到所有内建的名字。
+5)  如果以上都不行，就显示一个可用的空白按钮。
+
+							*builtin-tools*
+号  名字		正常定义的操作  ~
+00  New			打开新窗口
+01  Open		浏览要在当前窗口打开的文件
+02  Save		把缓冲区写回文件
+03  Undo		撤销上次改变
+04  Redo		重做上次撤销的改变
+05  Cut			删除选择的文本到剪贴板
+06  Copy		复制选择的文本到剪贴板
+07  Paste		从剪贴板粘贴文本
+08  Print		打印当前缓冲区
+09  Help		打开缓冲区，显示 Vim 的内建帮助
+10  Find		开始搜索命令
+11  SaveAll		把所有修改过的缓冲区写回文件
+12  SaveSesn		把当前的情况写到会话文件
+13  NewSesn		创建一个新的会话文件
+14  LoadSesn		载入会话文件
+15  RunScript		浏览文件，并作为 Vim 脚本执行
+16  Replace		执行 substitute 命令，给出提示
+17  WinClose		关闭当前窗口
+18  WinMax		使得当前窗口使用尽量多行
+19  WinMin		使得当前窗口使用尽量少行
+20  WinSplit		分割当前窗口
+21  Shell		启动外壳
+22  FindPrev		反向再次搜索
+23  FindNext		正向再次搜索
+24  FindHelp		提示关键字，搜索相关帮助
+25  Make		运行 make，跳到第一个错误
+26  TagJump		跳转至光标所在的标签
+27  RunCtags		运行 Ctags，为当前目录的文件构造标签
+28  WinVSplit		垂直分割当前窗口
+29  WinMaxWidth		使得当前窗口使用尽量多列
+30  WinMinWidth		使得当前窗口使用尽量少列
+
+					*hidden-menus* *win32-hidden-menus*
+在 Win32 和 GTK+ GUI 上，以 ']' 开始的菜单名使得该菜单不会在主菜单栏里出现。你
+可以用 |:popup| 或者 |:tearoff| 命令来显示之。
+
+							*popup-menu*
+在 Win32、GTK+、Motif、Athena 和 Photon GUI 上，你可以定义特殊的 "PopUp" 菜
+单。如果 'mousemodel' 设为 popup 或者 popup_setpos，这将是按下鼠标右键时显示的
+菜单。
+
+
+5.3 显示菜单如何被映射					*showing-menus*
+
+要看看现有的菜单是如何被映射的，在 menu 命令之后只使用一个参数 (就像你使用
+":map" 命令那样)。如果指定的菜单是一个子菜单，那么所有该子树下面的层次结构都会
+显示。如果 :menu 后面不给出任何参数，显示所在模式下的_所有_菜单项 (例如，命令
+行模式下显示 :cmenu)。
+
+该列表里，在右手边表达式之前显示的特殊字符的含义是:
+*	菜单是通过 "nore" 形式定义的，以禁止重映射。
+&	菜单定义时包含了 "<script>"， 使得重映射只限于局部于脚本的映射。
+-	菜单被屏蔽。
+
+注意 在 menu 命令里输入菜单名时，按 <Tab> 可以用来补全菜单项目名。
+
+
+5.4 执行菜单						*execute-menus*
+
+						*:em*  *:emenu* *E334* *E335*
+:[range]em[enu] {menu}		从命令行上执行 {menu} 菜单。缺省执行普通模式的
+				命令。如果给出行范围 range，执行可视模式的菜
+				单。
+				如果从 <c-o> 那里调用，执行插入模式命令。例如:
+>
+	:emenu File.Exit
+
+如果控制台模式的 vim 编译时加入 WANT_MENU，你可以用 :emenu 来访问你已经习惯的
+GUI 模式下有用的菜单项目。关于一个能用于此目的的选项，见 'wildmenu'。例子又可
+以见 |console-menus|。
+
+如果使用行范围 range，并且选择的行和 '<、'> 指定的范围相同，则使用最近一次可视
+选择的范围执行菜单命令。
+
+
+5.5 删除菜单						*delete-menus*
+
+						*:unme*  *:unmenu*
+						*:aun*   *:aunmenu*
+						*:nunme* *:nunmenu*
+						*:ounme* *:ounmenu*
+						*:vunme* *:vunmenu*
+						*:xunme* *:xunmenu*
+						*:sunme* *:sunmenu*
+						*:iunme* *:iunmenu*
+						*:cunme* *:cunmenu*
+要删除一个菜单项或者整个子菜单，使用 umenu 命令，类似于 unmap 命令。例如: >
+    :unmenu! Edit.Paste
+
+会删除插入和命令行模式下的 Edit 菜单的 Paste 项。
+
+注意 在 umenu 命令里输入菜单名时，按 <Tab> 可以用来补全菜单项目名。
+
+要删除所有的菜单，可用:				*:unmenu-all*  >
+	:unmenu *	" 删除普通和可视模式下的所有菜单
+	:unmenu! *	" 删除插入和命令行模式下的所有菜单
+	:aunmenu *	" 删除所有模式下的所有菜单
+
+如果你想去掉菜单栏: >
+	:set guioptions-=m
+
+
+5.6 屏蔽菜单					*disable-menus*
+
+						*:menu-disable* *:menu-enable*
+如果你不想删除某个菜单，但想暂时屏蔽之，可以在 ":menu" 命令里使用 "enable" 或
+"disable" 关键字。例如: >
+	:menu disable &File.&Open\.\.\.
+	:amenu enable *
+	:amenu disable &Tools.*
+
+和其它 menu 命令一样，该命令作用于指定的模式上。注意 需要包含进来 "&" 这样的字
+符，以便找到经过翻译的名字。如果参数是 "*"，所有的菜单都受到影响。否则，给定的
+菜单名和下面所有的子菜单 (如果存在的话) 都会受影响。
+
+
+5.7 菜单示例					*menu-examples*
+
+这里是一个如何用 menu 增加菜单项的例子。你可以为光标下的关键字增加菜单项。使用
+寄存器 "z"。 >
+
+  :nmenu Words.Add\ Var		wb"zye:menu! Words.<C-R>z <C-R>z<CR>
+  :nmenu Words.Remove\ Var	wb"zye:unmenu! Words.<C-R>z<CR>
+  :vmenu Words.Add\ Var		"zy:menu! Words.<C-R>z <C-R>z <CR>
+  :vmenu Words.Remove\ Var	"zy:unmenu! Words.<C-R>z<CR>
+  :imenu Words.Add\ Var		<Esc>wb"zye:menu! Words.<C-R>z <C-R>z<CR>a
+  :imenu Words.Remove\ Var	<Esc>wb"zye:unmenu! Words.<C-R>z<CR>a
+
+(这里的右手边表达式使用 <> 记法，你可以复制/粘贴这里的文本来测试这些映射，或者
+把这些行加到你的 gvimrc 文件里；"<C-R>" 是 CTRL-R，"<CR>" 是 <CR> 键。|<>|)
+
+
+5.8 工具提示 (Tooltips) 和菜单提示
+
+见用户手册的 |42.4| 一节。
+
+							*:tmenu* *:tm*
+:tm[enu] {menupath} {rhs}	为菜单或者工具定义提示。{仅存在于 X11 和 Win32
+				GUI}
+
+:tm[enu] [menupath]		列出菜单提示。{仅存在于 X11 和 Win32 GUI}
+
+							*:tunmenu* *:tu*
+:tu[nmenu] {menupath}		删除菜单或者工具的提示。{仅存在于 X11 和 Win32
+				GUI}
+
+如果为某菜单项定义了提示，当鼠标移过该项目时，命令行区域会出现该提示，就像标准
+Windows 菜单提示出现在状态栏那样。(除非 Vim 在命令行模式的时候，这时当然什么都
+不会显示。)
+如果为某工具栏项目定义了提示，当鼠标移过该按钮时，提示以通常的方式出现。要改变
+它们的颜色，使用 |hl-Tooltip| 高亮组。
+
+"提示" 可以为每个菜单项目定义。例如，在这样定义菜单项时: >
+	:amenu MyMenu.Hello :echo "Hello"<CR>
+提示可以这样定义: >
+	:tmenu MyMenu.Hello Displays a greeting.
+然后这样删除: >
+	:tunmenu MyMenu.Hello
+
+现在，工具提示只有在 X11 和 Win32 GUI 上才支持。不过，在不远的将来，应该在其它
+gui 平台上也会出现。
+
+":tmenu" 菜单和其它菜单命令使用相同的参数。":tunmenu" 删除已存在的菜单提示，使
+用方式和其它的 umenu 命令一样。
+
+如果菜单项目不再合法，(即，在所有模式下，它的动作都被删除) Vim 为你删除菜单的
+提示 (和菜单项)。这意味着 :aunmenu 彻底删除了菜单项目 - 你不需要再运行
+:tunmenu 了。
+
+
+5.9 弹出式菜单
+
+在 Win32 和 GTK+ GUI 上，你可以在光标位置下生成一个菜单。这和 PopUp 菜单类似，
+除了你可以弹出任何菜单树以外。
+
+该命令只是为了后向兼容才存在，不鼓励使用。因为它的行为很奇特。
+
+							*:popup* *:popu*
+:popu[p] {name}			弹出菜单 {name}。菜单名必须有至少一项子项，但
+				不一定需要出现在菜单栏上 (见 |hidden-menus|)。
+				{仅在 Win32 和 GTK GUI 上有效}
+
+:popu[p]! {name}		和上面类似，但使用鼠标指针所在的位置，而不是光
+				标位置。
+
+示例: >
+	:popup File
+会使得 "File" 菜单 (如果有的话) 出现在文本光标 (如果有 ! 则是鼠标指针) 的位置
+上。 >
+
+	:amenu ]Toolbar.Make	:make<CR>
+	:popup ]Toolbar
+会创建一个弹出式菜单，该菜单并不存在于主菜单栏中。
+
+注意 ']' 开始的菜单不会显示。
+
+==============================================================================
+6. 附加							*gui-extras*
+
+这一节说明其它和 GUI 相关的特性。
+
+- 在 GUI 上，按 escape 之后不需要等一秒，因为没有键码会以 <Esc> 开始。
+
+- 在 GUI 上，输入 ^V 紧跟一个特殊键会插入 "<Key>"，因为所用到的内部字符串没有
+  意义。也可以按下修饰符，得到 "<Modifiers-Key>"。
+
+- 在 GUI 上，修饰符 SHIFT、CTRL 和 ALT (或 META) 可以在映射里和特殊键或鼠标一
+  起使用，例如 :map <M-LeftDrag> <LeftDrag>
+
+- 在 GUI 上，若干普通键在映射等命令里可以带修饰符，它们是 <Space>、<Tab>、
+  <NL>、<CR> 和 <Esc>。
+
+- 要在 Vim 脚本里检查是不是使用 GUI，你可以这么使用: >
+
+	if has("gui_running")
+	   echo "是的，我们有 GUI"
+	else
+	   echo "无聊的老终端"
+	endif
+<						*setting-guifont*
+- 如果你在多个系统上使用同一个 vimrc 文件，你可以这样设置不同类型的 GUI 专用的
+  选项: >
+
+	if has("gui_running")
+	    if has("gui_gtk2")
+		:set guifont=Luxi\ Mono\ 12
+	    elseif has("x11")
+		" Also for GTK 1
+		:set guifont=*-lucidatypewriter-medium-r-normal-*-*-180-*-*-m-*-*
+	    elseif has("gui_win32")
+		:set guifont=Luxi_Mono:h12:cANSI
+	    endif
+	endif
+
+MS Mincho 是一个推荐的日文字体。相关信息见: http://www.lexikan.com/mincho.htm
+
+==============================================================================
+7. 外壳命令						*gui-shell*
+
+X11 GUI 上，外部命令在 gvim 窗口里执行。见 |gui-pty|。
+
+警 告: 在 X11 GUI 上执行外部命令不总是可以的。"普通" 的命令，像 "ls"、"grep"、
+"make" 大多数没问题。需要一个智能终端的命令，比如 "less" 和 "ispell" 就不行。
+有的可能挂起，需要从另外一个终端杀死进程才能终止。所以，要小心一点。
+
+Win32 GUI 上，外部命令在一个单独的窗口上执行。见 |gui-shell-win32|。
+
+ vim:tw=78:sw=4:ts=8:ft=help:norl:

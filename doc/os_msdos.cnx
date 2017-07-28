@@ -1,0 +1,238 @@
+*os_msdos.txt*  For Vim version 7.4.  最后更新: 2006年7月19日
+
+
+		  VIM 参 考 手 册    作者: Bram Moolenaar
+		                     译者: Dasn, tocer
+		                     http://vimcdoc.sf.net
+
+
+					*msdos* *ms-dos* *MSDOS* *MS-DOS*
+本文描述 MS-DOS 版本 Vim 的特点。
+
+1. MS-DOS 平台的两种版本	|msdos-versions|
+2. 一些已知的问题		|msdos-problems|
+3. 长文件名			|msdos-longfname|
+4. termcap 编码			|msdos-termcap|
+5. shift 加方向键		|msdos-arrows|
+6. 文件扩展名			|msdos-fname-extensions|
+7. 内存的使用和限制		|msdos-limitations|
+8. 文件的符号链接		|msdos-linked-files|
+9. 在 DOS 窗口里复制和粘贴	|msdos-copy-paste|
+
+此外，还有一些 Win32 和 DOS 版本通用的条目:
+文件位置			|dos-locations|
+使用反斜杠			|dos-backslash|
+标准映射			|dos-standard-mappings|
+屏幕的输出与颜色		|dos-colors|
+文件格式			|dos-file-formats|
+:cd 命令			|dos-:cd|
+中止键				|dos-CTRL-Break|
+临时文件			|dos-temp-files|
+默认的 Shell 选项		|dos-shell|
+
+有关编译的讨论请参考 "src/INSTALL.pc"。			*msdos-compiling*
+
+==============================================================================
+1. MS-DOS 平台的两种版本				*msdos-versions*
+
+在 MS-DOS 上，有两种版本的 Vim :
+
+							*dos16*
+DOS16 版本		可以在任何 DOS 系统上运行，只能使用 640KB 内存。也可以
+			在 OS/2，Windows 95 和 NT 上运行。不包括一些 Vim 特有
+			的功能 (自动命令、语法高亮等)。建议 386 以前的计算机使
+			用。
+							*dos32*
+DOS32 版本		需要 386 处理器和 |DPMI| 驱动程序，可以使用所有内存。
+			支持长文件名和 Windows 剪贴板，但是不能在 Windows NT
+			下运行。建议 MS-DOS，Windows 3.1 和 Windows 95 用户使
+			用。
+
+还有两个版本在 Windows 上运行:
+Win32 版本		需要 Windows 95 或 Windows NT，使用所有内存，支持长文
+			件名等。在 Windows 95 下有一些问题。建议使用 Windows
+			NT。见 |os_win32.txt|。
+
+Win32 GUI 版本		所需平台支持与 Win32 版本相同，但是它有自己的窗口，而
+			不是在控制台窗口里运行。有滚动条、菜单等。建议 Windows
+			95 和 Windows NT 用户使用。见 |gui-w32|。
+
+建议使用 Dos32 或 Win32 版本。虽然 Dos16 版本可以编辑很大的文件，但是如果你做
+一些大的改动的话，就会很快耗尽内存。禁用 "撤销" 功能有助于解决这个问题:
+":set ul=-1"。在屏幕更新速度方面，Dos16 版本是三个版本中更新速度最快的 (在 DOS
+或 Windows 95 里运行)，在 Windows NT 上，Win32 版本 和 Dos16 版本一样快。
+
+								*DPMI*
+运行 Dos32 版本，需要 DPMI 驱动程序。如果你运行了 Windows 或者以前装过不错的内
+存管理程序，那么 DPMI 可能已经安装好了。如果你得到 "No DPMI" 这条消息，你就需
+要安装 DPMI 驱动程序。这个驱动程序已经包含在 Vim 包里的 CSDPMI4B.ZIP 文件中。
+在运行 Vim 之前运行 "cwsdpmi"，或者你可以把 "cwsdpmi -p" 添加到 autoexec.bat
+文件里，让它每次启动后驻留内存。最新版本的 "CSDPMI*.ZIP" 可以在
+"ftp.neosoft.com:pub/users/s/sandmann" 找到。
+
+							*minimal-features*
+16 位的 DOS 版本只编译了最基本的功能。查阅 |+feature-list|，所包含的功能前面
+有一个 "T"。
+你可以编辑 feature.h 并重新编译，以获得更多的功能。
+
+==============================================================================
+2. 一些已知的问题					*msdos-problems*
+
+当你使用 smartdrive (MS-DOS 6.x) 并且启用了后写式高速缓存 (write-behind
+caching)，Vim 就可能尝试在一个只读的文件系统里 (例如: 有写保护的软驱) 创建交
+换文件。你会收到这样的提示: >
+	A serious disk error has occurred .., Retry (r)?
+这时没有别的办法，要么打开写保护，要么关机，就算你按 CTRL-ALT-DEL 也无济于事。
+这确实是 smartdrive 的问题，不是 Vim 的问题。除此以外，smartdrive 工作得很好。
+如果你觉得这很烦人，那就不要用后写式高速缓存 (write-behind caching)。
+
+Vim 不能读取正在使用的交换文件，除非你用了 "share" 命令。如果你不断收到交换文
+件已存在的警告，那你应该把 "share" 命令添加到 config.sys 或 autoexec.bat 文件
+里 (参见 MS-DOS 的相关文档)。
+
+16 位的 DOS 版本一次能打开的文件数 (可见的和隐藏的) 大约在 10 个左右，再多了就
+要报错。可能在打开文件的时候或者保存文件的时候，也可能在使用过滤命令的时候报告
+"内存不够"，或者遇到其它各种各样的问题。
+
+32 位 Dos 版本同一时间也不能有无限数目的打开文件。文件数目的限制取决于
+CONFIG.SYS 文件里 FILE 的设置。FILE 的默认值是 15，如果你需要编辑更多文件，可
+以增加 FILE 的值。如果 FILE 值不够大，就会出一些奇怪的错误，并且执行 shell 命
+令时可能会死机。
+
+32 位 Dos 版本可以处理长文件名。自动补全文件名的时候，虽然 Vim 会匹配短的文件
+名，但是却会产生相应的长文件名。例如，如果有一个长文件名 "this_is_a_test"，其
+短文件名是 "this_i~1"，命令 ":e *1" 编辑文件 "this_is_a_test"。
+
+运行 32 位 Dos 版本时，如果遇到有关 DPMI 的问题，那么应该看看你的 config.sys
+文件，里面是不是有某个驱动程序占用了大量的资源。已经知道的一个问题是 "netx"
+(NetWare v. 3.26 Workstation shell)，换成 3.32 版本就可以解决。
+
+32 位 Dos 版本可以处理带引号的参数。这在处理带空格的文件名时特别有用，例如: >
+	vim "program files\accessories\ppp.scp"
+但是有一个副作用，单引号会被删除。可以在单引号前面加一个反斜杠来避免这种情况。
+例如，要编辑文件 "fi'le.txt": >
+	vim fi\'le.txt
+
+==============================================================================
+3. 长文件名						*msdos-longfname*
+
+如果在 Windows 95 里运行 32 位 DOS 版本，就可以使用长文件名 (默认是可以的)。如
+果你不想使用，可以把下面这条命令添加到 autoexec.bat 文件里: >
+	set LFN=N
+备注: 如果你安装了 DJGPP，在你的机器上很可能有一个 "djgpp.env" 文件，里面包含
+有 "LFN=n"，当你要使用长文件名的时候，你需要设置 "LFN=Y"。
+
+==============================================================================
+4. termcap 编码						*msdos-termcap*
+
+如果你想用别的输出方式 (例如: 用一个串口终端)，把终端名设置成 "pcansi" 即可。
+你可以在需要的时候改变 termcap 选项 (见 |terminal-options|)。备注: 标准 IBM 的
+ansi.sys 并不支持所有的内建 pcansi 终端编码。如果你用 ansi.sys，你需要删除
+termcap 项目 t_al 和 t_dl: >
+   :set t_al= t_dl=
+否则，屏幕不会正确更新。最好还是用 nansi.sys，nnansi.sys，或类似的驱动程序代替
+ansi.sys。
+
+如果你想用 Vim 在串口终端上工作，就要复位 'bioskey' 选项。否则将会从 PC 键盘读
+取读取命令。复位 'bioskey' 之后，CTRL-C 和 CTRL-P 也许不能正确工作。
+
+==============================================================================
+5. shift 加方向键					*msdos-arrows*
+
+用 CTRL-左箭头 和 CTRL-右箭头 代替 SHIFT-左箭头 和 SHIFT-右箭头。上箭头键和下
+箭头键不能和 SHIFT 或 CTRL 组合使用。
+
+==============================================================================
+6. 文件扩展名					*msdos-fname-extensions*
+
+MS-DOS 只允许有一个文件扩展名，因此，在文件名扩展的时候，原文件名中的 "." 被替
+换成 "_"，并且在第 8 个字符的位置截断，然后加上扩展名 (例如: ".swp")。看两个例
+子: "test.c" 变成 "test_c.bak"，"thisisat.est" 变成 "thisisat.bak" 为了减少这
+些问题，默认的 'backupext' 是 "~" 而不是 ".bak"。文件 "thisisat.est" 的备份文
+件是 "thisisat.es~"。'shortname' 选项不可用，因为该选项永远是打开的。
+
+==============================================================================
+7. 内存的使用和限制				*msdos-limitations*
+
+交换文件用来存储大部分文本。你应该能编辑很大的文件。但内存用于撤销和别的一些事
+情。所以在 Dos16 版本中，如果你删除了大量文本，仍然可能耗尽内存。
+
+如果 Vim 给出 "Out of memory" 的警告信息，你应该停止编辑。如果继续编辑，那么此
+后的操作结果都是不可预料的。把 'undolevels' 设置为 0 可以节省内存。运行大量的
+宏肯定会导致内存不够，因为每一次操作都被记录下来以便将来撤销。在这种情况下，把
+'undolevels' 设置为负值。这样可以完全关掉 "撤销 (undo)" 功能。
+
+						*msdos-clipboard-limits*
+在 Dos32 版本里，用扩展内存来避免这些问题。然而，如果你用剪贴板你仍然可能遇到
+内存的限制，因为 Windows 剪贴板只能通过 Dos 内存与 Vim 通信。这意味着通过剪贴
+板传递文本的最大数量取决与你有多少可用的 Dos 内存。
+
+把下面几行添加到 "config.sys" 文件里，可以启用 Dos 扩展内存以最大化可用的 Dos
+内存: >
+
+	DOS=HIGH,UMB
+	DEVICE=C:\WINDOWS\himem.sys
+	DEVICE=C:\WINDOWS\emm386.exe RAM
+
+做了这些修改之后，可以使 DOS 腾出更多的内存给 Vim (Dos16 版本) 使用。
+
+在 Dos16 版本里，每行文本不能超过 32000 个字符。当读取一个文件时，这些较长的行
+会被自动分割。但是编辑这些 "长行" 会产生不可预料的后果。
+
+==============================================================================
+8. 文件的符号链接				*msdos-linked-files*
+
+用 Vim 编辑链接 (指向 unix NFS 文件服务器上的文件)，可能会出问题。保存文件时，
+Vim 不会通过链接把文件保存到服务器上，而是在本地创建一个新的文件覆盖掉原来的符
+号链接。
+
+在 UNIX 系统上，Vim 可以处理链接 (符号链接或硬链接)。Vim 先把文件写入一个备份
+文件中，然后用备份文件覆盖原文件。这样做是为了保证所有属性都和原文件相同。在非
+UNIX 系统上，首先原文件被改名，然后写入新文件。只有保护位和原文件相同。但是，
+这个方法不能处理 NFS 文件系统，那里除了链接还有一些其它问题。唯一的解决办法是
+禁用备份文件，可以通过命令 ":set nobackup nowritebackup" 实现 |'writebackup'|
+
+当通过 Samba 或者类似的系统装载 (mount) Unix 文件系统时会发生类似的问题。如果
+Vim 建立一个新的文件，它将得到装载文件系统的默认用户 ID。这可能和原用户 ID 不
+同。为避免此问题，可以设置 'backupcopy' 选项为 "yes"。
+
+==============================================================================
+9. 在 DOS 窗口里复制和粘贴			*msdos-copy-paste*
+
+					*E450* *E451* *E452* *E453* *E454*
+32 位的 DOS 版本可以对 Windows 剪贴板进行操作。用 "* 寄存器 (可以用 :reg 命令
+查看寄存器及其内容 译者)。大量的文本可以用这种方法复制，但是可能会受到内存的限
+制，见 |msdos-clipboard-limits|。从一个 Vim 移动文本到另一个 Vim 时，所选择的
+区域 (面向字符、面向行、面向列块) 也一起移动。
+
+在其它版本里，可以用下面的方法: (这是 John Velman <velman@igate1.hac.com> 在
+comp.editors 上发表的)
+
+如何在 DOS 窗口里复制/粘贴 Vim 文本:
+
+1) 让 VIM 以窗口方式运行，而不是全屏，用 ALT-回车 在全屏模式和窗口模式之间切
+   换。注意 在 Windows 95 上，你必须保证 "属性" 里的 "快速粘贴" (MS-DOS 窗口/
+   杂项/快速粘贴) 的复选框没被选中。要想永久改变这一选项，可以修改
+   "\windows\system\conagent.exe" 的属性 (Philip Nelson 说的，我没试过)。
+
+2) 要往 Vim 里粘贴文本，先使 Vim 处于插入状态。
+
+3) 把要粘贴的文本放到 windows 剪贴板上。
+
+4) 点击 Vim 窗口左上角的控制框按钮 (像一个大减号)，如果你不想用鼠标，可以用
+   ALT-空格。
+5) 在出现的菜单里选择 "编辑"。
+6) 在子菜单里选择 "粘贴"。
+
+从 Vim 窗口复制文本到剪贴板:
+
+1) 点击窗口控制菜单。
+2) 选择 "编辑"。
+3) 选择 "标记"。
+4) 用鼠标或者方向键选择要复制部分。用方向键选择的时候，你可以按住 Shift 键以
+   扩展选择范围。
+5) 选择完毕，按回车键。所选的区域就复制到剪贴板了。顺便说一句，用这种方法可以
+   选择任何的矩形区域，例如: 4-25 行，7-10 列。所选择的区域可以包含 Vim 窗口内
+   的任何东西。例如，":!dir" 命令的输出内容也可包含在内。
+
+ vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,180 @@
+*remote.txt*    For Vim version 7.4.  最近更新: 2008年6月
+
+
+		  VIM 参考手册    by Bram Moolenaar
+				译者: Willis，tocer
+				http://vimcdoc.sf.net
+
+
+Vim 客户-服务器 通信					*client-server*
+
+1. 通用功能			|clientserver|
+2. X11 专用条目			|x11-clientserver|
+3. MS-Windows 专用条目		|w32-clientserver|
+
+{Vi 没有任何这里的功能}
+
+==============================================================================
+1. 通用功能						*clientserver*
+
+如果编译时加入 |+clientserver| 特性，Vim 可以作为命令服务器，接受客户的消息并
+执行。同时，Vim 也可以作为客户端，发送消息给 Vim 服务器。
+
+可以使用以下的命令行参数:
+
+     参数			意义	~
+
+   --remote [+{cmd}] {file} ...					*--remote*
+				在远端打开文件列表。如果没有 Vim 服务器，就在
+				本地执行。
+				有一个可选的初始命令: #{cmd}，它必须是后面可以
+				跟 "|" 的 Ex 命令。
+				命令行的其余部分将作为文件列表。所以，非文件
+				的参数一定要在此之前出现。
+				你不能用这个方法编辑标准输入 |--|。
+				远端的 Vim 将被推向前台。如果不想如此，用 >
+				 vim --remote-send "<C-\><C-N>:n filename<CR>"
+<  --remote-silent [+{cmd}] {file} ...			*--remote-silent*
+				同上，但如果服务器没打开而需要本地编辑，不产生
+				警告。
+   --remote-wait [+{cmd}] {file} ...				*--remote-wait*
+				同 --remote，但直到所有的文件在远端被完成 (卸
+				载) 为止才返回。
+   --remote-wait-silent [+{cmd}] {file} ...		*--remote-wait-silent*
+				同 --remote-wait，但如果服务器没打开，不产生警
+				告。
+							*--remote-tab*
+   --remote-tab			同 --remote 但用新标签页打开每个文件。
+							*--remote-tab-silent*
+   --remote-tab-silent		同 --remote-silent 但用新标签页打开每个文件。
+							*--remote-tab-wait*
+   --remote-tab-wait		同 --remote-wait 但用新标签页打开每个文件。
+
+    						*--remote-tab-wait-silent*
+   --remote-tab-wait-silent	同 --remote-wait-silent 但用新标签页打开每个文
+   				件。
+								*--servername*
+   --servername {name}		成为用 {name} 作为名字的服务器。如果同时也用了
+				某个 --remote 命令，连接到服务器 {name}，而不
+				使用缺省的名字。 (见下)。
+								*--remote-send*
+   --remote-send {keys}		发送键序列 {keys} 到服务器，然后退出。{keys}
+   				不通过映射。能识别特殊的键名，如 "<CR>" 会生成
+				CR 字符。
+								*--remote-expr*
+   --remote-expr {expr}		在服务器上执行 {expr}。然后在标准输出上打出结
+				果。
+								*--serverlist*
+   --serverlist			输出可用的服务器名字的列表。
+
+
+示例 ~
+
+在一个已经运行的 GVIM 服务器上编辑 "file.txt"。 >
+    gvim --remote file.txt
+
+在一个已经运行的名为 FOOBAR 的服务器上编辑 "file.txt"。 >
+    gvim --servername FOOBAR --remote file.txt
+
+在名为 "FILES" 的服务器上编辑 "file.txt"，如果不存在这个服务器，自己成为服务器
+"FILES"。 >
+    gvim --servername FILES --remote-silent file.txt
+
+下面的例子不能工作。--remote 之后所有的参数都被视作文件名: >
+    gvim --remote --servername FOOBAR file.txt
+
+在远端服务器上编辑文件 "+foo" (注意 "./" 的使用避免了打头的加号的特别含义)。 >
+    vim --remote ./+foo
+
+告诉远端服务器 "BLA" 写入所有文件，并且退出。 >
+    vim --servername BLA --remote-send '<C-\><C-N>:wqa<CR>'
+
+
+服 务 器 名
+
+缺省地，Vim 试图用启动时的名字注册服务器名 (gvim、egvim ...)，你可以用
+--servername 参数覆盖之。如果不能用指定的名字，尝试附加一个后缀，直到找到一个
+空闲的名字为止。比如，在同一个 X 服务器上，第二次启动 gvim 的服务器名会是
+"gvim1"。可以通过 |v:servername| 得到最终的服务器名。这里忽略大小写的区别，所
+以 "gvim" 和 "GVIM" 重复。
+
+当 Vim 启动时带有 --remote、--remote-wait 或者 --remote-send 参数时，会根据上
+述的方法由启动名和指定的 --servername 参数决定要访问的服务器名。如果准确的匹
+配找不到，寻找第一个可以带数字后缀的服务器。不过，如果 --servername 给出的名字
+已经带有数字后缀，必须准确匹配。
+
+如果使用 --remote 和 --remote-wait 但没有可用的服务器，Vim 会根据剩余的参数启
+动，自己编辑这些文件。这样，发送命令给 gvim 的时候，就不需要关心它是否已经启
+动。
+
+--serverlist 参数让 Vim 在标准输出 (stdout) 上打出所有已经注册的命令服务器，然
+后退出。
+
+Win32 注意事项: 不一定总能把 Vim 服务器切换到在前台，因为 MS-Windows 不允许这
+么做。客户通过 --remote 和 --remote-wait 参数调用而服务器名以 "g" 开始的时候，
+服务器将被推向前台。
+
+
+远 程 编 辑
+
+用上面的结果，--remote 参数随后基于其后的参数构造一个 |:drop| 命令并发送之。
+--remote-wait 也会这么做，但同时等待所有文件编辑任务的完成。这是通过 BufUnload
+事件完成的。文件卸载时，Vim 假设你完成了它的编辑任务。
+注意: --remote 和 --remote-list 参数会吃掉命令行余下的部分。也就是说，余下的参
+数都被认为是文件名，不要把参数放在那里！
+
+函 数
+								*E240* *E573*
+若干 Vim 的函数可以用来书写命令服务器的脚本。参见 |eval.txt| 的描述，也可以在
+下面的函数名字上按 CTRL-] 以得到它们完整的描述。
+
+    摘要				     解释 ~
+    remote_expr( server, string, idvar)      发送表达式
+    remote_send( server, string, idvar)      发送键序列
+    serverlist()			     得到可用服务器的列表
+    remote_peek( serverid, retvar)	     检查返回的字符串
+    remote_read( serverid)		     读取返回的字符串
+    server2client( serverid, string)	     发送返回字符串
+    remote_foreground( server)		     把服务器推向前台
+
+也可参考 |CTRL-\_CTRL-N|，它可用来引导键序列。
+server2client() 的 {serverid} 可以通过 expand("<client>") 得到。
+
+==============================================================================
+2. X11 专用条目						*x11-clientserver*
+				    *E247* *E248* *E251* *E258* *E277*
+
+客户和服务器的通信是通过 X 服务器进行的。必须指明 Vim 服务器所处的 DISPLAY 位
+置。通常的 X 服务器的保护措施这里也适用，你必须有权限在 X 服务器上打开一个窗
+口，这样不同系统间的通信才有可能。
+
+缺省地，GUI 的 Vim 会在 X 服务器上注册一个名字，使得后续的执行能通过这个名字寻
+址并向它发送字符串。Vim 也可以作为一个客户端，给同一个 X11 显示上的其它 Vim 实
+例发送字符串。
+
+X11 GUI 的 Vim (gvim) 启动时，会试图在根窗口的 'VimRegistry' 属性上注册发送服
+务器的名字。
+
+非 GUI 但可以访问到 X11 显示的 Vim (打开了 |xterm-clipboard|) 也可以作为命令服
+务器，只要服务器名通过 --servername 参数明确给出就行了。
+
+空的 --servername 参数关闭命令服务器。
+
+要从别的应用程序向 Vim 服务器发送命令，可以阅读源代码 src/if_xcmdsrv.c。那里包
+含了 Vim 使用的协议的一些情况。
+
+==============================================================================
+3. Win32 专用条目					*w32-clientserver*
+
+每个 Win32 的 Vim 都可以作为服务器，包括控制台版本。你不需要编译时带 OLE 的版
+本。我们使用 Windows 消息，它适用于任何版本的 MS-Windows。不过，它只允许在同一
+个机器上进行通信。
+
+因为我们使用 MS-Windows 的消息，别的应用程序也可以和 Vim 服务器通信。一个替代
+方案是用 OLE 功能 |ole-interface|。
+
+如果用 gvim，--remote-wait 正确的使用方法只能是: >
+
+	start /w gvim --remote-wait file.txt
+<
+ vim:tw=78:sw=4:ts=8:ft=help:norl:

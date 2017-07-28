@@ -1,0 +1,172 @@
+*gui_w16.txt*	For Vim version 7.4.  最后更新: 2006年7月10日
+
+
+		  VIM 参 考 手 册    作者: Bram Moolenaar
+		                     译者: Dasn
+		                     http://vimcdoc.sf.net
+
+
+Vim 的图形用户界面					*gui-w16* *win16-gui*
+
+1.启动图形界面			|gui-start|
+2.设置 Vim 为默认的编辑器	|win16-default-editor|
+3.使用剪贴板			|win16-clipboard|
+4.命令行命令			|win16-shell|
+5.特殊颜色			|win16-colors|
+6.Windows 对话框和浏览器	|win16-dialogs|
+7.杂项				|win16-various|
+
+其他相关文章:
+|gui.txt|	所有的 GUI 版本的通用功能
+|os_msdos.txt|	DOS 和 Windows 版本的通用功能
+|gui_w32.txt|	这里也有一些功能适用于 Win16 版本
+
+{Vi 没有 Windows 图形界面}
+
+Win16 版本的 Vim 可以在 Windows 3.1 或者更高版本的 Windows 上运行。由于没有在
+Windows 3.0 上测试过，所以它也许不能在 Windows 3.0 上运行，除非你修改一下 Vim
+的源代码，重新编译一次。(如果是这样还不如把你的系统升级到 Windows 3.11。:)
+
+在很多方面，它与 Win32 GUI 版本基本相同，包括那个平坦样式的工具条！主要的不同
+之处如下:
+
+1) 为了节省资源和加快刷新速度，文本的字体不支持粗体和斜体。(你可以把源代码中的
+MSWIN16_FASTTEXT 定义注释掉，这样就可以重新启用这一功能。)
+2) 没有可撕下菜单。
+3) 没有 OLE 接口。
+4) 不支持长文件名 (这是必然的)。
+5) 工具栏上的按钮没有工具提示，取而代之的是命令行提示，有些类似于菜单的风格。
+6) 一行最多容纳 32767 个字符 (16 位的 DOS 版本也是如此)
+
+
+==============================================================================
+1. 启动图形界面	 					*win16-start*
+
+Vim 的 Win16 GUI 版本呈现给你的是一个 Windows 窗口。无论你用什么方式启动它，也
+不管你是否修改了它的文件名，它总是启动一个图形界面。Vim 的 Win16 GUI 没有所谓
+的 'console' 版本，但是你可以在一个 DOS 窗口中启动一个 16-bit DOS 版本的 Vim。
+
+Vim 的 Win16 GUI 有一个额外的菜单选项: "窗口/选择字体"，它会调用标准的 Windows
+字体选择程序。备注: 为了获得 GDI 最快的绘图速度，粗体字和斜体字通常不支持。
+
+设定菜单的高度对 Vim 的 Win16 GUI 版本不起作用。
+
+							*win16-maximized*
+如果你想让 Vim 在启动时最大化窗口，可以把下面的命令加到你的 vimrc 或 gvimrc 文
+件中: >
+	au GUIEnter * simalt ~x
+<
+gvim.exe 还有一个特别的版本，可以在 Windows 3.1 或 3.11 的 Win32s 子系统运行。
+参见 |win32s|。
+
+==============================================================================
+2. 设置 Vim 为默认的编辑器				*win16-default-editor*
+
+要把 Vim 设置为某一类文件的默认编辑器，可以用文件管理器的 "关联" 功能。
+
+如果你通过双击用 Vim 打开一个文件，Vim 的当前目录会切换到文件所在目录。
+
+参见 |notepad|。
+
+
+==============================================================================
+3. 使用剪贴板						*win16-clipboard*
+
+Windows 有一个剪贴板，你可以把文本从别的程序 "剪" 下来，放到剪贴板里，也可以把
+剪贴板里的文本 "粘贴" 到别的程序里。在 Vim 里有多种办法完成这些操作。
+这里的剪贴板与 Win32 版本完全相同: 参见 |gui-clipboard|。
+
+==============================================================================
+4. 命令行命令						*win16-shell*
+
+Vim 用一个 DOS 窗口执行外部命令，这使得 Vim 可以运行任何 DOS 命令。这个窗口使
+用 _default.pif 文件中的设置。
+
+							*win16-!start*
+通常 Vim 在一个命令结束之前不会继续进行下面的工作 (这对 Vim 从 shell 中捕获输
+出是很有用的)。如果你想让 Vim 启动一个命令后立即返回，可以这样做: >
+	:!start {command}
+这可能只适用于 Windows 程序。
+千万别忘了，当你切换回 Vim 的时候，一定让 Windows 3.1x 在后台继续运行那个你要
+执行的 DOS 程序。
+
+==============================================================================
+5. 特殊颜色						*win16-colors*
+
+在 Win16 中，可以使用 DOS 版本中定义的颜色。参见 |dos-colors|。
+
+另外，系统颜色也一样可以使用。它们以 Sys_XXX 的形式出现，这里 XXX 是相应的颜色
+名称 (对大小写不敏感)，如下表所示: (更翔实的描述可以参看 Win32 手册)。
+
+Sys_BTNFace		Sys_BTNShadow			Sys_ActiveBorder
+Sys_ActiveCaption	Sys_AppWorkspace		Sys_Background
+Sys_BTNText		Sys_CaptionText			Sys_GrayText
+Sys_Highlight		Sys_HighlightText		Sys_InactiveBorder
+Sys_InactiveCaption	Sys_InactiveCaptionText		Sys_Menu
+Sys_MenuText		Sys_ScrollBar			Sys_Window
+Sys_WindowFrame		Sys_WindowText
+
+
+可能最有用的值是下面这些:
+	Sys_Window	    正常的窗口背景颜色
+	Sys_WindowText      正常的窗口文字颜色
+	Sys_Highlight       加亮的背景颜色
+	Sys_HighlightText   加亮的文字颜色
+
+还有一些额外可供使用的颜色:
+Gray、Grey、LightYellow、SeaGreen、Orange、Purple、SlateBlue、Violet。
+
+参见 |rgb.txt|。
+
+==============================================================================
+						*win16-dialogs*
+6. Windows 对话框和浏览器
+
+Vim 的控制台版本在各个平台上提供的用户界面是类似的，同样 Vim 的 Win16 GUI 版本
+也会用与其他平台相似的视窗组件进行操作。
+
+
+6.1 对话框
+
+用 "confirm" 命令组 (例如: 'confirm' 选项，|:confirm| 命令和 |confirm()| 函数)
+调用的对话框是基于 GUI 而不是像其它版本那样是基于控制台的。没有选项可以改变这
+种状况。
+
+6.2 文件浏览器
+
+如果你在文件编辑命令前加上 ":browse"，Vim 就会弹出一个文件选择窗口，选择现存
+文件。参见 |:browse|。
+
+
+==============================================================================
+7. 杂项							*win16-various*
+
+							*win16-printing*
+菜单 "文件/打印" 选项使用记事本程序中的打印功能。这虽然有点别扭，但是容易移
+植。当然你可以定义自己的打印命令。例如，你可以找一下 16 位版本的 PrintFile。在
+$VIMRUNTIME/menu.vim 里你可以看到缺省是如何工作的。
+
+下面这条命令同样好用: >
+	:w >>prn
+
+Vim 支持许多 MS-Windows 的标准特性。一些相关的介绍可以在别的地方找到: 参见
+|'mouse'|，|win32-hidden-menus|。也可以看看 |:simalt|
+
+							*win16-drag-n-drop*
+你可以把一个或多个文件拖到 Vim 窗口里，Vim 会以一般的方式打开它们。如果你在拖
+动的过程中按住 Shift 键，Vim 会把当前目录切换到第一个被拖动文件所在的目录。如
+果你在拖动的过程中按住 Ctrl 键，Vim 会分割一个新窗口来打开文件。否则只有在当前
+缓冲区发生改变后才会分割新窗口。
+你也可以把文件目录的图标拖到 Vim 里，但是 Vim 不会打开目录里的所有文件 (通常我
+们也不希望它这么做)，Vim 会切换到那个目录，并且打开一个新文件。
+如果 Vim 处于命令行状态，被拖进来的文件和目录的名字会插入到光标所在的位置，这
+样就可以在任何 Ex 命令里使用这些名字。
+
+							*win16-truetype*
+建议用光栅 (raster) 字体，不要用 TrueType 的等宽 (fixed-pitch) 字体。比如: 用
+Courier，而不要用 Courier New。这样做不仅仅是节省资源，而且因为 Windows 3.1x
+在处理等宽 TrueType 字体时有细微的问题。特别是你把块状光标移到管道字符 '|' 上
+时，光标的大小会被画错，并且会留下痕迹。这个漏洞只出现在 Win3.1x GDI 里，在
+95/NT 下面没有这种情况。
+
+ vim:tw=78:sw=4:ts=8:ft=help:norl:

@@ -1,0 +1,1376 @@
+*spell.txt*	For Vim version 7.4.  最近更新: 2013年8月
+
+
+		  VIM 参考手册	  by Bram Moolenaar
+				译者: Willis
+				http://vimcdoc.sf.net
+
+
+拼写检查						*spell*
+
+1. 快速入门			|spell-quickstart|
+2. 拼写检查评注			|spell-remarks|
+3. 生成拼写文件			|spell-mkspell|
+4. 拼写文件格式			|spell-file-format|
+
+{Vi 无此功能}
+
+如果编译时没有加入 |+syntax| 特性，不能使用拼写检查。
+
+备注: 另有一个 vimspell 插件。如果你安装了，通过 ":help vimspell" 可以了解它。
+不过你可能更想把这个插件删掉而用 'spell' 选项。后者更好。
+
+==============================================================================
+1. 快速入门					*spell-quickstart* *E756*
+
+此命令打开拼写检查: >
+
+	:setlocal spell spelllang=en_us
+
+它打开 'spell' 选项并指定检查美国英语。
+
+有问题的单词使用下面的高亮:
+	SpellBad	不能识别的单词 (坏词) 			|hl-SpellBad|
+	SpellCap	开头没有大写的单词			|hl-SpellCap|
+	SpellRare	偏僻词					|hl-SpellRare|
+	SpellLocal	不符合所选区域的拼写方式		|hl-SpellLocal|
+
+Vim 只检查单词的拼写，不做语法检查。
+
+如果 'mousemodel' 选项设为 "popup" 并且光标在拼写错误的单词上，或者它被设为
+"popup_setpos" 而鼠标指针在拼写错误的单词上，那么弹出的菜单包含一个子菜单用来
+替换这个坏词。注意: 这减慢了弹出菜单出现的速度。GTK 的 备注: 直到菜单出现为止
+不要释放鼠标右键，否则会有问题。
+
+要搜索下一个拼写有问题的单词:
+
+							*]s*
+]s			移动到光标之后下一个拼写有问题的单词。命令前的计数可以
+			用来重复。适用 'wrapscan'。
+
+							*[s*
+[s			类似于 "]s" 但反向搜索。寻找光标之前拼写有问题的单词。
+			不能识别分散在两行的单词，因而可能停在不被高亮为坏词的
+			单词上。但不会停在行首没有大写开头的单词上。
+
+							*]S*
+]S			类似于 "]s" 但只检查坏词，不检查偏僻词或其它区域的词。
+
+							*[S*
+[S			类似于 "]S" 但反向搜索。
+
+
+要加入词汇到自定义的单词列表:
+
+							*zg*
+zg			把光标所在的单词作为一个好 (good) 词加入到 'spellfile'
+			的第一个名字对应的文件。命令前加上计数指示使用
+			'spellfile' 的第几个项目。计数 2 使用第二个项目。
+
+			可视模式下把选择的字符序列作为一个单词 (包括空白！)。
+			如果光标在标为坏词的文本上，使用标注的文本。
+			否则使用非单词字符分隔的光标所在的单词。
+
+			如果该单词在其它拼写文件里被显式标注为坏词，结果无法预
+			测。
+
+							*zG*
+zG			同 "zg" 但加入单词到内部单词列表 |internal-wordlist|。
+
+							*zw*
+zw			类似于 "zg" 但标记单词为坏 (错误: wrong) 词。
+			如果单词已经在 'spellfile' 里出现，把它变为注释行。
+			|spellfile-cleanup| 说明如何清理这些行。
+
+							*zW*
+zW			同 "zw" 但加入单词到内部单词列表 |internal-wordlist|。
+
+zuw							*zug* *zuw*
+zug			撤销 |zw| 和 |zg|，从 'spellfile' 里删除单词。计数的使
+			用方法同 |zg|。
+
+zuW							*zuG* *zuW*
+zuG			撤销 |zW| 和 |zG|，从内部单词列表里删除单词。计数的使
+			用方法同 |zg| (译者注: ？)。
+
+							*:spe* *:spellgood*
+:[count]spe[llgood] {word}
+			把 {word} 作为一个好词加入到 'spellfile'，类似 |zg|。
+			如果没有计数，使用第一个名字项目，计数为 2 使用第二个
+			项目，等等。
+
+:spe[llgood]! {word}	把 {word} 作为一个好词加入到内部单词列表。类似 |zG|。
+
+							*:spellw* *:spellwrong*
+:[count]spellw[rong] {word}
+			把 {word} 作为一个坏 (错误: wrong) 词加入到
+			'spellfile'，类似 |zw|。如果没有计数，使用第一个名字项
+			目，计数为 2 使用第二个项目，等等。
+
+:spellw[rong]! {word}	把 {word} 作为一个坏 (错误: wrong) 词加入到内部单词列
+			表。类似 |zW|。
+
+:[count]spellu[ndo] {word}				*:spellu* *:spellundo*
+			类似于 |zuw|，[count] 的使用同 |:spellgood|。
+
+:spellu[ndo]! {word}	类似于 |zuW|，[count] 的使用同 |:spellgood|。
+
+
+用上面的命令加入单词到 'spellfile' 后，相关联的 ".spl" 文件会自动更新并重新载
+入。如果手动修改 'spellfile'，你需要用 |:mkspell| 命令。以下命令多数情况下应该
+能够工作: >
+	:edit <'spellfile' 里的文件>
+<	(修改拼写文件) >
+	:mkspell! %
+
+有关 'spellfile' 格式的详情见 |spell-wordlist-format|。
+
+							*internal-wordlist*
+置位 'spell' 时，所有缓冲区使用同一个内部单词列表。它不会被保存，退出 Vim 时就
+会丢失。设置 'encoding' 时它也被清空。
+
+
+要列出坏词的拼写建议:
+							*z=*
+z=			为光标所在/之后的单词提供正确拼写单词的建议。即使单词
+			没有被高亮为坏词，它也可用来寻找替代的单词，比如当该单
+			词之后的单词是坏词。
+			可视模式下使用高亮文本作为要被替代的单词。
+			结果按和被替代的单词的相似度排序。
+			可能需时很久。如果等不及，你可以按 CTRL-C。
+
+			如果命令没有给出计数，列出所有替代，可以输入编号进行选
+			择，如果不想替换，输入 <Enter>。你可以用鼠标点击你希望
+			的选择 (鼠标必须可用于普通模式，而且不能有回绕行)。点
+			击第一行 (标题) 取消操作。
+
+			通常，建议列表用来替换高亮的坏词。有时它们也包含其它文
+			本，这种情况也同时列出替换文本，出现在一个 "<" 之后。
+
+			如果使用计数，直接使用该建议，不再提示。例如，"1z=" 总
+			是使用第一个建议。
+
+			如果 'verbose' 非零，除了建议以外，同时显示指示和坏词
+			相似程度的评分 (分数愈高差别越大)。
+			如果单词被替换，重复命令 "." 会重复单词的替换。这相当
+			于 "ciw"，跟好词，然后跟 <Esc>。_不_能用于泰语和其它不
+			用空格分隔单词的语言。
+
+					*:spellr* *:spellrepall* *E752* *E753*
+:spellr[epall]		在当前窗口重复 |z=| 进行的替换，即把所有的匹配用替换过
+			的那个单词替换。
+
+插入模式下，如果光标在坏词之后，用 CTRL-X s 可以寻找建议。这使用插入模式补全的
+工作方式。CTRL-N 得到下一个建议，CTRL-P 往回走。|i_CTRL-X_s|
+
+'spellsuggest' 选项影响建议列表的生成和排序方式。见 |'spellsuggest'|。
+
+'spellcapcheck' 选项用来检查句子第一个单词是否以大写字母开头。这不用于文件的首
+个单词。如果句子之后立即换行，下一行的高亮可能被延迟。如果需要的话，用
+|CTRL-L|。另见 |set-spc-auto| 了解如何在设置 'spelllang' 时自动设置本选项。
+
+Vim 计算好词的使用次数并用来对建议进行排序: 出现过的单词有较小的奖励，经常见到
+的单词有较大的奖励。字缀文件里 COMMON 项目也用来定义常用词，这样新文件或短文件
+都能使用此机制 |spell-COMMON|。
+
+==============================================================================
+2. 拼写建议的评注					*spell-remarks*
+
+性 能
+
+Vim 进行在线拼写检查。要快速工作就需要把单词列表载入内存。这需要很大的内存 (1
+兆字节或更多)。载入单词列表产生的延迟也很显著，这个过程发生在置位 'spell' 和已
+经置位了 'spell' 再设置 'spelllang' 的时候。要最大程度减少延迟，每个单词列表只
+载入一次。'spelllang' 清空或者 'spell' 复位时都不删除它。但设置 'encoding' 时
+会重载所有的单词列表，这时你也会注意到明显的延迟。
+
+
+区 域
+
+不同的区域可能使用同一单词不同的拼写形式。例如，英语 (至少) 有以下变种:
+
+	en		所有区域
+	en_au		澳大利亚
+	en_ca		加拿大
+	en_gb		英国
+	en_nz		新西兰
+	en_us		美国
+
+不用于指定区域但用于其它区域的单词使用 SpellLocal 高亮 |hl-SpellLocal|。
+
+语言和区域名总用小写。
+
+用 |zg| 和其它命令加入单词时总为所有区域加入单词。如果不想这样，你需要手动修改
+'spellfile'。见 |spell-wordlist-format|。注意 只有所有 'spelllang' 所有项目
+(不包括指定 .spl 名字的文件) 都指定相同区域时，才使用 'spellfile' 文件指定的区
+域。
+
+							*spell-german*
+特例: 德语使用如下特殊区域:
+	de		接受所有的德语单词
+	de_de		旧式和新式拼写
+	de_19		旧式拼写
+	de_20		新式拼写
+	de_at		奥地利
+	de_ch		瑞士
+
+							*spell-russian*
+特例: 俄语使用如下特殊区域:
+	ru		接受所有的俄语单词
+	ru_ru		"IE" 字母拼写
+	ru_yo		"YO" 字母拼写
+
+							*spell-yiddish*
+意第绪语 (yiddish) 需要 "utf-8" 编码，因为它使用了特殊字符。如果使用 latin1，
+Vim 会使用转译的 (罗马化的) 意第绪语。如果你想使用 utf-8 的转译意第绪语，用
+"yi-tr"。见下表:
+	'encoding'	'spelllang'
+	utf-8		yi		意第绪语
+	latin1		yi		转译的意第绪语
+	utf-8		yi-tr		转译的意第绪语
+
+
+拼 写 文 件						*spell-load*
+
+Vim 在 'runtimepath' 里的 "spell" 子目录查找拼写文件。名字规则是: LL.EEE.spl，
+其中:
+	LL	语言名
+	EEE	'encoding' 值
+
+"LL" 的值来自 'spelllang'，但不包括区域名。例如:
+	'spelllang'	LL ~
+	en_us		en
+	en-rare		en-rare
+	medical_ca	medical
+
+只载入 'runtimepath' 里第一个可用的文件。如果成功，载入文件名为 LL.EEE.add.spl
+的附加文件。所有找到的都被使用。
+
+如果找不到拼写文件，激活 |SpellFileMissing| 自动命令事件。它可能会启动
+|spellfile.vim| 插件提供你机会来下载拼写文件。
+
+另外，载入和 'spellfile' 的名字相关的文件，也就是 |zg| 和 |zw| 用来加入好词和
+坏词的文件。
+
+例外:
+- 如果 'encoding' 是 "iso-8859-15"，Vim 使用 "latin1"。对拼写来说，欧元符号没
+  有作用。
+- 如果 'encoding' 没有对应的拼写文件，Vim 尝试用 "ascii" 代替。这只能用于单词
+  几乎全是 ASCII 字符构成的语言，例如英语。可用 'encoding' 不是 "latin1"，如
+  iso-8859-2，但要编辑英文文本的场合。 ".add" 文件使用和找到的主拼写文件相同的
+  名字。
+
+例如，如果设置如下:
+	'runtimepath' 是 "~/.vim,/usr/share/vim70,~/.vim/after"
+	'encoding'    是 "iso-8859-2"
+	'spelllang'   是 "pl"
+
+Vim 会寻找:
+1. ~/.vim/spell/pl.iso-8859-2.spl
+2. /usr/share/vim70/spell/pl.iso-8859-2.spl
+3. ~/.vim/spell/pl.iso-8859-2.add.spl
+4. /usr/share/vim70/spell/pl.iso-8859-2.add.spl
+5. ~/.vim/after/spell/pl.iso-8859-2.add.spl
+
+这里假设没找到 1 但找到了 2。
+
+如果 'encoding' 为 "latin1"，Vim 会寻找:
+1. ~/.vim/spell/pl.latin1.spl
+2. /usr/share/vim70/spell/pl.latin1.spl
+3. ~/.vim/after/spell/pl.latin1.spl
+4. ~/.vim/spell/pl.ascii.spl
+5. /usr/share/vim70/spell/pl.ascii.spl
+6. ~/.vim/after/spell/pl.ascii.spl
+
+这里假设以上文件都找不到 (如果去掉所有的非 ASCII 字符，波兰语无法阅读)。
+
+目前不支持 EBCDIC 编码的拼写检查。
+
+当前的 'encoding' 下不一定有可用的拼写文件。|spell-mkspell| 说明如何建立拼写文
+件。用 "iconv" 转换拼写文件_不能_工作！
+
+备注: VMS 上 ".{enc}.spl" 被换名为 "_{enc}.spl"，否则文件名会有问题。
+
+						    *spell-sug-file* *E781*
+如果存在和 ".spl" 同名但以 ".sug" 结尾的文件，使用该文件来给出更好的建议。直到
+需要建议的时候才载入该文件，以减少内存开销。
+
+				    *E758* *E759* *E778* *E779* *E780* *E782*
+载入拼写文件时，Vim 检查它的格式是否正确。如果有错，该文件可能已经被清空或修改
+过，也可能它本来是为其它 Vim 版本设计的。
+
+
+清 理 拼 写 文 件					*spellfile-cleanup*
+
+|zw| 命令会把 'spellfile' 的已有项目变成注释行。这避免了每次都写入一个新文件，
+但文件因而只会增长而不会缩短。要清理所有 ".add" 拼写文件的注释行，执行: >
+	:runtime spell/cleanadd.vim
+
+它删除所有除了 "##" 开头的注释行。"##" 行可以用来假如你想保留的注释。
+
+你可以随时调用此脚本。系统提供了一个变量，用于跳过对最近刚修改过的文件的清理。
+它设置文件修改以后隔多长时间才需要清理，以秒计。例如，如果只要清理那些最近一个
+小时没有修改过的文件: >
+      let g:spell_clean_limit = 60 * 60
+缺省值为一秒。
+
+
+单 词
+
+Vim 使用固定的方法来识别单词，和 'iskeyword' 相互独立。所以该方法适用于帮助文
+件和 'iskeyword' 里包含 '-' 等字符的语言。单词字符仍然和 'encoding' 有关。
+
+单词字符表格保存在主 .spl 文件里。所以它和生成文件时的当前 locale 有关！不过，
+.add.spl 文件不包含单词列表。
+
+数位开头的单词总是忽略该数位，除非能够识别整个单词。这样，如果 "3D" 是单词而
+"D" 不是，那么识别 "3D" 为一个单词，但如果 "3D" 不是单词，只把 "D" 标识为坏
+词。能识别 0x12ab 和 0X12AB 形式的十六进制数。
+
+
+单 词 组 合
+
+拼写检查的单词可以包含空格。这可以用来识别不能单独使用的单词，例如 "et al."。
+也可以用来识别 "the the" 这样的错误并高亮之。
+
+空格的个数无关紧要。多数情况下换行符也可以出现。不过，这使得判断从哪里开始检查
+拼写错误出现困难。如果你修改了一行而且只有该行被重画，Vim 不会去看上一行，所以
+如果 "et" 出现在上一行的尾部，"al." 会被标记为错误。如果你输入 "the<CR>the"，
+直到第一行被重画，高亮并不出现。要立即重画，用 |CTRL-L|。"[s" 也会停在带换行符
+的单词组合上。
+
+如果遇到换行符，Vim 跳过之后的 '*'、'>' 和 '"' 这样的字符。这使得拼写检查可以
+在 C、外壳脚本和 Vim 代码里的注释进行。
+
+
+语 法 高 亮						*spell-syntax*
+
+使用语法高亮的文件可以指定应在哪里进行拼写检查:
+
+1.  所有地方				缺省
+2.  在特定项目里			使用 "contains=@Spell"
+3.  除了特定项目的所有地方		使用 "contains=@NoSpell"
+
+第二个方法里，加入 @NoSpell 簇的项目又会屏蔽拼写检查。这可用来，比如说，给程序
+注释加上 @Spell，而给不应检查拼写的项目加上 @NoSpell。
+另见 |:syn-spell| 了解如何处理不在语法项目里的文本。
+
+
+VIM 脚 本
+
+如果你想编写和拼写有关的 Vim 脚本，以下函数可能有用:
+
+    spellbadword()	寻找光标所在的坏词
+    spellsuggest()	得到拼写建议列表
+    soundfold()		得到单词按发音折叠的等价形式
+
+
+自 动 设 置 'spellcapcheck'				*set-spc-auto*
+
+一旦 'spelllang' 选项被成功设置，Vim 会执行 'runtimepath' 的 "spell/LANG.vim"
+文件。"LANG" 是 'spelllang' 中第一个逗号、句号或下划线之前的值。这可用来设置语
+言特定的选项，尤其是 'spellcapcheck'。
+
+发布中包含了若干这样的文件。用此命令可以看看它们做了什么: >
+	:next $VIMRUNTIME/spell/*.vim
+<
+注意 如果 'spellcapcheck' 被修改而不同于缺省值，这些脚本不对它进行修改。这时假
+设用户已经有其它的偏好值。
+
+
+双 重 评 分						*spell-double-scoring*
+
+'spellsuggest' 选项可用来选择 "双重" 评分。该机制基于以下原则: 有两种不同类型
+的拼写错误:
+
+1. 你知道如何拼写单词，但有些输入错误。这种类型会导致较小的编辑距离 (交换/省略
+   /插入的字符数) 和一个发音可能完全不同的单词。
+
+2. 你不知道如何拼写单词，所以输入发音类似的形式。这时编辑距离可能很大，但经过
+   按发音折叠以后单词可以很相似。
+
+既然两种错误的评分可以非常不同，我们为每种错误使用一个列表，并把它们合并。
+
+按发音折叠较慢，而通晓语言的用户也不太会犯第二种错误。所以设置 'spellsuggest'
+可以让用户选择自己偏好的建议评分方法。
+
+==============================================================================
+3. 生成拼写文件						*spell-mkspell*
+
+Vim 的拼写文件使用二进制文件格式。这大大加快了单词列表的载入，并减小了文件的大
+小。
+						    *.aff* *.dic* *Myspell*
+你可以用 Myspell 使用的 .aff 和 .dic 文件构造 Vim 的拼写文件。OpenOffice.org
+和 Mozilla 使用 Myspell。OpenOffice .oxt 文件是包含 .aff 和 .dic 文件的 zip 压
+缩包。你可以在此找到那些文件:
+	http://extensions.services.openoffice.org/dictionary
+如果不行，这里可以找到较旧的 OpenOffice 2 文件:
+	http://wiki.services.openoffice.org/wiki/Dictionaries
+你也可以使用简单单词列表列表。效果相同，这取决于你能找到什么格式的单词列表。
+
+如果你安装 Aap (来自 www.a-a-p.org)，可以利用 runtime/spell/??/ 目录的若干构造
+文件 (recipe)。Aap 会自己下载文件，应用 Vim 必需的补丁并构造 .spl 文件。
+
+确信你正确设置了当前 locale，否则 Vim 不知道什么字符是大写字母，什么字符是小写
+的。如果不知道 locale (例如，在 Unix 上使用 MS-Windows 代码页)，在 .aff 文件里
+增加表格 |spell-affix-chars|。如果 .aff 文件没有定义表格，使用当前激活的拼写的
+单词表格。如果拼写也没有激活，Vim 只好试图进行一些猜测。
+
+							*:mksp* *:mkspell*
+:mksp[ell][!] [-ascii] {outname} {inname} ...
+			从单词列表生成 Vim 的拼写文件。例如: >
+		:mkspell /tmp/nl nl_NL.words
+<								*E751*
+			如果 {outname} 以 ".spl" 结尾，它被用作文件名。否则，
+			它指定诸如 "en" 这样的语言名，不带区域名。要写入的文件
+			名是 "{outname}.{encoding}.spl"，其中 {encoding} 是
+			'encoding' 选项的值。
+
+			如果输出文件已存在，必须用 [!] 才能进行覆盖。
+
+			如果给出 [-ascii] 参数，跳过包含非 ASCII 字符的单词。
+			产生的文件名以 "ascii.spl" 结尾。
+
+			输入可以是 Myspell 格式的文件 {inname}.aff 和
+			{inname}.dic。如果 {inname}.aff 不存在，输入也可以用文
+			件名为 {inname} 的普通单词列表文件。
+
+			可以给出多个 {inname} 参数，把多个区域合并到一个 Vim
+			拼写文件。例如: >
+		:mkspell ~/.vim/spell/en /tmp/en_US /tmp/en_CA /tmp/en_AU
+<			合并美加澳三地的英语单词列表成为单个 en.spl 文件。
+			至多可以合并八个区域。 *E754* *E755*
+			使用第一个包含 REP 和 SAL 项目的 .aff 文件的这些项目。
+			|spell-REP| |spell-SAL|
+
+								*E845*
+			该命令需要大量内存，用于寻找最优单词树 (波兰语、意大利
+			语和匈牙利语需要几百兆字节)。最终结果因为使用压缩的缘
+			故会小得多。为了避免内存溢出，压缩会时不时进行。使用
+			'mkspellmem' 选项可以对此行为进行调节。
+
+			拼写文件写回后，在缓冲区使用时会自动重新载入。
+
+:mksp[ell] [-ascii] {name}.{enc}.add
+			类似于上面的 ":mkspell"，使用 {name}.{enc}.add 作为输
+			入文件，并在相同目录产生在后面附加 ".spl" 的输出文件。
+
+:mksp[ell] [-ascii] {name}
+			类似于上面的 ":mkspell"，使用 {name} 作为输入文件，并
+			在相同目录产生在后面附加 ".{enc}.spl" 的输出文件。
+
+Vim 会报告重复单词的个数。这可能是单词列表里的错误，但有时一个基本字可以加上不
+同的前缀和后缀以免把它们合并在一起 (例如，捷克语就这么用)。如果你想让 Vim 报告
+所有的重复单词，设置 'verbose' 选项。
+
+如果为了 Vim 的使用，你想修改 Myspell 单词列表，我们建议以下步骤:
+
+1. 从 Myspell 获取 xx_YY.aff 和 xx_YY.dic 文件。
+2. 把这些文件备份为 xx_YY.orig.aff 和 xx_YY.orig.dic。
+3. 修改 xx_YY.aff 和 xx_YY.dic 文件以删除坏词、增加新词、定义 FOL/LOW/UPP 的单
+   词字符，等等。可以考虑使用发布中的 "*.diff" 文件。
+4. 用正确的 locale 启动 Vim，然后用 |:mkspell| 生成 Vim 拼写文件。
+5. 如果拼写文件被写到 'runtimepath' 里的 spell 目录，这个命令可以测试该文件:
+   ":set spell spelllang=xx"。如果要写到别处，用 ":set spelllang=xx.enc.spl"。
+
+如果 Myspell 的文件有更新，你可以把差异合并进来:
+1. 取得新的 Myspell 文件，假设名为 xx_YY.new.aff 和 xx_UU.new.dic。
+2. 用 Vimdiff 来对改变的内容进行比较: >
+	vimdiff xx_YY.orig.dic xx_YY.new.dic
+3. 选择 xx_YY.dic 里你喜欢的改变。xx_YY.aff 可能也需要修改。
+4. 把 xx_YY.new.dic 换名为 xx_YY.orig.dic，xx_YY.new.aff 换为 xx_YY.orig.aff。
+
+
+拼 写 文 件 版 本					*E770* *E771* *E772*
+
+拼写检查是 Vim 较新的一个特性，因此将来 .spl 文件格式可能会修改以支持更多的语
+言。Vim 会检查拼写文件的合法性并报告可能的错误。
+
+	E771: Old spell file, needs to be updated ~
+拼写文件比你的 Vim 版本要旧。你需要更新 .spl 文件。
+
+	E772: Spell file is for newer version of Vim ~
+拼写文件比你的 Vim 版本要新。你需要更新 Vim。
+
+	E770: Unsupported section in spell file ~
+这意味着拼写文件是为 Vim 的后来版本设计的，因为它包含了拼写文件需要的 (但目前
+不支持的) 一个小节。这种情况下最好升级 Vim。
+
+
+拼 写 文 件 转 储
+
+如果为了某些原因你需要检查当前使用的拼写文件支持哪些单词，用此命令:
+
+							*:spelldump* *:spelld*
+:spelld[ump]		打开新窗口，用当前所有的合法单词填充。不包含复合词。
+			注意: 对某些语言结果可能很大，甚至会使 Vim 溢出内存。
+
+:spelld[ump]!		类似于 ":spelldump"，同时包含单词计数，也就是在更新屏
+			幕时找到每个单词的个数。COMMON 项目里的单词的初始计数
+			为 10。
+
+使用单词列表格式 |spell-wordlist-format|。你可以用 ":mkspell" 来阅读它并生成
+包含所有单词的 .spl 文件。
+
+如果 'spelllang' 里的所有项目使用相同区域或者不使用任何区域，转储的单词里包含
+区域信息。否则，只包含当前区域里的单词，并且不生成 "/regions" 行。
+
+该 .spl 文件里，带有 .spl 文件名的注释行头部出现在所有生成的单词之前。
+
+
+拼 写 文 件 丢 失		*spell-SpellFileMissing* *spellfile.vim*
+
+如果使用语言的拼写文件不存在，报错。但如果激活了 "spellfile.vim" 插件，它会提
+供你下载拼写文件的机会。你只要按照指示去做就可以了，它会告诉你把文件写到哪里
+(为此，'runtimepath' 中必须要有一个可写的目录)。
+
+包含在该插件里用于寻找拼写文件的缺省位置使用 Vim 的 ftp 服务器。如果你想用其它
+位置或者其它协议，设置 g:spellfile_URL 变量为保存拼写文件目录的位置。|netrw|
+插件用来得到该文件，那里提供了 URL 的格式说明。例如: >
+	let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
+你可能需要转义字符。
+
+关于下载语言，该插件只会询问你一次。如果你想再做一次，重启 Vim 或者设置
+g:spellfile_URL 为其它值 (比如，在前面加一个空格)。
+
+如果不想使用 "spellfile.vim" 插件，在 vimrc 文件里加入: >
+
+	let loaded_spellfile_plugin = 1
+
+除了用插件以外，定义 |SpellFileMissing| 自动命令也可以让你自己处理丢失的文件。
+你可以这么做: >
+
+	:au SpellFileMissing * call Download_spell_file(expand('<amatch>'))
+
+这里 <amatch> 项目包含语言名。另一个重要的值是 'encoding'，因为每个编码都有自
+己的拼写文件。有两个例外:
+- ISO-8859-15 (latin9) 使用名字 "latin1" (两者的区别只在于一些不在字典单词里的
+  字符上)。
+- 某些大多数单词里只使用 ASCII 字符的语言也可以使用名字 "ascii"。
+
+缺省 "spellfile.vim" 插件使用此自动命令，如果在它之后你要定义自动命令，用
+":au! SpellFileMissing" 可以否决它的设置。如果你在插件之前定义自动命令，该插件
+会注意到这一点而不做任何事。
+							*E797*
+注意 SpellFileMissing 自动命令不能改变或破坏用户正在编辑的缓冲区。
+
+==============================================================================
+4. 拼写文件格式						*spell-file-format*
+
+这里包含用户为建立并维护单词列表使用的文件格式。
+
+注意 我们这里避免使用单词 "字典"。这是因为拼写检查的目标和编写 (成册的) 字典有
+所不同。对于拼写，我们需要正确单词的列表，这些单词因而不会被高亮。字典里不会包
+含人名和公司名，但单词列表里会。有些古老的词汇现在已经罕用，而它们往往是常用词
+的错误拼写。它们在字典出现，但不在单词列表里。
+
+有两种格式: 直接的单词列表和使用字缀压缩 (affix compression) 的列表。Myspell
+(Mozilla 和 OpenOffice.Org) 使用字缀压缩的文件。它需要两个文件，分别带 .aff 和
+.dic 扩展名。
+
+
+直 接 单 词 列 表 格 式					*spell-wordlist-format*
+
+每行一个单词。就需要这么多。
+
+此外，还识别以下项目:
+
+- 忽略空行和空白行。
+
+	# comment ~
+- 忽略 # 开头的行 (注释行)。
+
+	/encoding=utf-8 ~
+- 在任何单词之前的以 "/encoding=" 开头的行指定文件的编码。'=' 之后是编码名。它
+  告诉 Vim 如何设定从指定编码到 'encoding' 的转换。这样，同一单词列表可用于多
+  个目标编码。
+
+	/regions=usca ~
+- "/regions=" 开头的行指定支持的一到多个区域名。每个区域名必须是两个 ASCII 字
+  符。第一个区域是区域 1。所以 "/regions=usca" 包含区域 1 "us" 和区域 2 "ca"。
+  附加单词列表的区域名必须和主单词列表的相同！
+
+- 其它 '/' 开头的行保留将来使用。忽略不识别的行。但你会得到警告，让你知道发生
+  了一些事。
+
+- 单词后面可以跟 "/" 加以下的项目:
+    =		大小写必须准确匹配。
+    ?		偏僻词。
+    !		坏 (错误) 词。
+    digit	包含该单词的合法区域。如果不指定区域，该词在所有区域均合法。
+
+示例:
+
+	# 这是示例单词列表			注释
+	/encoding=latin1			文件编码
+	/regions=uscagb				区域 "us"、"ca" 和 "gb"
+	example					所有区域可用的单词
+	blah/12					区域 "us" 和 "ca" 可用的单词
+	vim/!					坏词
+	Campbell/?3				区域 3 "gb" 的偏僻词
+	's mornings/=				保持大小写的单词
+
+注意 如果使用 "/="，不能接受再次出现的同一单词但使用全大写的形式。这和混合大小
+写的单词不同，后者自动标注为保持大小写，但可以用全大写的形式出现。
+
+
+.AFF 和 .DIC 文 件 格 式				*aff-dic-format*
+
+有两个文件: 基本单词列表和字缀文件。字缀文件指定语言的设定，也可以包含字缀。字
+缀用于修改基本单词来得到完整的单词列表。这样显著地减少了单词的数目，对波兰语这
+样的语言尤其如此。这被称为字缀压缩。
+
+基本单词列表和字缀文件用 ":mkspell" 命令合并以产生二进制的拼写文件。因为已经经
+过预处理，此文件的载入很快。二进制文件格式在源代码中描述 (src/spell.c)。但只有
+开发者需要知道它的信息。
+
+预处理过程也使得我们在构造 Vim 单词列表之前可以接受 Myspell 语言文件并进行一定
+修改。这个工具可以在 "src/spell" 目录里找到。
+
+字缀和单词列表文件基于 Myspell 使用的文件 (Mozilla 和 OpenOffice.org 的拼写检
+查器)。这里给出它们的描述:
+	http://lingucomponent.openoffice.org/affix.readme ~
+注意字缀是大小写敏感的，上面的描述里对此并不明确。
+
+Vim 支持不少附加成分。下面给出描述 |spell-affix-vim|。已经作出努力，使文件格式
+和其它拼写检查器使用的兼容，因此常常可以直接使用相同的文件。比 Myspell 提供更
+多功能的另一开发项目是 Hunspell ( http://hunspell.sf.net )。
+
+
+单 词 列 表 格 式				*spell-dic-format*
+
+简单例子，附注行号:
+
+	1	1234 ~
+	2	aan ~
+	3	Als ~
+	4	Etten-Leur ~
+	5	et al. ~
+	6	's-Gravenhage ~
+	7	's-Gravenhaags ~
+	8	# 区域间有差异的词 ~
+	9	kado/1 ~
+	10	cadeau/2 ~
+	11	TCP,IP ~
+	12	/使用 S 字缀可以加上 's' ~
+	13	bedel/S ~
+
+第一行包含单词个数。Vim 忽略，但如果没有会报错。 *E760*
+
+其后，每个单词一行。忽略行尾的空格，其它地方出现的空格仍然有意义。字缀文件指定
+编码 |spell-SET|。
+
+注释行以 '#' 或 '/' 开始。参见示例行 8 和 12。注意 _不能_在单词之后加上注释:
+
+		someword   # 这里的注释会出错！ ~
+
+单词之后有一个可选的斜杠与标志位。多数标志位是用来指示该词可以使用哪些字缀的字
+母。.aff 文件的 SFX 和 PFX 说明它们的用法，见 |spell-SFX| 和 |spell-PFX|。Vim
+也允许使用由字缀文件的 FLAG 项目里指定的其它标志位类型 |spell-FLAG|。
+
+如果单词只有小写字母，同时匹配第一个字母大写的形式。
+
+如果单词里包含大写字母，相应位置必须大写。不能匹配同一位置使用小写形式的相同单
+词。同样，也不能匹配将其它位置 (本是小写) 的字母变成大写的形式。
+
+总能接受全部大写的单词形式。
+
+	单词列表	匹配			不匹配 ~
+	als		als Als ALS		ALs AlS aLs aLS
+	Als		Als  ALS		als ALs AlS aLs aLS
+	ALS		ALS			als Als ALs AlS aLs aLS
+	AlS		AlS ALS			als Als ALs aLs aLS
+
+可以用 KEEPCASE 的字缀标识符来指定某个单词只能接受大小写完全匹配的形式，见下
+|spell-KEEPCASE|。
+
+注意: 行 5 和 7 使用了非单词字符。你可以在单词里包含任何字符。检查文本时，单词
+只有在前后都是非单词字符的时候才可能匹配。Myspell 也许不能用非单词字符开始的单
+词。
+
+行 12 (译者注: 应为行 11) 定义单词 "TCP/IP"。因为斜杠有特殊含义，这里使用逗号
+代替。它定义在字缀文件的 SLASH 项目里，见 |spell-SLASH|。注意 没有这个 SLASH
+项目，匹配的单词将是 "TCP,IP"。
+
+
+字 缀 文 件 格 式			*spell-aff-format* *spell-affix-vim*
+
+							*spell-affix-comment*
+.aff 文件的注释行以 '#' 开始:
+
+	# 注释行 ~
+
+带有固定数目参数的项目之后可以有注释，但不能有包含空白的参数。注释必须以 "#"
+字符开始。例如:
+
+	KEEPCASE =  # fix case for words with this flag ~
+
+
+编 码								*spell-SET*
+
+字缀文件可以使用任何 "iconv" 支持的编码。但在有些情况下，调用 |:mkspell| 时必
+须设置正确的当前 locale。加入 FOL/LOW/UPP 行可以取消这个限制 |spell-FOL|。
+
+编码应该在任何依赖于编码的内容之前指定。此编码将同时应用于字缀文件和字典文件。
+用 SET 行设置编码:
+
+	SET utf-8 ~
+
+此编码可以和 ":mkspell" 使用时的 'encoding' 选项值不同。Vim 这时会把所有内容转
+换为 'encoding' 并生成适用于 'encoding' 的拼写文件。如果有些使用的字符不能转换
+为 'encoding'，报错。
+							*spell-affix-mbyte*
+如果使用多字节编码，可以使用更多不同的字缀标志位。Myspell 不支持这些，因而你也
+许又不愿意这样用。为了兼容性起见，使用 8 位编码。
+
+
+信 息
+
+字缀文件的这些项目可以用来为拼写文件加入信息。这里没有格式的限制，但正确的编码
+仍然是必要的。
+
+				*spell-NAME* *spell-VERSION* *spell-HOME*
+				*spell-AUTHOR* *spell-EMAIL* *spell-COPYRIGHT*
+	NAME		语言名
+	VERSION		1.0.1  with fixes
+	HOME		http://www.myhome.eu
+	AUTHOR		John Doe
+	EMAIL		john AT Doe DOT net
+	COPYRIGHT	LGPL
+
+这些字段被按原样放到 .spl 文件里。|:spellinfo| 命令可以查看这些信息。
+
+							*:spellinfo* *:spelli*
+:spelli[nfo]		显示当前缓冲区使用的拼写文件的信息。
+
+
+字 符 表 格
+							*spell-affix-chars*
+如果使用 8 位编码，字缀文件应该定义哪些字符是单词字符。这是因为使用 ":mkspell"
+的系统可能不支持此编码的 locale，因而 isalpha() 不一定工作。Unix 上用 "cp1250"
+编码就是如此。
+						*E761* *E762* *spell-FOL*
+						*spell-LOW* *spell-UPP*
+字缀文件需要如下三行。简单的例子:
+
+	FOL  áëñ ~
+	LOW  áëñ ~
+	UPP  ÁËÑ ~
+
+这三行必须使用完全相同的字符数。
+
+"FOL" 行指定大小写合并字母。在忽略大小写的情况下，它们用来比较单词。多数编码里
+和小写字母行完全相同。
+
+"LOW" 行指定小写字母。多数情况下和 "FOL" 行等同。
+
+"UPP" 行指定大写字母。也就是，如果一个字符和 "FOL" 相同位置的字符不同，它就是
+大写字母。
+
+德语的 sharp s ß 是个特例。它的大写形式是 "SS"。在 FOL/LOW/UPP 行里应该包含它
+以识别为单词字符，但在所有三行上，用 ß 字符代替。
+
+这里应该省略 ASCII 字符。不管怎么指定，Vim 总是以相同的方式处理它们。
+如果编码为 UTF-8，不需要指定单词字符。
+
+							*E763*
+Vim 允许在相同文件里为多种语言进行拼写检查。它们在 'spelllang' 选项里列出。为
+此，相同编码的所有拼写文件必须使用相同的单词字符，否则不能保证它们合并使用而不
+产生错误。
+
+如果你得到 E763 警告说单词表格不一致，可能需要更新 .spl 文件。如果你是下载得到
+的文件，下载所有拼写文件的最新版本。否则重新用 |:mkspell| 生成 .spl 文件。如果
+还有错误，请检查所用的 .aff 文件里的 FOL、LOW 和 UPP 三行。
+
+用 "-ascii" 参数生成的 XX.ascii.spl 拼写文件不包含字符表格，所以它可以和任何编
+码的拼写文件合并使用。.add.spl 文件同样如此。
+
+
+词中字符
+							*spell-midword*
+有些字符只有在两个平常的单词字符之间才被认为是单词字符。单引号是一例: 我们经常
+把文本放在单引号里，所以它不应该被认为是单词字符，但出现在单词字符之间的单引号
+又应该算。这样做的目的是为了识别诸如 they'are 这样的拼写错误。正确的形式应该是
+they're，但既然 "they" 和 "are" 本身都是单词，不这么做就发现不了此错误。
+
+.aff 文件里用 MIDWORD 定义这些字符。例如:
+
+	MIDWORD	'- ~
+
+
+标 志 位 类 型						*spell-FLAG*
+
+标志位用来指定单词可用的字缀和其它属性。通常使用单字符的标志位。这限制了可用的
+标志位数，尤其是对 8 位编码而言。如果需要更多的字缀，可使用 FLAG 项目。可能的
+值包括:
+
+	FLAG long	使用两字符标志位
+	FLAG num	使用数值，从 1 到 65000
+	FLAG caplong	使用不含 A-Z 的单字符标志位和 A-Z 开始的两字符标志位
+
+如用 "FLAG num"，代表字缀的数值列表需要用逗号分隔: "234,2143,1435"。此方法效率
+不高，但方便程序自动生成文件。
+
+如用 "caplong"，两字符标志位都以大写字母开头: "Aa"、"B1"、"BB" 等。一般用法是
+单字符标志位用于常用项目，而两字符标志位用于不常用的项目。
+
+注意: 如果使用 utf-8，标志位只能使用不超过 65000 的字符值。
+
+注意: 即使使用 "num" 或 "long"，复合词和前缀的标志位限定在大约 250 个。
+
+后 缀
+					    *spell-PFX* *spell-SFX*
+支持常见的 PFX (前缀) 和 SFX (后缀) 行 (见 Myspell 文档或 Aspell 手册:
+http://aspell.net/man-html/Affix-Compression.html)。
+
+小结:
+	SFX L Y 2 ~
+	SFX L 0 re [^x] ~
+	SFX L 0 ro x ~
+
+第一行是标题行，包含四个字段:
+	SFX {flag} {combine} {count}
+
+{flag}		后缀使用的名字。多数是单个字符，但其它形式也是可能的，见
+		|spell-FLAG|。
+
+{combine}	可为 'Y' 或 'N'。如果为 'Y'，加上后缀的单词可以有前缀。如果为
+		'N'，不再允许前缀。
+
+{count}		后面跟随的行数。如果不正确，报错。
+
+PFX 使用的字段完全相同。
+
+后面跟随的行使用的基本格式是:
+	SFX {flag} {strip} {add} {condition} {extra}
+
+{flag}		必须和首行使用的 {flag} 相同。
+
+{strip}		从基本字删除的字符序列。并不检查是否真有这些字符，只使用其长度
+		(以字节计)。最好和 {condition} 匹配，否则会发生奇怪的行为。如
+		果 {strip} 长度等于或大于基本字的长度，不能使用该后缀。如果
+		{strip} 为 0 (零)，不删除任何字符。
+
+{add}		加入基本字的字符序列，发生在删除 {strip} 之后。可选后跟 '/' 带
+		标志位。这些标志位应用于加上字缀的单词。见 |spell-affix-flags|
+
+{condition}	简单模式。基本字只有匹配此模式才能使用该后缀。常用于不同结尾的
+		单词使用单个后缀字符时使用不同的 {add} 和 {strip} 字段的情况。
+		如果 {condition} 为一个 . (句号)，没有任何条件。
+		此模式可以包含:
+		- 按本义出现的字符。
+		- [] 里的字符集。[abc] 匹配 a、b 和 c。可使用连字符表示范围
+		  [a-c]，但只用于 Vim。
+		- ^ 开始的字符集取反指定的字符。[^abc] 匹配任何除了 a、b 和 c
+		  以外的字符。
+
+{extra}		可选的附加文本:
+		    # 注释		忽略注释
+		    -			Hunspell 使用，忽略
+
+PFX 使用相同的字段，但 {strip}、{add} 和 {condition} 应用于单词的头部。
+
+注意: Myspell 忽略相关信息之后的任何附加文本。Vim 需要这些文本之前有 "#"，这样
+不会错过可能的错误。例如:
+
+	SFX F 0 in   [^i]n	# Spion > Spionin  ~
+	SFX F 0 nen  in		# Bauerin > Bauerinnen ~
+
+Myspell 看来允许同一个字缀名使用多于一次。因为这种使用方法可能是因为不小心造成
+的错误，Vim 检查 (标题行上) 额外的 "S" 标志。Myspell 使用此特性的字缀文件看来
+都有此标志位。例如:
+
+	SFX a Y 1 S ~
+	SFX a 0 an . ~
+
+	SFX a Y 2 S ~
+	SFX a 0 en . ~
+	SFX a 0 on . ~
+
+
+字 缀 标 志 位						*spell-affix-flags*
+
+此特性来自 Hunspell: 字缀可以指定标志位，和基本字标志位的使用方法类似。这些标
+志位适用于基本字加上字缀后的单词 (但有限制)。例如:
+
+	SFX S Y 1 ~
+	SFX S 0 s . ~
+
+	SFX A Y 1 ~
+	SFX A 0 able/S . ~
+
+如果字典文件包含 "drink/AS"，以下单词是合法的:
+
+	drink
+	drinks		使用 S 后缀
+	drinkable	使用 A 后缀
+	drinkables	使用 A 后缀然后 S 后缀
+
+一般来说，后缀标志位和基本字标志位都应用于加上后缀后的单词。但只能用基本字标志
+位指定一个字缀，唯一的特例是可以同时使用一个前缀和一个后缀，条件是两者都支持组
+合 (combine)。
+
+特别地，字缀的标志位可用于:
+- 后缀的后缀，见上例。只能用一次，这样一个单词可用两个后缀 (加上一个前缀)。
+- 使带该字缀的单词成为偏僻词。|spell-RARE| 标志位。
+- 禁止带该字缀的单词进行复合。|spell-COMPOUNDFORBIDFLAG| 标志位。
+- 允许带该字缀的单词在字缀的这边进行复合。|spell-COMPOUNDPERMITFLAG| 标志位。
+- 使用 NEEDCOMPOUND 标志位: 加上字缀的单词只能用作复合词的一部分。
+  |spell-NEEDCOMPOUND|
+- 复合词标志位: 加上字缀的单词可已出现在复合词的尾部、中间、头部等位置。这些标
+  志位和基本字标志位合并。|spell-compound|
+- NEEDAFFIX: 需要另一个字缀来构成一个合法的单词。
+- CIRCUMFIX，下面立即解释。
+
+
+CIRCUMFIX						*spell-CIRCUMFIX*
+
+CIRCUMFIX (环缀) 标志位意味着必须同时加入一个前缀和一个后缀。如果使用有
+CIRCUMFIX 标志位的前缀，只能加入带有 CIRCUMFIX 标志位的后缀。反之亦然。
+(译者注: CIRCUMFIX 的使用方法和 KEEPCASE |spell-KEEPCASE| 等相同。)
+一个替代的方法是只指定后缀，并为该后缀指定两个标志位: 所需前缀和 NEEDAFFIX 标
+志位。|spell-NEEDAFFIX|
+
+
+PFXPOSTPONE						*spell-PFXPOSTPONE*
+
+如果字缀文件有许多前缀，而它们又应用于许多单词，你无法在内存里构造完整的单词列
+表。希伯来语正是如此 (包含所有单词的列表将超过 1 Gbyte)。这种情况下必须延迟前
+缀的应用。此方法使拼写检查变慢。.aff 文件用此关键字指示使用此方法:
+
+	PFXPOSTPONE ~
+
+只能延迟没有删除字符串并且没有标志位的前缀。带有删除字符串或标志位的前缀仍然会
+被包含在单词列表里。但如果该删除字符串只有一个字符并等于附加字符串的最后一个字
+符但以小写形式出现的话例外。此时如果使用该删除字符串，后面的单词可以用大写字母
+开始。
+
+
+带 斜 杠 的 单 词					*spell-SLASH*
+
+.dic 文件使用斜杠分隔基本字与字缀字符以及其它标志位。不幸的是，这意味着你不能
+在单词里使用斜杠。这样，"TCP/IP" 不是一个单词，而是 "TCP" 并带标志位 "IP"。要
+在单词里包含斜杠，在它之前加上反斜杠。如果罕见地你想在单词里用反斜杠，用两个反
+斜杠就可以。其它反斜杠的使用方式为将来的扩展保留。
+(译者注: 此处似乎不需要特别的 SLASH 项目，但 |spell-dic-format| 有相关暗示)
+
+
+保 持 大 小 写 的 单 词					*spell-KEEPCASE*
+
+字缀文件可用 KEEPCASE 行定义使单词保持大小写的字缀名。例如:
+
+	KEEPCASE = ~
+
+Myspell 不支持此标志位。此标志位的出现意味着大小写相关。
+这可用于句首出现的单词不需要首字母大写的情况。例如:
+
+    单词列表	    匹配		    不匹配 ~
+    's morgens/=    's morgens		    'S morgens 's Morgens 'S MORGENS
+    's Morgens	    's Morgens 'S MORGENS   'S morgens 's morgens
+
+此标志位也可用来避免匹配单词的全大写字母形式。
+
+
+偏 僻 词						*spell-RARE*
+
+字缀文件可用 RARE 行来定义偏僻词使用的字缀名。例如:
+
+	RARE ? ~
+
+偏僻词和坏词的高亮方法不同。它用来标识对语言而言正确但几乎没人用的单词，因而这
+可能是其它单词输入错误的结果。如果相同单词已经被认为是好词，它不再被高亮为偏僻
+词。
+
+此标志位也用于字缀，这时，基本字不罕见，但加上字缀后却是 |spell-affix-flags|。
+不过，如果其它方式已经使该词以好词出现 (例如，属于其它区域)，它不会被标记为偏
+僻词。
+
+
+坏 词							*spell-BAD*
+
+字缀文件可以使用 BAD 行来定义坏词使用的字缀名。例如:
+
+	BAD ! ~
+
+它可以用来排除本来是好词的单词。例如，.dic 文件里的 "the the":
+
+	the the/! ~
+
+一旦一个单词被标为坏词，即使遇到相同的词被标为好词的情况，也不能再撤销。
+
+此标志位也可用于带字缀的单词，因而可以用来标注一系列相关的词为坏词。
+
+							*spell-FORBIDDENWORD*
+FORBIDDENWORD 等同于 BAD。为了保持和 Hunspell 的兼容而设。
+
+							*spell-NEEDAFFIX*
+NEEDAFFIX 标志位用来指定单词必须使用字缀。该单词本身不被认为是好词 (除非有空字
+缀)。例如:
+
+	NEEDAFFIX + ~
+
+
+复 合 词						*spell-compound*
+
+复合词是通过连接 .dic 文件里出现的单词而成的更长的词。要指定那些单词可以连接，
+要用一个字符。该字符放在单词之后的字缀列表里。这里我们把这个字符叫做标志位。显
+然，这些标志位必须不能和任何字缀标识符冲突。
+
+							*spell-COMPOUNDFLAG*
+Myspell 兼容方法使用 COMPOUNDFLAG 指定的标志位。带该标志位的所有单词可以用任何
+顺序进行合并。这样无法实现哪个单词必须出现在前等控制。例如:
+	COMPOUNDFLAG c ~
+
+							*spell-COMPOUNDRULE*
+更高级的方式是用带有多种标志位的多种项目来指定如何构成复合词。这和 Myspell 3.0
+不兼容。让我们从下例开始:
+	COMPOUNDRULE c+ ~
+	COMPOUNDRULE se ~
+
+第一行定义带有 "c" 标志位的单词可以用任何顺序进行来连接。第二行定义由一个带有
+"s" 标志位和一个带有 "e" 标志位的单词可以构成复合词。假定使用下面的字典:
+	bork/c ~
+	onion/s ~
+	soup/e ~
+
+你可以构造以下单词:
+	bork
+	borkbork
+	borkborkbork
+	(等等)
+	onion
+	soup
+	onionsoup
+
+COMPOUNDRULE 项目可以出现多次。它的参数包含一或多个组。每组可以是:
+	一个标志位			例如，c
+	[] 里多选一的标志位		例如，[abc]
+可选地，后面可跟:
+	*	该组出现零或多次，例如，sm*e
+	+	该组出现一或多次，例如，c+
+	?	该组出现零或一次，例如，x?
+
+这和正规表达式的语法相似 (但不完全相同！)。一些例子如下，这里同时列出它们所要
+求的标志位序列:
+    COMPOUNDRULE x+	   x xx xxx 等
+    COMPOUNDRULE yz	   yz
+    COMPOUNDRULE x+z	   xz xxz xxxz 等
+    COMPOUNDRULE yx+	   yx yxx yxxx 等
+    COMPOUNDRULE xy?z	   xz xyz
+
+    COMPOUNDRULE [abc]z    az bz cz
+    COMPOUNDRULE [abc]+z   az aaz abaz bz baz bcbz cz caz cbaz 等
+    COMPOUNDRULE a[xyz]+   ax axx axyz ay ayx ayzz az azy azxy 等
+    COMPOUNDRULE sm*e	   se sme smme smmme 等
+    COMPOUNDRULE s[xyz]*e  se sxe sxye sxyxe sye syze sze szye szyxe  等
+
+特别例子: 复合词需要由两个单词和一个连字符构成:
+	.aff 文件:
+	    COMPOUNDRULE sde ~
+	    NEEDAFFIX x ~
+	    COMPOUNDWORDMAX 3 ~
+	    COMPOUNDMIN 1 ~
+	.dic 文件:
+	    start/s ~
+	    end/e ~
+	    -/xd ~
+
+这样，单词 "start-end" 可以接受但 "startend" 不行。
+
+还有一个隐含的规则，如果没有更多标志位，带前缀的单词不能在另一个单词之后复合，
+同样，带有后缀的单词不能在另一个单词之前复合。也就是，字缀不能出现在复合词的中
+间。这一规则用 |spell-COMPOUNDPERMITFLAG| 可以改变。
+
+							*spell-NEEDCOMPOUND*
+NEEDCOMPOUND 标志位要求单词必须用作复合词的一部分。该单词本身不作为好词。例如:
+
+	NEEDCOMPOUND & ~
+
+							*spell-ONLYINCOMPOUND*
+ONLYINCOMPOUND 等同于 NEEDCOMPOUND。为保持和 Hunspell 兼容性而设。
+
+							*spell-COMPOUNDMIN*
+用于复合词的最短字符长度用 COMPOUNDMIN 指定。例如:
+	COMPOUNDMIN 5 ~
+
+如果省略，没有最短长度。显然，不给短词加上复合用的标志位就可以了。保留此特性是
+为了和 Myspell 兼容。
+
+							*spell-COMPOUNDWORDMAX*
+用于复合词的最大单词长度用 COMPOUNDMAX 指定。例如:
+	COMPOUNDWORDMAX 3 ~
+
+如果省略，没有最大长度。适用于所有的复合词。
+
+要设置带有特定标志位的单词的限制，确信在 COMPOUNDRULE 出现的项目不允许太多的单
+词。
+
+							*spell-COMPOUNDSYLMAX*
+复合词包含的最大音节数用 COMPOUNDSYLMAX 指定。例如:
+	COMPOUNDSYLMAX 6 ~
+
+如果没有 SYLLABLE 项目，没有任何效果。如果没有 COMPOUNDSYLMAX，没有音节数的限
+制。
+
+如果同时定义了 COMPOUNDWORDMAX 和 COMPOUNDSYLMAX，接受满足其中任何一个条件的单
+词，也就是说，或者不超过 COMPOUNDWORDMAX 个单词，或者不超过 COMPOUNDSYLMAX 个
+音节。
+
+						    *spell-COMPOUNDFORBIDFLAG*
+COMPOUNDFORBIDFLAG 指定可用于字缀的标志位。它意味着加上字缀的单词不能用于复合
+词。例如:
+	字缀文件:
+		COMPOUNDFLAG c ~
+		COMPOUNDFORBIDFLAG x ~
+		SFX a Y 2 ~
+		SFX a 0 s   . ~
+		SFX a 0 ize/x . ~
+	字典:
+		word/c ~
+		util/ac ~
+
+允许 "wordutil" 和 "wordutils"，但不允许 "wordutilize"。
+备注: 这还不能用于延迟前缀。
+
+						    *spell-COMPOUNDPERMITFLAG*
+COMPOUNDPERMITFLAG 指定可用于字缀的标志位。它意味着加上字缀的单词可以用于复合
+词，其中该字缀可以出现在单词中间。没有此标志位，这是不允许的。
+备注: 这还不能用于延迟前缀。
+
+						    *spell-COMPOUNDROOT*
+COMPOUNDROOT 标志位用来指定字典里已经是复合词的单词。检查复合词规则时，它可以
+被计算为两个单词。也可用于字缀，使得该字缀成为一个复合词。
+
+						*spell-CHECKCOMPOUNDPATTERN*
+CHECKCOMPOUNDPATTERN 用于定义这样的模式，在两个词复合的位置匹配时禁止该复合
+词。示例:
+	CHECKCOMPOUNDPATTERN o e ~
+
+如果第一个词以 "o" 结尾而第二个词以 "e" 开始，禁止它们的复合。
+
+虽然名字叫模式，参数必须是普通的文本而不是什么模式。总是忽略大小写。
+
+不支持 Hunspell 带三个参数和标志位的功能。
+
+							*spell-SYLLABLE*
+SYLLABLE 项目定义用于计算单词音节数的字符或字符序列。例如:
+	SYLLABLE aáeéiíoóöõuúüûy/aa/au/ea/ee/ei/ie/oa/oe/oo/ou/uu/ui ~
+
+第一个斜杠之前是当作一个音节的字符的集合，即使它们被重复和混合也是如此，直到下
+一个字符不属于此集合为止。该斜杠之后列出当作一个音节的字符序列。它们比使用集合
+里的字符优先。用上面这个示例，"ideeen" 有三个音节，分别包含 "i"、"ee" 和 "e"。
+
+这里只需要包含大小写合并字母。
+
+上面已经提到了另一个限制复合的方法: 为字缀加上 |spell-COMPOUNDFORBIDFLAG| 标志
+位，这样所有带有该字缀的单词都不用于复合。
+
+
+无 限 复 合						*spell-NOBREAK*
+
+有些语言，比如泰语，使用的单词之间没有空格。这就像所有单词都进行了复合。要指定
+此行为，使用字缀文件的 NOBREAK 项目，没有参数:
+	NOBREAK ~
+
+Vim 会试图判断哪里单词结束而下一个单词开始。如果有拼写错误，这不一定能做得很
+好。
+
+
+							*spell-COMMON*
+可用 COMMON 项目指定常用词。编辑短文件时，它会提供更好的建议。例如:
+
+	COMMON  the of to and a in is it you that he was for on are ~
+
+这些单词必须用空格分隔，一行至多 25 个。
+如果 ":mkspell" 命令指定多个区域，所有区域的常用词进行合并并用于所有区域。
+
+							*spell-NOSPLITSUGS*
+此项目指示不要分割单词来提供建议。分割单词的建议只有在相近词很少时才会出现。
+
+	NOSPLITSUGS ~
+
+							*spell-NOSUGGEST*
+NOSUGGEST 指定的标志位可用来不参与建议的单词。可用于不洁词汇。
+
+	NOSUGGEST % ~
+
+
+替 换							*spell-REP*
+
+字缀文件可用 REP 项目来定义常见错误。用于提供拼写建议。这些项目定义 "从" 一个
+文本替换 "到" 的另一个文本。例如:
+
+	REP 4 ~
+	REP f ph ~
+	REP ph f ~
+	REP k ch ~
+	REP ch k ~
+
+第一行指定后面跟随的 REP 行数。Vim 忽略该计数，但此行仍然要存在 (为了和
+Myspell 兼容)。
+
+不要包含简单的单字符替换或交换。但你要指定的话 Vim 还是会去做。如果你喜欢，可
+以包含整个单词，但用 'spellsuggest' 里的 "file:" 项目可能更好。
+
+下划线可用来包含空格:
+
+	REP the_the the ~
+
+
+相 近 字 符						*spell-MAP* *E783*
+
+字缀文件可用 MAP 项目定义非常相近的字母。多用于带有不同重音的同一字母。替换这
+些字母的建议会得到更高的优先级。例如:
+
+	MAP 2 ~
+	MAP eéëêè ~
+	MAP uüùúû ~
+
+第一行指定后面跟随的 MAP 行数。Vim 忽略该计数，但该行仍然要存在。
+
+每个字母只能在一个 MAP 项目里出现。如果第一个字母是 ASCII 或至少是不带重音的那
+个，效率会稍稍提高。
+
+
+.SUG 文 件						*spell-NOSUGFILE*
+
+如果字缀文件指定按发音折叠，":mkspell" 通常会和 .spl 文件一起产生 .sug 文件。
+该文件用于快速寻找发音相近形式的建议。代价是大量的内存开销 (开销取决于单词数，
+|:mkspell| 完成时会显示这方面大概的估计)。
+
+如果不想生成 .sug 文件，在字缀文件里使用项目:
+
+	NOSUGFILE ~
+
+如果只是不想用，用户可以简单地忽略 .sug 文件。
+
+
+SOUND-A-LIKE						*spell-SAL*
+
+字缀文件可用 SAL (sound-a-like，发音相近) 项目来定义要使用的发音相近机制。主要
+项目定义 "从" 一个文本替换 "到" 的另一个文本。简单的例子:
+
+	SAL CIA			 X ~
+	SAL CH			 X ~
+	SAL C			 K ~
+	SAL K			 K ~
+
+这里有一些规则，它们可能会变得很复杂。具体如何工作的解释可见 Aspell 手册:
+	http://aspell.net/man-html/Phonetic-Code.html
+
+还有一些特殊项目:
+
+	SAL followup		true ~
+	SAL collapse_result	true ~
+	SAL remove_accents	true ~
+
+"1" 的含义和 "true" 相同。其它值代表 "false"。
+
+
+简 单 按 发 音 折 叠				*spell-SOFOFROM* *spell-SOFOTO*
+
+SAL 机制复杂又费时。一个稍简单的机制是把所有的字符映射为其它字符，这样发音相近
+的字符被映射为同一字符。同时也可用于大小写合并。你不能同时使用 SAL 项目和简单
+按发音折叠项目。
+
+这个机制需要两个项目: 一个指定被映射的字符，一个指定映射到的字符。它们必须包含
+相同数目的字符。例如:
+
+    SOFOFROM abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ~
+    SOFOTO   ebctefghejklnnepkrstevvkesebctefghejklnnepkrstevvkes ~
+
+这个例子里所有元音被映射为同一个字符 'e'。另一个方法是完全省略所有的元音。一些
+发音几乎相同的字符经常会被混用，比如 'm' 和 'n'，它们也被映射到同一个字符上。
+不要过于极端，否则所有单词看起来都差不多了。
+
+不出现在 SOFOFROM 里的字符被省略，除了所有的空白被为单个空格替换以外。SOFOFORM
+里相同字符的序列被替换为一个字符。
+
+你可以用 |soundfold()| 函数测试结果。也可以设置 'verbose' 选项来看看 |z=| 命令
+输出的评分。
+
+
+不 支 持 的 项 目				*spell-affix-not-supported*
+
+这些项目出现在其它拼写检查器使用的字缀文件里。Vim 里忽略它们，不支持也不用其它
+方法定义。
+
+ACCENT		(Hunspell)				*spell-ACCENT*
+		用 MAP 代替。|spell-MAP|
+
+BREAK		(Hunspell)				*spell-BREAK*
+		定义分切点。还不清楚这是怎么工作的。
+		不支持。
+
+CHECKCOMPOUNDCASE  (Hunspell)			*spell-CHECKCOMPOUNDCASE*
+		不允许复合词边界上有大写字母。不支持。
+
+CHECKCOMPOUNDDUP  (Hunspell)			*spell-CHECKCOMPOUNDDUP*
+		不允许复合词里使用同一单词两次。不支持。
+
+CHECKCOMPOUNDREP  (Hunspell)			*spell-CHECKCOMPOUNDREP*
+		有关 REP 项目和复合词。不支持。
+
+CHECKCOMPOUNDTRIPLE  (Hunspell)			*spell-CHECKCOMPOUNDTRIPLE*
+		禁止复合时出现三个相同的字符。不支持。
+
+COMPLEXPREFIXES  (Hunspell)				*spell-COMPLEXPREFIXES*
+		允许使用两个前缀。不支持。
+
+COMPOUND	(Hunspell)				*spell-COMPOUND*
+		先是包含 COMPOUND 项目总数的一行，然后跟随那么多数目带有模式的
+		COMPOUND 行。
+		删除带有计数的第一行，把其它行换名为 COMPOUNDRULE。
+		|spell-COMPOUNDRULE|
+
+COMPOUNDFIRST	(Hunspell)				*spell-COMPOUNDFIRST*
+		用 COMPOUNDRULE 代替。|spell-COMPOUNDRULE|
+
+COMPOUNDBEGIN	(Hunspell)				*spell-COMPOUNDBEGIN*
+		用 COMPOUNDRULE 代替。|spell-COMPOUNDRULE|
+
+COMPOUNDEND	(Hunspell)				*spell-COMPOUNDEND*
+		用 COMPOUNDRULE 代替。|spell-COMPOUNDRULE|
+
+COMPOUNDMIDDLE	(Hunspell)				*spell-COMPOUNDMIDDLE*
+		用 COMPOUNDRULE 代替。|spell-COMPOUNDRULE|
+
+COMPOUNDRULES	(Hunspell)				*spell-COMPOUNDRULES*
+		紧跟其后的 COMPOUNDRULE 行的数目。忽略，但参数必须是数值。
+
+COMPOUNDSYLLABLE  (Hunspell)			*spell-COMPOUNDSYLLABLE*
+		用 SYLLABLE 和 COMPOUNDSYLMAX 代替。|spell-SYLLABLE|
+		|spell-COMPOUNDSYLMAX|
+
+KEY		(Hunspell)				*spell-KEY*
+		定义键盘上互相靠近的字符。
+		用于给出更好的建议。不支持。
+
+LANG		(Hunspell)				*spell-LANG*
+		指定语言特定的行为。实际上把部分有关语言的知识放进了程序里。因
+		而 Vim 不支持。必须分别指定每个语言属性。
+
+LEMMA_PRESENT	(Hunspell)				*spell-LEMMA_PRESENT*
+		只用于词态学分析。
+
+MAXNGRAMSUGS	(Hunspell)				*spell-MAXNGRAMSUGS*
+		设置 n-元组建议的数目。不支持。
+
+PSEUDOROOT	(Hunspell)				*spell-PSEUDOROOT*
+		用 NEEDAFFIX 代替。|spell-NEEDAFFIX|
+
+SUGSWITHDOTS	(Hunspell)				*spell-SUGSWITHDOTS*
+		给建议加上句号。Vim 不需要。
+
+SYLLABLENUM	(Hunspell)				*spell-SYLLABLENUM*
+		不支持。
+
+TRY		(Myspell、Hunspell 以及其它)		*spell-TRY*
+		Vim 不使用 TRY 项目并忽略它们。要提供建议，使用单词里的实际字
+		符，这样效率高很多。
+
+WORDCHARS	(Hunspell)				*spell-WORDCHARS*
+		用于识别单词。Vim 不需要，因为没有检查单词之前分隔单词的必要
+		(我们用 trie 树代替了哈希表)。
+
+ vim:tw=78:sw=4:ts=8:ft=help:norl:

@@ -1,0 +1,88 @@
+*workshop.txt*  For Vim version 7.4.  最近更新: 2010年7月
+
+
+		  VIM 参考手册	作者: Gordon Prieur
+				译者: Willis
+				http://vimcdoc.sf.net
+
+
+Sun Visual WorkShop 特性			*workshop* *workshop-support*
+
+1. 简介							|workshop-intro|
+2. 命令							|workshop-commands|
+3. 编译 vim/gvim 以加入 WorkShop 支持			|workshop-compiling|
+4. 为 Workshop 发布树配置 gvim	 			|workshop-configure|
+5. 获得最新版本的 XPM 库				|workshop-xpm|
+
+{Vi 无此功能}
+{仅在编译时加入 |+sun_workshop| 特性时才可用}
+
+==============================================================================
+1. 简介							*workshop-intro*
+
+Sun Visual Workshop 有一个 "供选择的编辑器" 功能，以便用户挑选他们喜欢的编辑器
+调试程序。在 6.0 发布版本中，我们加入了 gvim 支持。 一个 workshop 调试会话包含
+调试窗口和编辑窗口 (可能还有其他)。用户可以在编辑窗口执行众多调试指令，从而尽
+量减少在窗口间切换的需要。
+
+Sun Visual Workshop 6 (也被称为 Forte Developer 6) 自带的 Vim 版本是 Vim 5.3。
+我们这个版本的功能比 Visual Workshop 所带的 vim/gvim 更可靠。希望用 Vim 作为编
+辑器的 VWS 用户应该自己编译这些源代码，并安装到自己的 workshop 发布树中。
+
+==============================================================================
+2. 命令							*workshop-commands*
+
+						*:ws* *:wsverb*
+:ws[verb] verb			把 verb 传到 verb 执行程序。
+
+把 verb 传到一个 workshop 函数，它收集参数并把该 verb 和相关数据通过 IPC 连接
+发送给 workshop。
+
+==============================================================================
+3. 编译 vim/gvim 以加入 Workshop 支持			*workshop-compiling*
+
+编译 vim 时，加入 FEAT_SUN_WORKSHOP 就可以打开所有必需的编译时选项，使 vim 可
+以和 Visual WorkShop 协同使用。VMS 需要的功能用 VWS 发布版本提供的 Sun 编译器
+编译通过并经过测试。这不是说这些功能不能用 gcc 编译或者运行，只不过我们不能保
+证这一点。
+
+==============================================================================
+4. 为 Workshop 发布树配置 gvim				*workshop-configure*
+
+要使得支持 Sun Visual Workshop 6 的 gvim 能够编译，需要满足若干要求。
+
+    o 应该用 VWS 的编译器而不是 gcc。我们既没有用 gcc 编译更没有测试过，因此不
+      能保证它能正常工作。
+
+    o 必须提供自己的 XPM 库。下面 |workshop-xpm| 一节详述如何得到最新版 XPM。
+
+    o 编辑 src 目录的 Makefile，删除 Sun Visual Workshop 行的注释。通过查找字
+      符串 FEAT_SUN_WORKSHOP，它们很容易找到。
+
+    o 我们同时建议 gui 使用 Motif。这样 gvim 就会和 Sun Visual WorkShop 其他部
+      分有着相同的外观。
+
+可用下面的配置行来 configure 带 Sun Visual WorkShop 支持的 vim:
+
+    $ CC=cc configure --enable-workshop --enable-gui=motif \
+	-prefix=<VWS-install-dir>/contrib/contrib6/<vim-version>
+
+VWS-install-dir 是 Sun Visual WorkShop 安装位置的主目录。缺省值是
+/opt/SUNWspro。vim 发布版本的安装一般要有 root 权限。然后，你还需要修改符号链
+接 <VWS-installdir>/bin/gvim，使之指向新安装目录里的 vim。<vim-version> 应是唯
+一的版本字符串。我用的是 "vim" 加上等价于 version.h 中的 VIM_VERSION_SHORT 的
+字符串。
+
+==============================================================================
+5. 获得最新的 XPM 库					*workshop-xpm*
+
+支持 Motif 或 Athena 的 Vim 要显示图像，XPM 库是必需的。没有它，工具栏和标号
+(sign) 特性会被关闭。
+
+XPM 库由法国国立计算机科学与控制研究学院的 Arnaud Le Hors 提供，它可在
+http://cgit.freedesktop.org/xorg/lib/libXpm 下载。撰写此文时，它的最新版本是
+xpm-3.4k-solaris.tgz，这是一个 gzip 压缩的 tar 文件。如果你建立目录
+/usr/local/xpm 然后在那里解包，就可以直接使用 Makefile 里去掉注释的行而无须修
+改。如果安装在别的目录，请修改 src/Makefile 里的 XPM_DIR。
+
+ vim:tw=78:ts=8:ft=help:norl:

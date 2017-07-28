@@ -1,0 +1,880 @@
+*os_vms.txt*    For Vim version 7.4.  最近更新: 2013年1月
+
+
+		  VIM 参考手册
+				译者: Willis
+				http://vimcdoc.sf.net
+
+
+							*VMS* *vms*
+本文件讨论 Vim 的 VMS 版本的特点。你可以在 Vim 命令提示下输入 :help VMS 得到本
+帮助文件。
+
+ 1. 准备开始		|vms-started|
+ 2. 下载文件		|vms-download|
+ 3. 编译		|vms-compiling|
+ 4. 问题		|vms-problems|
+ 5. 布署		|vms-deploy|
+ 6. 实际使用方法	|vms-usage|
+ 7. GUI 模式的问题	|vms-gui|
+ 8. 有用的提示		|vms-notes|
+ 9. VMS 相关改动	|vms-changes|
+10. 作者		|vms-authors|
+
+==============================================================================
+
+1. 准备开始						*vms-started*
+
+Vim (Vi IMproved) 是一个 vi-兼容的文本编辑器，它能在人类知道的差不多一切操作系
+统上运行。现在在 OpenVMS 上也可以了，不管是文本方式或者 X/Motif 方式。它拥有完
+整的功能，和其他操作系统上的 Vim 也绝对兼容。
+
+==============================================================================
+
+2. 下载文件						*vms-download*
+
+你可以从官方 Vim 站点用 ftp 下载 Vim 源代码:
+	ftp://ftp.vim.org/pub/vim/
+或者使用某个镜像站点:
+	ftp://ftp.vim.org/pub/vim/MIRRORS
+
+你可以从这里得到编译好的二进制文件:
+	http://www.polarhome.com/vim/
+	ftp://ftp.polarhome.com/pub/vim/
+
+要使用预编译的二进制版本，你需要如下档案之一:
+
+  vim-XX-exe-ia64-gui.zip	IA64 GUI/Motif 可执行文件
+  vim-XX-exe-ia64-gtk.zip	IA64 GUI/GTK 可执行文件
+  vim-XX-exe-ia64-term.zip	IA64 控制台可执行文件
+  vim-XX-exe-axp-gui.zip	Alpha GUI/Motif 可执行文件
+  vim-XX-exe-axp-gtk.zip	Alpha GUI/GTK 可执行文件
+  vim-XX-exe-axp-term.zip	Alpha 控制台可执行文件
+  vim-XX-exe-vax-gui.zip	VAX GUI 可执行文件
+  vim-XX-exe-vax-term.zip	VAX 控制台可执行文件
+
+当然还有 (可选)
+  vim-XX-runtime.zip		运行时文件
+
+二进制档案包括: vim.exe、ctags.exe、xxd.exe 等文件。
+
+GTK 可执行文件需要 GTKLIB，后者在 Alpha 和 IA64 平台上可以得到。
+==============================================================================
+
+3. 编译							*vms-compiling*
+
+参见 [.SRC]INSTALLVMS.TXT 文件。
+
+==============================================================================
+4. 问题							*vms-problems*
+
+代码经过 Open VMS 6.2 - 8.2 在 Alpha、VAX 和 IA64 平台以及 DEC C 编译器测试。
+应该不会有大问题。如果你的系统缺少一些库，你可以调整 OS_VMS_CONF.H 文件。
+
+如果你决定编译 Vim 时加上 +perl，+python 等选项，首先你需要下载 OpenVMS 的
+Perl 和 Python 的发布版本。编译并布署需要的库，并修改 MAKE_VMS.MMS 文件的若干
+行。在 Vim 这里，应该没有问题。
+
+GTK、XPM 库的路径也应该在 MAKE_VMS.MMS 里配置。
+
+注意: 在 VAX 上，用 DEC C 编译器是没有问题的。VAX C 编译器在预处理指令方面和
+ANSI C 不完全兼容，因而你需要使用转换程序，来完整这项麻烦的工作。详细的指令请
+阅读 INSTALLvms.txt 文件。
+
+MMS_VIM.EXE 是和 VIM.EXE 一起编译的，但是 XXD.EXE 需要切换到另一个目录并单独编
+译。
+
+CTAGS 不再是 Vim 源程序发布的一部分，但是 OpenVMS 专用的源程序可能还是如上所述
+那样包含 CTAGS 的源代码。关于 VMS 上的 CTAGS 的更多信息可以参考
+http://www.polarhome.com/ctags/
+
+高级的用户可能想试试修改 FEATURE.H。
+
+你也可以编译时加上 +xfontset +xim 选项，但需要你做好 GUI 字体等设置。参见
+Vim 命令行提示下的 :help xim。
+
+你还可以使用带有 GTK 图标的 GUI。为此，你需要下载和安装 OpenVMS 版本的 GTK，或
+至少是运行库里共享的图片: polarhome.com 里有 LIBGTK。
+
+如果你有更多更高级的问题，请把你的问题发送到 Vim on VMS 邮件列表
+<vim-vms@polarhome.com>
+关于 vim-vms 列表的更多情况可以在这里找到:
+http://www.polarhome.com/mailman/listinfo/vim-vms
+
+==============================================================================
+
+5. 布署							*vms-deploy*
+
+Vim 使用一个特定的目录结构来保存文档和运行时文件:
+
+   vim (或者随便什么名字)
+    |- tmp
+    |- vim57
+    |----- doc
+    |----- syntax
+    |- vim62
+    |----- doc
+    |----- syntax
+    |- vim64
+    |----- doc
+    |----- syntax
+    vimrc    (系统 rc 文件)
+    gvimrc
+
+使用: >
+
+	define/nolog VIM	device:[path.vim]
+	define/nolog VIMRUNTIME device:[path.vim.vim60]
+	define/nolog TMP	device:[path.tmp]
+
+可以使 vim.exe 找到它的文档，文件类型，语法文件，并指定哪里可以存放临时文件。
+把 Vim 发布版本的 "runtime" 子目录复制到 vimruntime 目录里。
+
+逻辑名 $VIMRUNTIME 和 $TMP 是可选的。
+
+如果 $VIMRUNTIME 没有设置，Vim 会猜测并试图自动设置。更多情况可以查阅 :help
+runtime。
+
+如果 $TMP 没有设置，你就不能使用部分的功能，如 CTAGS，XXD，打印，等等，因为它
+们需要临时目录来进行正常的操作。$TMP 目录应该对该用户可读可写。最简单的设置
+$TMP 的方法是定义逻辑名: >
+
+	define/nolog TMP SYS$SCRATCH
+或者: >
+	define/nolog TMP SYS$LOGIN
+
+==============================================================================
+
+6. 实际使用方法						*vms-usage*
+
+通常，你只需要运行 Vim 的一个版本，因而为 Vim 提供一个专用的目录就够了。把所有
+的 Vim 运行时目录结构复制到要布署的位置。在你的 LOGIN.COM (在 SYS$LOGIN 目录
+下) 里加入如下一行，把逻辑名 $VIM 设置为: >
+
+	$ define VIM device:<path>
+
+设置一些符号: >
+
+	$ ! vi 文本方式启动 Vim。
+	$ vi*m  :== mcr VIM:VIM.EXE
+
+	$ !gvi GUI 方式启动 Vim。
+	$ gv*im :== spawn/nowait mcr VIM:VIM.EXE -g
+
+请查阅如何定制和配置符号的相关内容。
+
+你也许想要在你的主目录 (SYS$LOGIN) 下创建 .vimrc 和 .gvimrc 文件，以覆盖缺省的
+设置。
+
+最简单的方法就是简单的使用示例文件并换名。你需要把菜单文件 (MENU.VIM) 和 vimrc
+和 gvimrc 文件留在原来的 $VIM 目录。这些是所有用户的缺省设置，个人用户只需要把
+他们自己的添加或者改变的设置保存在主目录下的 .vimrc 和 .gvimrc 文件就可以。
+这样就没有问题了。
+
+注意: 记住，系统 rc 文件 (所有用户的缺省) 没有开头的 "."。所以，系统文件是: >
+
+	$VIM:vimrc
+	$VIM:gvimrc
+	$VIM:menu.vim
+
+而用户自己的 rc 文件是: >
+
+	sys$login:.vimrc
+	sys$login:.gvimrc
+
+你可以用 :version 查看是否一切文件位置都正确。
+
+LOGIN.COM 示例: >
+
+	$ define/nolog VIM RF10:[UTIL.VIM]
+	$ vi*m :== mcr VIM:VIM.EXE
+	$ gv*im:== spawn/nowait/input=NLA0 mcr VIM:VIM.EXE -g -GEOMETRY 80x40
+	$ set disp/create/node=192.168.5.223/trans=tcpip
+
+注意: 这样的设置就可以了。如果你在单独的服务器或者簇环境下工作，但是你想使用
+Vim 作为 DECNET 环境下的中继编辑器，它也够用了。你只要加上 "完整的" 路径: >
+
+	$ define VIM "<服务器名>[""用户名 密码""]::设备:<路径>"
+	$ vi*m :== "mcr VIM:VIM.EXE"
+
+例如: >
+
+	$ define VIM "PLUTO::RF10:[UTIL.VIM]"
+	$ define VIM "PLUTO""ZAY mypass""::RF10:[UTIL.VIM]" ! 如果密码需要的话
+
+如果你同时安装了多个版本，你可以用 $VIMRUNTIME 逻辑名指向正确的 Vim 版本。如果
+$VIMRUNTIME 没有定义，Vim 会使用 $VIM 逻辑名。你可以执行 Vim 命令 :help
+runtime 来了解关于 $VIMRUNTIME 的更多信息。
+
+系统管理员可能希望设立一个系统范围的 Vim 安装版本。那就加到
+SYS$STARTUP:SYLOGICALS.COM >
+
+	$ define/nolog/sys VIM 设备:<路径>
+	$ define/nolog/sys TMP SYS$SCRATCH
+
+并加到 SYS$STARTUP:SYLOGIN.COM >
+
+	$ vi*m :== mcr VIM:VIM.EXE
+	$ gv*im:== spawn/nowait/input=NLA0 mcr VIM:VIM.EXE -g -GEOMETRY 80x40
+
+
+这样就能为系统的每个用户设立正常的 Vim 工作环境了。
+
+重 要: OpenVMS 上的 Vim (和其它对大小写不敏感的系统) 的命令行参数假设使用小
+写。要说明使用的命令行参数是大写，必须使用 "/" 符号。
+
+示例:
+  >
+	vim -R	filename  ! 意味着: -r 列出交换文件并退出
+	vim -/r	filename  ! 意味着: -R 只读模式 (类似于 "view")
+	vim -u	<vimrc>   ! 意味着: -u 使用 <vimrc> 代替其它的 .vimrc
+	vim -/u	<gvimrc>  ! 意味着: -U 使用 <gvimrc> 代替其它的 .gvimrc
+
+==============================================================================
+
+7. GUI 模式的问题					*vms-gui*
+
+OpenVMS 是一个真正的大型机操作系统。因此，即使它有一个 GUI 控制台，大多数用户
+也不会在普通的操作中使用一个本地的 X/Window 环境。从而不可能很简单的 "就那样"
+使用 GUI 模式启动 Vim。但是，也难不到哪儿去。
+
+首先: 你需要一个内建支持 GUI 的可执行版本。
+
+其次: 你需要在你的 VMS 服务器上安装 DECW/Motif，不然你会得到错误报告，提示你一
+些共享库找不到。
+
+其三: 如果你选择执行带有附加功能，如 GUI/GTK 的 Vim，你需要安装 GTK 或至少有
+GTK 运行环境 (LIBGTK 可在  http://www.polarhome.com/vim/ 下载)。
+
+1) 如果你使用 VMS X/Motif 控制台工作:
+   这样启动 Vim: >
+
+	$ mc device:<path>VIM.EXE -g
+<
+   或者在 Vim 命令行提示下输入 :gui 命令。详见 :help gui
+
+2) 如果你用其它的 X/Window 环境，比如 Unix 或者远程的 X VMS 控制台。这样设置连
+   接到你的终端的显示: >
+
+	$ set disp/create/node=<你的 IP 地址>/trans=<传输层-名字>
+<
+   然后像地一点那样启动 Vim。你可以从 VMS 文档里查找到更多的帮助，或者从 VMS
+   提示符下输入 :help set disp。
+   示例: >
+
+	$ set disp/create/node=192.168.5.159		 ! 缺省传输层是 DECnet
+	$ set disp/create/node=192.168.5.159/trans=tcpip ! TCP/IP 网络
+	$ set disp/create/node=192.168.5.159/trans=local ! 显示在相同的机器上
+<
+注意: 你只能定义其中的一个。
+更多的信息可以通过在 VMS 提示符下输入 $help set disp 得到。
+
+3) 另外一个很好的方法是 XDM，如果你在 OpenVMS 机器上安装了的话。XDM 客户端可以
+   如同 GUI 控制台一样的工作。
+
+4) 如果你在 MS Windows 或者其它非 X/Window 环境上工作，你需要设置 X 服务器，并
+   像第二点那样运行 Vim。MS Windows 上有免费的 X 服务器，例如 MIX，Omni X 等。
+   也有很好的商业软件，如 eXcursion 或者 ReflectionX，它们都有内建的 DEC 支
+   持。
+
+请 注意，没有 GUI 支持的可执行程序在文本模式下启动时，比带有 GUI 支持的稍快。
+因此，如果你不打算使用 GUI 特性，可以考虑使用非 GUI 版本的可执行程序。
+
+==============================================================================
+
+8. 有用的提示						*vms-notes*
+
+8.1 退格/删除键
+8.2 过滤程序
+8.3 VMS 文件版本号
+8.4 目录名转换
+8.5 远程宿主调用
+8.6 终端问题
+8.7 十六进制编辑和其他外部工具
+8.8 执行 vimrc 和 gvimrc 脚本
+8.9 从 Vim 里打印
+8.10 设置符号
+8.11 diff 和其他 GNU 程序
+8.12 diff-模式
+8.13 允许 C 关键字里出现 '$'
+8.14 为初学者提供的 VIMTUTOR (VIM 教程)
+8.15 控制台模式启动太慢的问题
+8.16 公用 VIM 目录 - 不同的体系结构
+
+8.1 退格/删除键
+
+VMS 存在退格/删除键的不一致问题。:fixdel 不能解决这个问题，你应该用: >
+
+	:inoremap ^? ^H		" 在终端模式下
+	:inoremap <Del> ^H	" 在 gui 模式下
+
+详见 8.6 章 (终端问题)。
+(Bruce Hunsaker <BNHunsaker@chq.byu.edu> Vim 5.3 版本)
+
+
+8.2 过滤程序
+
+Vim 支持过滤程序；例如，如果你有 sort 程序，并能像 Unix 那样支持输入/输出重定
+向 (<输入文件 >输出文件)，你可以用 >
+
+	:map \s 0!'aqsort<CR>
+
+(Charles E. Campbell，Jr，<cec@gryphon.gsfc.nasa.gov> Vim 5.4 版本)
+
+
+8.3 VMS 文件版本号
+
+Vim 保存文件会保存到带有更高一级的文件版本号的新文件。试试如下的设置。 >
+
+	:set nobackup	     " 不要创建 *.*_ 备份文件
+	:set nowritebackup   " 在 VMS 没有任何意义。这是缺省行为。
+
+从缺省的交换文件恢复文件没有任何问题。详见 :help swapfile
+
+(Claude Marinier <ClaudeMarinier@xwavesolutions.com> Vim 5.5 版本，Zoltan
+Arpadffy Vim 5.6 版本)
+
+
+8.4 目录名转换
+
+Vim 会在内部转换任何 unix 风格的路径名，甚至包括混合 unix/VMS 的路径名，成为
+VMS 风格的路径。一些典型的转换类似于: >
+
+	/abc/def/ghi		-> abc:[def]ghi.
+	/abc/def/ghi.j		-> abc:[def]ghi.j
+	/abc/def/ghi.j;2	-> abc:[def]ghi.j;2
+	/abc/def/ghi/jkl/mno	-> abc:[def.ghi.jkl]mno.
+	abc:[def.ghi]jkl/mno	-> abc:[def.ghi.jkl]mno.
+	  ./			-> 当前目录
+	  ../			-> 相对的父目录
+	  [.def.ghi]		-> 相对的子目录
+	   ./def/ghi		-> 相对的子目录
+<
+注意: 你可能要用 <、> 尖括号 (设备:<路径>文件名.扩展名;版本)。比如，
+rf10:<user.zay.work>test.c;1
+
+(David Elins <delins@foliage.com>，Jerome Lauret
+<JLAURET@mail.chem.sunysb.edu> Vim 5.6 版本)
+
+
+8.5 远程宿主调用
+
+可以使用 Vim 作为中继编辑器。
+1. 从远端编辑若干文件: >
+
+	vi "<服务器>""用户名 密码""::<设备>:<路径><文件名>;<版本>"
+
+例如: >
+	vi "pluto""zay passwd""::RF10:<USER.ZAY.WORK>TEST.C;1"
+<
+注意: 语法非常重要，不然 VMS 会识别为多个参数，而不是一个 (结果是: 文件找不
+到)。
+
+2.  设置 Vim 成为中继编辑器。如果 Vim 没有在你的本地上安装，只要设置你的 IP 地
+址，包含服务器名字的完整的 Vim 路径，并运行如下的程序: >
+
+	$ if (p1 .eqs. "") .OR. (p2 .eqs. "") then goto usage
+	$ set disp/create/node=<你的 IP 地址>/trans=tcpip
+	$ define "VIM "<vim_服务器>""''p1' ''p2'""::<设备>:<vim 路径>"
+	$  vi*m :== "mcr VIM:VIM.EXE"
+	$ gv*im :== "spawn/nowait mcr VIM:VIM.EXE -g"
+	$ goto end
+	$ usage:
+	$ write sys$output " Please enter username and password as a parameter."
+	$ write sys$output " Example: @SETVIM.COM username passwd"
+	$ end:
+<
+注意: 不要在簇环境下使用 (你也不需要)，不然速度会非常非常慢，不过也许比本地的
+Emacs 还要快些。:-)
+
+(Zoltan Arpadffy，Vim 5.6 版本)
+
+
+8.6 终端问题
+
+如果你的终端名称不为 Vim 所知，那么 Vim 就会尝试缺省的名字，而你会在启动时得到
+如下的提示:
+---
+Terminal entry not found in termcap
+'unknown-terminal' not known. Available built-in terminals are:
+    builtin_gui
+    builtin_riscos
+    builtin_amiga
+    builtin_beos-ansi
+    builtin_ansi
+    builtin_vt320
+    builtin_vt52
+    builtin_pcansi
+    builtin_win32
+    builtin_xterm
+    builtin_iris-ansi
+    builtin_debug
+    builtin_dumb
+defaulting to 'vt320'
+---
+解决方法是定义合适的缺省终端名: >
+
+	$ ! 未知的终端名字。让我们使用 vt320 或者 ansi。
+	$ ! 注意: 大小写是敏感的。
+	$ define term "vt320"
+
+从 VT100 到 VT320 (如 V300，VT220，VT200) 等终端不需要特别的键盘映射。它们应该
+正常工作，例如光标移动，插入，删除等键。但 GUI 模式下的退格键除外。要解决这个
+问题，在 .gvimrc 下加入: >
+
+	inoremap <Del> <BS>
+
+Vim 也会识别它们为快速终端。
+
+如果屏幕在窗口切换时出现一些烦人的行，在你的 .vimrc 文件里加入: >
+
+	set ttyfast	" 设置快速终端
+<
+注意: 如果你通过远程或者慢速的连接访问 Vim，建议你避免快速终端选项: >
+
+	set nottyfast   " 设置慢速终端
+
+(Zoltan Arpadffy，Vim 5.6 版本)
+
+
+8.7 十六进制编辑和其他外部工具
+
+OpenVMS 和其他系统一个很重要的区别就是 VMS 使用特殊的命令来执行可执行文件: >
+
+	RUN <路径>文件名
+	MCR <路径>文件名 <参数>
+
+OpenVMS 用户不得不经常注意到，Vim 命令 :! 只是把他们推到 DCL 提示符下。如果你
+想以此执行 DCL 的命令，那没有问题。但如果我们想执行诸如 XXD，CTAGS，JTAGS 等程
+序，我们就会发现依照 Vim 文档进行操作会出现问题 (比如，:help xxd)。
+
+解决方法: 执行 MC 命令，并加上可执行文件的全路径。例如，执行 :%!xxd 命令可以
+用: >
+
+	:%!mc vim:xxd
+
+更一般的: >
+	:!mc <路径>文件 <参数>
+<
+注意: 你可以使用 XXD 和 GUI 菜单下的 CTAGS。
+
+要定制 ctags，可以定义逻辑名 $CTAGS 并使用标准的参数。如: >
+
+	define/nolog CTAGS "--totals -o sys$login:tags"
+
+要知道更多的信息，请阅读 :help tagsearch 和
+http://ctags.sourceforge.net/ctags.html 提供的 CTAGS 文档。
+
+(Zoltan Arpadffy，Vim 5.6-70 版本)
+
+
+8.8 执行 vimrc 和 gvimrc 脚本
+
+如果你想使用用从别的平台上通过 ftp 等方式带来的 .vimrc 和 .gvimrc (例如，MS
+Windows)，可能会有问题。因为 VMS 使用不同的行尾表示方式。
+具体症状就是， Vim 不能执行你的 .vimrc/.gvimrc，即使你说: >
+>
+	:so sys$login:.vimrc
+
+一个技巧就是压缩 (例如，zip) 其他平台的文件，并在 VMS 上解压；如果你还有同样的
+问题，那么尝试复制-粘贴 (为此，你需要两个系统在一台机器上同时使用。例如，
+Windows 上的 Xterm 窗口，或者从 VMS telnet 到 Windows 上)。
+
+(Sandor Kopanyi，<sandor.kopanyi@mailbox.hu> Vim 6.0a 版本)
+
+
+8.9 从 Vim 里打印
+
+要使得 Vim 能够在 VMS 环境下支持打印 (GUI 模式的版本)，你需要设置 $TMP 逻辑名
+并指向某个临时目录，还要设置 SYS$PRINT 逻辑名指向你的缺省打印队列。
+示例: >
+
+	$define SYS$PRINT HP5ANSI
+
+你可以打印整个缓冲区，或者只是标记的区域。详情参见 :help 的内容。
+
+(Zoltan Arpadffy，Vim 6.0c 版本)
+
+
+8.10 设置符号
+
+如果我这样设置 GVIM，在父终端按 CTRL-Y 就会关闭 gvim。通过设置不同的符号，看来
+就能解决这个问题。我的建议是: >
+
+	$ GV*IM:==SPAWN/NOWAIT/INPUT=NLA0: MCR VIM:VIM.EXE -G -GEOMETRY 80X40
+
+其中，/INPUT=NLA0: 分隔 gvim 和父终端的标准输入，从而隔绝了父窗口的信号。如果
+没有 -GEOMETRY，GVIM 窗口会很小，从而菜单很容易在窗口调整大小后引起混淆。
+
+(Carlo Mekenkamp，Coen Engelbarts，Vim 6.0ac 版本)
+
+
+8.11 diff 和其他 GNU 程序
+
+6.0 版本开始实现了 diff 功能。但是 OpenVMS 并不使用 GNU/Unix 类似的 diff，而内
+建的 diff 不能工作。以下是一个简单的解决此问题的方法。安装一个 Unix 兼容的
+diff，则 Vim 就能正常在 diff 模式下工作了。只要你重定义 diff 程序如下: >
+
+	define /nolog diff <GNU_PATH>diff.exe
+
+另外一个更复杂的方法参见下面 (8.12 diff-模式)。此外，还有其他的程序，如
+patch、make 等等，都会有相同的问题。www.polarhome.com 提供了 Alpha 和 VAX 机器
+上的 GNU 程序包，可以用来解决 OpenVMS 上的 GNU 问题。
+(Zoltan Arpadffy，Vim 6.1 版本)
+
+
+8.12 diff-模式
+
+Vim 6.0 或更高版本提供 Vim 的 diff-模式 (见 |new-diff-mode|、|diff-mode| 和
+|08.7|)。它们使用外部程序 'diff' 并希望看到 Unix 兼容的 diff 输出结果。不过，
+标准的 VMS diff 程序输出的格式与之不兼容。要在 VMS 上使用 Vim 的 diff-模式，你
+需要:
+    1 安装 Unix 兼容的 diff 程序，例如 GNU diff
+    2 告诉 Vim 在 diff-模式下使用 Unix 兼容的 diff。
+
+你可以从 VIM-VMS 网站下载 GNU diff，它是 GNU 工具的一部分。链接是:
+http://www.polarhome.com/vim/files/gnu_tools.zip。我建议把它解压到一个单独的
+"GNU" 目录下，并建立一个逻辑名 GNU: 指向该目录，例如: >
+
+   DEFINE GNU    <DISK>:[<DIRECTORY>.BIN.GNU]
+
+你可以定义 GDIFF 符号，以便在 DCL 提示下使用 GNU diff: >
+
+   GDIFF :==     $GNU:DIFF.EXE
+
+现在你可以告诉 Vim 使用新的 diff 程序了。以下程序取自 |diff-diffexpr|，但把外
+部 diff 程序的调用指向新的 VMS 上的 diff。把它加到你的 .vimrc 文件里: >
+
+     " Set up vimdiff options
+       if v:version >= 600
+	" Use GNU diff on VMS
+	set diffexpr=MyDiff()
+	function MyDiff()
+	   let opt = ""
+	   if &diffopt =~ "icase"
+	     let opt = opt . "-i "
+	   endif
+	   if &diffopt =~ "iwhite"
+	     let opt = opt . "-b "
+	   endif
+	   silent execute "!mc GNU:diff.exe -a " . opt . v:fname_in . " " .  v:fname_new .
+		\  " > " . v:fname_out
+	endfunction
+      endif
+
+你现在可以使用 Vim 的 diff-模式，比如，只读方式下比较两个文件: >
+
+    $ VIM -D/R <FILE1> <FILE2>
+
+你可以定义新的符号来执行 vimdiff，例如: >
+
+    $ VIMDIFF     :== 'VIM' -D/R
+    $ GVIMDIFF    :== 'GVIM' -D/R
+
+你现在可以用四种方式比较文件: >
+
+    1. VMS  diff:  $ DIFF     <FILE1> <FILE2>
+    2. GNU  diff:  $ GDIFF    <FILE1> <FILE2>
+    3. VIM  diff:  $ VIMDIFF  <FILE1> <FILE2>
+    4. GVIM diff:  $ GVIMDIFF <FILE1> <FILE2>
+
+(Coen Engelbarts，Vim 6.1 版本)
+
+
+8.13 允许 C 关键字里出现 '$'
+
+DEC C 使用很多带有 '$' 的标识符。ANSI C 则不允许如此，而 Vim 因而把 '$' 当作标
+识符结束的标记。通过 'iskeyword' 选项，你可以改变这一行为。
+在你的 .vimrc 文件里加入如下的命令: >
+
+    autocmd FileType c,cpp,cs  set iskeyword+=$
+
+你也可以创建如下的文件 $VIM/FTPLUGIN/C.VIM (和/或 CPP.VIM 和 CS.VIM)，并加入如
+下的命令: >
+
+	set iskeyword+=$
+
+这样，基于单词的命令，如 '*'-搜索命令和 CTRL-] 标签搜索等，都能作用于整个标识
+符上了。(VMS 上的 Ctags 从 5.1 版本开始，也支持带 '$' 的 C 关键字)。
+
+(Coen Engelbarts，Vim 6.1 版本)
+
+8.14 为初学者提供的 VIMTUTOR (VIM 教程)
+
+VIMTUTOR.COM DCL 脚本可以帮助 Vim 初学者学习/掌握在 OpenVMS 上运行 Vim 的基本
+步骤。在某些二进制版本中，你可以如下方式开始: >
+
+	@vim:vimtutor
+
+(Thomas.R.Wyant III，Vim 6.1 版本)
+
+8.15 控制台模式启动太慢的问题
+
+因为 GUI/GTK Vim 在控制台模式中也能很好的工作，很多管理员为整个系统安装了这些
+版本的可执行程序。
+不幸的是，在远端慢速连接上，GUI/GTK 版本对只想使用控制台的用户会相当慢，这是因
+为该版本检测 X 环境的超时关系。
+
+幸运的是，有个简单的方法。管理员只需要同时安装 GUI/GTK 版本和纯控制台版本，如
+下: >
+
+    |- vim73
+    |----- doc
+    |----- syntax
+       vimrc    (系统 rc 文件)
+       gvimrc
+       gvim.exe (换名的 GUI 或 GTK 版本的 vim.exe)
+       vim.exe  (纯控制台版本)
+
+在 LOGIN.COM 或 SYSLOGIN.COM 为 ex 定义系统符号: >
+
+	$ define/nolog VIM RF10:[UTIL.VIM73] ! VIM 所在的目录
+	$ vi*m  :== mcr VIM:VIM.EXE
+	$ gvi*m :== mcr VIM:GVIM.EXE
+	$ ! 或者用以下方式启动
+	$ gv*im :== spawn/nowait/input=NLA0 mcr VIM:GVIM.EXE -g -GEOMETRY 80x40
+
+
+像这样，没有 X 环境而只想用纯控制台模式的用户就可以避免效率太低的问题了。
+
+(Zoltan Arpadffy，Vim 7.2)
+
+8.16 公用 VIM 目录 - 不同的体系结构
+
+在一个下面这样包含不同体系结构结点的簇里:
+
+$show cluster
+View of Cluster from system ID 11655  node: TOR                                                                     18-AUG-2008 11:58:31
++---------------------------------+
+¦        SYSTEMS        ¦ MEMBERS ¦
++-----------------------+---------¦
+¦  NODE  ¦   SOFTWARE   ¦  STATUS ¦
++--------+--------------+---------¦
+¦ TOR    ¦ VMS V7.3-2   ¦ MEMBER  ¦
+¦ TITAN2 ¦ VMS V8.3     ¦ MEMBER  ¦
+¦ ODIN   ¦ VMS V7.3-2   ¦ MEMBER  ¦
++---------------------------------+
+
+如果能够有一个公共的 VIM 目录，但分别执行不同的可执行程序，会很方便。
+有若干实现方案:
+
+方法 1。所有可执行程序在相同目录，但使用不同的名字。
+在 login.com 或 sylogin.com 里使用以下的脚本可以很容易做到: >
+
+	$ if f$getsyi("NODE_HWTYPE") .eqs. "VAX"
+	$ then
+	$       say "VAX platform"
+	$       vi*m:== mcr vim:VIM.EXE_VAX
+	$ endif
+	$ if f$getsyi("NODE_HWTYPE") .eqs. "ALPH"
+	$ then
+	$       say "ALPHA platform"
+	$       vi*m :== mcr vim:VIM.EXE_AXP
+	$ endif
+	$ if f$getsyi("ARCH_NAME") .eqs. "IA64"
+	$ then
+	$      say "IA64 platform"
+	$      vi*m :== mcr vim:VIM.EXE_IA64
+	$ endif
+
+方法 2.  不同目录: >
+
+	$ if f$getsyi("NODE_HWTYPE") .eqs. "VAX"
+	$ then
+	$       say "VAX platform"
+	$       define/nolog VIM RF10:[UTIL.VAX_EXE] ! VAX executables
+	$ endif
+	$ if f$getsyi("NODE_HWTYPE") .eqs. "ALPH"
+	$ then
+	$       say "ALPHA platform"
+	$       define/nolog VIM RF10:[UTIL.AXP_EXE] ! AXP executables
+	$ endif
+	$ if f$getsyi("ARCH_NAME") .eqs. "IA64"
+	$ then
+	$      say "IA64 platform"
+	$      define/nolog VIM RF10:[UTIL.IA64_EXE] ! IA64 executables
+	$ endif
+        $! VIMRUNTIME must be defined in order to find runtime files
+	$ define/nolog VIMRUNTIME RF10:[UTIL.VIM73]
+
+使用这种方法一个好的示例可见来自 GNU_TOOLS.ZIP 包的 [GNU]gnu_tools.com 脚本。
+可以从这里下载 http://www.polarhome.com/vim/
+
+(Zoltan Arpadffy，Vim 7.2)
+
+==============================================================================
+
+9. VMS 相关修改记录 (英文)				*vms-changes*
+
+Version 7.3
+- CTAGS 5.8 included
+- VMS compile warnings fixed - floating-point overflow warning corrected on VAX
+- filepath completion corrected - too many chars were escaped in filename
+  and shell commands
+- the following plugins are included into VMS runtime:
+	genutils 2.4, multiselect 2.2, multvals 3.1, selectbuf 4.3,
+	bufexplorer 7.1.7, taglist 4.5
+- minor changes in vimrc (just in VMS runtime)
+- make_vms.mms - HUGE model is the default
+- [TESTDIR]make_vms.mms include as many tests possible
+- modify test30 and test54 for VMS
+- enable FLOAT feature in VMS port
+- os_vms.txt updated
+
+Version 7.2 (2008 Aug 9)
+- VCF files write corrected
+- CTAGS 5.7 included
+- corrected make_vms.mms (on VAX gave syntax error)
+
+Version 7.1 (2007 Jun 15)
+- create TAGS file from menu
+
+Version 7
+- Improved low level char input (affects just console mode)
+- Fixed plugin bug
+- CTAGS 5.6 included
+
+Version 6.4 (2005 Oct 15)
+- GTKLIB and Vim build on IA64
+- colors in terminal mode
+- syntax highlighting in terminal mode
+- write problem fixed (extra CR)
+- ESC and ESC sequence recognition in terminal mode
+- make file changed to support new MMS version
+- env variable expansion in path corrected
+- printing problems corrected
+- help text added for case insensitive arguments
+
+Version 6.3 (2004 May 10)
+- Improved vms_read function
+- CTAGS v5.5.4 included
+- Documentation corrected and updated
+
+Version 6.2 (2003 May 7)
+- Corrected VMS system call results
+- Low level character input is rewritten
+- Correction in tag and quickfix handling
+- First GTK build
+- Make file changes
+    - GTK feature added
+    - Define for OLD_VMS
+    - OpenVMS version 6.2 or older
+- Documentation updated with GTK features
+- CTAGS v5.5 included
+- VMS VIM tutor created
+
+Version 6.1 (2002 Mar 25)
+- TCL init_tcl() problem fixed
+- CTAGS v5.4 included
+- GNU tools binaries for OpenVMS
+- Make file changes
+    - PERL, PYTHON and TCL support improved
+    - InstallVMS.txt has a detailed description HOWTO build
+- VMS/Unix file handling rewritten
+- Minor casting and bug fixes
+
+Version 6.0 (2001 Sep 28)
+- Unix and VMS code has been merged
+	- separated "really" VMS related code
+	- included all possible Unix functionality
+	- simplified or deleted the configuration files
+	- makefile MAKE_VMS.MMS reviewed
+- menu changes (fixed printing, CTAGS and XXD usage)
+- fixed variable RMS record format handling anomaly
+- corrected syntax, ftplugin etc files load
+- changed expand_wildcards and expandpath functions to work more general
+- created OS_VMS_FILTER.COM - DECC->VAXC pre-processor directive convert
+  script.
+- Improved code's VAXC and new DECC compilers compatibility
+- changed quickfix parameters:
+	- errormessage format to suite DECC
+	- search, make and other commands to suite VMS system
+- updated and renamed MMS make files for Vim and CTAGS.
+- CTAGS has been removed from source distribution of Vim but it will remain
+  in OpenVMS binary distributions.
+- simplified build/configuration procedure
+- created INSTALLvms.txt - detailed compiling instructions under VMS.
+- updated test scripts.
+
+Version 5.8 (2001 Jun 1)
+- OS_VMS.TXT updated with new features.
+- other minor fixes.
+- documentation updated
+- this version had been tested much more than any other OpenVMS version
+  earlier
+
+Version 5.7 (2000 Jun 24)
+- New CTAGS v5.0 in distribution
+- Documentation updated
+
+Version 5.6 (2000 Jan 17)
+- VMS filename related changes:
+	- version handling (open everything, save to new version)
+	- correct file extension matching for syntax (version problem)
+	- handle <,> characters and passwords in directory definition
+	- handle internode/remote invocation and editing with passwords
+	- OpenVMS files will be treated case insensitive from now
+	- corrected response of expand("%:.") etc path related functions
+	(in one word: VMS directory handling internally)
+- version command
+	- corrected (+,-) information data
+	- added compiler and OS version
+	- added user and host information
+	- resolving $VIM and $VIMRUNTIME logicals
+- VMS port is in MAX_FEAT (maximum features) club with Unix, Win32 and OS/2.
+	- enabled farsi, rightleft etc. features
+	- undo level raised up to 1000
+- Updated OS_VMS.MMS file.
+	- maximum features ON is default
+	- Vim is compilable with +perl, +python and +tcl features.
+	- improved MMK compatibility
+- Created MAKEFILE_VMS.MMS, makefile for testing Vim during development.
+- Defined DEC terminal VT320
+	- compatibility for VT3*0, VT2*0 and VT1*0 - ANSI terminals
+	  backwards, but not VT340 and newer with colour capability.
+	- VT320 is default terminal for OpenVMS
+	- these new terminals are also fast ttys (default for OpenVMS).
+	- allowed dec_mouse ttym
+- Updated files vimrc and gvimrc with VMS specific suggestions.
+- OS_VMS.TXT updated with new features.
+
+Version 5.5 (1999 Dec 3)
+- Popup menu line crash corrected.
+- Handle full file names with version numbers.
+- Directory handling (CD command etc.)
+- Corrected file name conversion VMS to Unix and v.v.
+- Correct response of expand wildcards
+- Recovery is working from this version under VMS as well.
+- Improved terminal and signal handing.
+- Improved OS_VMS.TXT
+
+Version 5.4 (1999 Sep 9)
+- Cut and paste mismatch corrected.
+- Motif directories during open and save are corrected.
+
+Version 5.3 (1998 Oct 12)
+- Minor changes in the code
+- Standard distribution with +GUI option
+
+Version 5.1 (1998 Apr 21)
+- Syntax and DEC C changes in the code
+- Fixing problems with the /doc subdirectory
+- Improve OS_VMS.MMS
+
+Version 4.5 (1996 Dec 16)
+- First VMS port by Henk Elbers <henk@xs4all.nl>
+
+==============================================================================
+
+10. 作者						*vms-authors*
+
+OpenVMS 文档和执行文件的维护者是:
+Zoltan Arpadffy <arpadffy@polarhome.com>
+OpenVMS Vim page: http://www.polarhome.com/vim/
+
+本文档采用了较早 OS_VMS.TXT 版本的作者和贡献者提供的部分内容和备注。他们是:
+	Charles E. Campbell, Jr. <cec@gryphon.gsfc.nasa.gov>
+	Bruce Hunsaker <BNHunsaker@chq.byu.edu>
+	Sandor Kopanyi <sandor.kopanyi@mailbox.hu>
+
+ vim:tw=78:ts=8:ft=help:norl:

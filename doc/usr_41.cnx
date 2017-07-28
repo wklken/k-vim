@@ -1,0 +1,2222 @@
+*usr_41.txt*	For Vim version 7.4.  最近更新: 2013年8月
+
+		     VIM USER MANUAL - by Bram Moolenaar
+		     译者: lang2、Willis http://vimcdoc.sf.net
+
+			      编写 Vim 脚本
+
+
+Vim 脚本语言在很多地方用到，包括 vimrc 文件，语法文件，等等。本章讨论 Vim 脚本
+相关的知识。这样的内容有很多，所以本章也比较长。
+
+|41.1|	简介
+|41.2|	变量
+|41.3|	表达式
+|41.4|	条件语句
+|41.5|	执行一个表达式
+|41.6|	使用函数
+|41.7|	定义一个函数
+|41.8|	列表和字典
+|41.9|	例外
+|41.10|	其它讨论
+|41.11|	编写插件
+|41.12|	编写文件类型插件
+|41.13|	编写编译器插件
+|41.14|	编写快速载入的插件
+|41.15|	编写库脚本
+|41.16|	发布 Vim 脚本
+
+           下一章: |usr_42.txt|  添加新的菜单
+           前一章: |usr_40.txt|  创建新的命令
+             目录: |usr_toc.txt|
+
+==============================================================================
+*41.1*	简介					*vim-script-intro* *script*
+
+你最初接触到 Vim 脚本是在 vimrc 文件里。当 Vim 启动时它将读取该文件的内容并执
+行其中的命令。你可以在其中设置选项。你也可以在其中使用任何冒号命令 (以 ":" 开
+头的命令；这些命令有时也被称作 Ex 命令或命令行命令)。
+   语法文件其实也是 Vim 脚本。专为某种文件类型设定选项的文件也是。一个很复杂的
+宏可以被单独的定义在一个 Vim 脚本文件中。你可以自己想到其它的应用。
+
+让我们从一个简单的例子开始: >
+
+	:let i = 1
+	:while i < 5
+	:  echo "count is" i
+	:  let i += 1
+	:endwhile
+<
+	备注:
+	那些 ":" 字符并非必须。只有在你键入命令时才需要，在编写 Vim 脚本时可以
+	去掉。在这里用一是为了清楚，二是为了区别于普通模式命令。
+	备注:
+	你可以拷贝这里的示例文本，然后用 :@" 执行。
+
+本例的输出是:
+
+	count is 1 ~
+	count is 2 ~
+	count is 3 ~
+	count is 4 ~
+
+第一行的 ":let" 命令给一个变量赋值。通常的用法是: >
+
+	:let {变量} = {表达式}
+
+在例子中变量名是 "i" 而表达式是一个简单的数值 1。
+   ":while" 命令开始一个循环。通常的用法是: >
+
+	:while {条件}
+	:  {语句}
+	:endwhile
+
+只要条件为真，"while" 和 ":endwhile" 包围的语句就会被执行。在例子中使用的条件
+是表达式 "i < 5"。这个条件在变量 i 小于五时总是真的。
+	备注:
+	如果你碰巧写了一个死循环语句，你可以用 CTRL-C 来终止 (在 MS-Windows
+	上使用 CTRL-Break)。
+
+":echo" 命令显示它的参数。在这个例子中的参数是字符串 "count is" 和变量 i 的
+值。因为开始时 i 的值是 1，所以将会显示:
+
+	count is 1 ~
+
+接着是 ":let i += 1" 命令。该命令相当于 ":let i = i + 1"。在变量 i 上加一并将
+新的值赋给同一个变量。
+
+给出本例是为了解释命令，不过如果你真的要写这样一个循环，下面的表达更加简洁: >
+
+	:for i in range(1, 4)
+	:  echo "count is" i
+	:endfor
+
+我们现在不解释 |:for| 和 |range()| 如何工作，一会儿再说。如果你没有耐心，点击
+这些链接。
+
+
+三 种 数 值
+
+数值可以是十进制，十六进制，或者八进制的。以 "0x" 或 "0X" 开始的数值是十六进制
+的。例如 "0x1f" 代表十进制 31。以零开始的数值是八进制的。"017" 代表十进制 15。
+当心: 不要在十进制数前添上零，那样该数值将会被作为八进制数对待！
+   ":echo" 命令总以十进制格式显示数值。例: >
+
+	:echo 0x7f 036
+<	127 30 ~
+
+在一个数值前加上减号会将其变为负值。十六进制数和八进制数亦然。减号也用于减法操
+作。将下例与前面的比较: >
+
+	:echo 0x7f -036
+<	97 ~
+
+表达式中的空白字符将被忽略。然而，为了增加表达式的易读性，建议用来分隔不同的项
+目。例如，为了不和上面的负号混淆，在减号和之后的数字前加入一个空格: >
+
+	:echo 0x7f - 036
+
+==============================================================================
+*41.2*	变量
+
+一个变量名可以由 ASCII 字符、数字和下划线组成。但是变量名不能以数字开始。以下
+是几个有效的变量名:
+
+	counter
+	_aap3
+	very_long_variable_name_with_dashes
+	FuncLength
+	LENGTH
+
+"foo+bar" 和 "6var" 都是无效的变量名。
+   这些变量都是全局的。要列出当前定义的所有变量可以用这个命令: >
+
+	:let
+
+你可以在任何地方使用全局变量。这同时也意味着: 当一个脚本文件使用 "count" 变量
+时，可能另一个脚本文件也使用了这个变量。这至少会引起混乱，严重时会导致脚本无法
+正常工作。为避免这种情况发生，你可以在变量名前加上 "s:" 使其变成脚本文件的局部
+变量。例如，一脚本包含以下代码: >
+
+	:let s:count = 1
+	:while s:count < 5
+	:  source other.vim
+	:  let s:count += 1
+	:endwhile
+
+由于 "s:count" 是局部变量，你可以确信调用 (source) "other.vim" 脚本时不会改变
+它的值。如果 "other.vim" 也使用一个 "s:count" 变量，该变量将会是仅在脚本内有效
+的局部变量。更多关于脚本局部变量可以在这里读到: |script-variable|。
+
+还有很多其它类型的变量，参阅 |internal-variables|。最常用的几类有:
+
+	b:name		缓冲区的局部变量
+	w:name		窗口的局部变量
+	g:name		全局变量 (也用于函数中)
+	v:name		Vim 预定义的变量
+
+
+删 除 变 量
+
+变量不仅仅可以在 ":let" 命令显示，同时也占用内存空间。为了删除一个变量可以使用
+":unlet" 命令。例: >
+
+	:unlet s:count
+
+这将删除 "s:count" 这个脚本局部变量并释放其占用的内存。如果你并不确定这个变量
+是否存在，但并不希望系统在它不存在时报错，可以在命令后添加 !: >
+
+	:unlet! s:count
+
+当一个脚本结束时，它使用的局部变量不会自动被删除。下一次脚本被执行时，旧的变量
+值仍可被使用。例: >
+
+	:if !exists("s:call_count")
+	:  let s:call_count = 0
+	:endif
+	:let s:call_count = s:call_count + 1
+	:echo "called" s:call_count "times"
+
+"exists()" 函数检查一个变量是否已经被定义过了。它的参数是你想检查的变量的名
+字。而不是变量本身！如果你这样做: >
+
+	:if !exists(s:call_count)
+
+那么变量 s:call_count 的值将被用来做检测。你不会得到想的结果。
+   惊叹号 ! 将一个值取反。当该值为真时，表达式的值为假。当该值为假时，表达式的
+值为真。你可以把它读作 "not"。这样 "if !exists()" 可以被读作 "if not exists()"
+(如果-不-存在)。
+   Vim 把任何非零的值当作真。零代表假。
+	注意:
+	如果期待数值类型，Vim 自动把字符串转换为数值。如果使用不以数字开始的字
+	符串，返回的数值为零。所以小心这种代码: >
+		:if "true"
+<	这里 "true" 会被解读为零，也就是假值！
+
+
+字 符 串 变 量 和 常 量
+
+到目前为止我们只用到了数值作为变量的值。同样的我们可以使用字符串。这两种变量类
+型是 Vim 支持的基本类型。变量的类型是动态的。每当我们通过 ":let" 语句为变量赋
+值时，变量的类型才被确定。类型更多的内容见 |41.8|。
+   你需要使用字符串常量来为字符串变量赋值。字符串常量有两种。第一种是由双引号
+括起来的: >
+
+	:let name = "peter"
+	:echo name
+<	peter ~
+
+如果你想在这样的字符串内使用双引号，在之前加上反斜杠即可: >
+
+	:let name = "\"peter\""
+	:echo name
+<	"peter" ~
+
+如果你不想使用反斜杠，也可以用单引号括起字符串: >
+
+	:let name = '"peter"'
+	:echo name
+<	"peter" ~
+
+所有的字符在单引号内都保持其本来面目。只有单引号本身例外: 输入两个你会得到一个
+单引号。因为反斜杠在其中也被作为其本身来对待，你无法使用它来改变其后的字符的意
+义。
+   在双引号括起来的字符串中可以使用特殊字符。这里有一些有用的例子:
+
+	\t		<Tab>
+	\n		<NL>，换行
+	\r		<CR>，<Enter>
+	\e		<Esc>
+	\b		<BS>，退格
+	\"		"
+	\\		\，反斜杠
+	\<Esc>		<Esc>
+	\<C-W>		CTRL-W
+
+最后两个只是用来举例子的。"\<name>" 的形式可以被用来表示特殊的键 "name"。
+   在 |expr-quote| 中列出了全部的特殊字符。
+
+==============================================================================
+*41.3*	表达式
+
+Vim 脚本支持的表达式很丰富，也很容易使用。你可以在这里读到表达式的定义:
+|expression-syntax|。这里我们只看看常用的几个。
+   已经提到的那些数值，字符串常量和变量都属于表达式。因此任何可以使用表达式的
+地方，数值，字符串变量和常量都可以使用。其它基本的表达式有:
+
+	$NAME		环境变量
+	&name		选项
+	@r		寄存器
+
+例子: >
+
+	:echo "The value of 'tabstop' is" &ts
+	:echo "Your home directory is" $HOME
+	:if @a > 5
+
+&name 这种形式可以被用来暂时改变一个选项的值。例: >
+
+	:let save_ic = &ic
+	:set noic
+	:/The Start/,$delete
+	:let &ic = save_ic
+
+这样既确保了在匹配 "The Start" 模式时 'ignorecase' 选项是关闭的，同时也保留了
+用户原来的选项值。(另一个方法是在模式里加上 "\C"，见 |/\C|。)
+
+
+算 术
+
+我们把这些基本的东西都混合起来用就更有趣了。先来看看算术运算:
+
+	a + b		加
+	a - b		减
+	a * b		乘
+	a / b		除
+	a % b		余
+
+先乘除，后加减。例如: >
+
+	:echo 10 + 5 * 2
+<	20 ~
+
+括号内的先计算。这也没什么奇怪的。例如: >
+
+	:echo (10 + 5) * 2
+<	30 ~
+
+用 "." 可以把两个字符串连接起来。例如: >
+
+	:echo "foo" . "bar"
+<	foobar ~
+
+一般的，当 ":echo" 命令遇到多个参数时，会在它们之间加入空格。但上例中参数是一
+个表达式，所以不会有空格。
+
+下面的条件表达式很显然是从 C 语言里借来的:
+
+	a ? b : c
+
+如果 "a" 为真用 "b"，否则用 "c"。例如: >
+
+	:let i = 4
+	:echo i > 5 ? "i is big" : "i is small"
+<	i is small ~
+
+在整个表达式被求值前，结构中的三部分总是先被求值的。因此你可以将其视为:
+
+	(a) ? (b) : (c)
+
+==============================================================================
+*41.4*	条件语句
+
+":if" 命令在条件满足的前提下，执行其后直到 ":endif" 的所有语句。常用的形式为:
+
+	:if {condition}
+	   {statements}
+	:endif
+
+语句 {statements} 仅当表达式 {condition} 为真 (非零) 时才被执行。这些语句还必
+须是有效的。否则 Vim 无法找到相应的 ":endif"。
+   你也可以使用 ":else"。常用形式为:
+
+	:if {condition}
+	   {statements}
+	:else
+	   {statements}
+	:endif
+
+第二组 {statements} 仅当条件不满足时被执行。
+   最后还有 ":elseif":
+
+	:if {condition}
+	   {statements}
+	:elseif {condition}
+	   {statements}
+	:endif
+
+这种形式就像 ":else" 接着 "if" 一样，但是少出现一个 ":endif"。
+   下面是一个有用的例子 (可以用在你的 vimrc 文件里): 它检查 'term' 选项并根据
+不同的值做不同的操作: >
+
+	:if &term == "xterm"
+	:  " Do stuff for xterm
+	:elseif &term == "vt100"
+	:  " Do stuff for a vt100 terminal
+	:else
+	:  " Do something for other terminals
+	:endif
+
+
+逻 辑 操 作
+
+实际上我们在前面的几个例子中已经是用到了。下面是几个最常用的形式:
+
+	a == b		等于
+	a != b		不等于
+	a >  b		大于
+	a >= b		大于等于
+	a <  b		小于
+	a <= b		小于等于
+
+如果条件满足，结果为 1，否则为 0。例如: >
+
+	:if v:version >= 700
+	:  echo "祝贺"
+	:else
+	:  echo "你在使用旧的版本，升级！"
+	:endif
+
+这里 "v:version" 是 Vim 定义的变量，用来存放 Vim 的版本号。600 意为 6.0 版。
+6.1 版的值为 601。这对编写可以在不同版本的 Vim 上运行的脚本很有用。参阅
+|v:version|
+
+对数值和字符串都可以做逻辑操作。两个字符串的算术差被用来比较它们的值。这个结果
+是通过字节值来计算的，对于某些语言，这样做的结果未必正确。
+   在比较一个字符串和一个数值时，该字符串将先被转换成一个数值。这容易出错，因
+为当一个字符串看起来不像数值时，它会被当作 0 对待。例如: >
+
+	:if 0 == "one"
+	:  echo "yes"
+	:endif
+
+上面的例子将显示 "yes"，因为 "one" 看起来不像一个数值，所以被转换为 0 了。
+
+对于字符串来说还有两种操作:
+
+	a =~ b		匹配
+	a !~ b		不匹配
+
+左边的 "a" 被当作一个字符串。右边的 "b" 被当作一个匹配模式，正如做查找操作一
+样。例如: >
+
+	:if str =~ " "
+	:  echo "字符串包括空格"
+	:endif
+	:if str !~ '\.$'
+	:  echo "字符串不以句号结尾"
+	:endif
+
+注意 在匹配模式中用单引号是很有用的。因为匹配模式中通常有很多反斜杠，而反斜杠
+在双引号字符串中必须双写才有效。
+
+在做字符串比较时用到 'ignorecase' 选项。如果你不希望使用该选项，可以在比较时加
+上 "#" 或 "?"。"#" 表示大小写敏感；"?" 表示忽略大小写。因此 "==?" 比较两字符串
+是否相等，不计大小写。"!~#" 检查一个模式是否被匹配，同时也考虑大小写。
+|expr-==| 有一个完整的字符串比较/匹配操作列表。
+
+
+
+循 环 详 述
+
+":while" 命令已经在前面提到了。还有另外两条语句可以在 ":while" 和 ":endwhile"
+之间使用。
+
+	:continue		跳回 while 循环的开始；继续循环
+	:break			跳至 ":endwhile"；循环结束
+
+例: >
+
+	:while counter < 40
+	:  call do_something()
+	:  if skip_flag
+	:    continue
+	:  endif
+	:  if finished_flag
+	:    break
+	:  endif
+	:  sleep 50m
+	:endwhile
+
+":sleep" 命令使 Vim 小憩一下。"50m" 表示休息 50 毫秒。再举一个例子，":sleep 4"
+休息 4 秒。
+
+更多循环可以用 ":for" 命令实现，见下面的 |41.8|。
+
+==============================================================================
+*41.5*	执行一个表达式
+
+到目前为止，脚本内的语句都是由 Vim 直接运行的。用 ":execute" 命令可以执行一个
+表达式的结果。这是一个创建并执行命令的非常有效的方法。
+   例如要跳转到一个由变量表示的标签: >
+
+	:execute "tag " . tag_name
+
+"." 被用来连接字符串 "tag " 和变量 "tag_name" 的值。假设 "tag_name" 的值为
+"get_cmd"，那么被将执行的命令将是: >
+
+	:tag get_cmd
+
+":execute" 命令只能用来执行冒号命令。":normal" 命令可以用来执行普通模式命令。
+然而，它的参数只能是按表面意义解释的命令字符，不能是表达式。例如: >
+
+	:normal gg=G
+
+这个命令将跳转到第一行并以 "=" 操作符排版所有行。
+   为了使 ":normal" 命令也可以带表达式，可以把 ":execute" 与其连起来使用。
+例: >
+
+	:execute "normal " . normal_commands
+
+变量 "normal_commands" 必须包含要执行的普通模式命令。
+   必须确保 ":normal" 的参数是一个完整的命令。否则，Vim 碰到参数的结尾就会中止
+其运行。例如，如果你开始了插入模式，你必须也退出插入模式。这样没问题: >
+
+	:execute "normal Inew text \<Esc>"
+
+这将在当前行插入 "new text "。注意 这里使用了特殊键 "\<Esc>"。这样就避免了在你
+的脚本当中键入真正的 <Esc> 字符。
+
+如果你不想执行字符串，而想执行它作为表达式计算的结果，可以用 eval() 函数: >
+
+	:let optname = "path"
+	:let optval = eval('&' . optname)
+
+"&" 被加到 "path" 前面，这样传给 eval() 的参数成为 "&path"。这时得到的返回值就
+是 'path' 选项的值。
+   相同的操作可以这样完成: >
+	:exe 'let optval = &' . optname
+
+==============================================================================
+*41.6*	使用函数
+
+Vim 定义了大量的函数并通过这些函数提供了丰富的功能。本节将给出一些例子。你可以
+在 |functions| 找到一个完整的列表。
+
+一个函数可以被 ":call" 命令调用。参数列表要用括号括起来，并用逗号分割。例如: >
+
+	:call search("Date: ", "W")
+
+这将以 "Date: " 和 "W" 为参数调用 search() 函数。search() 函数的第一个参数是
+一个查找模式，第二个是一个标志。标志 "W" 表示查找操作遇到文件尾时不折返。
+
+在一个表达式内也可以调用函数。例如: >
+
+	:let line = getline(".")
+	:let repl = substitute(line, '\a', "*", "g")
+	:call setline(".", repl)
+
+getline() 函数从当前缓冲区获取一行文本。其参数是行号。在本例中，"." 表示光标所
+在行。
+   substitute() 函数的功能和 ":substitute" 命令相似。它的第一个参数是要执行替
+换操作的源字符串。第二个参数是一个匹配模式，第三个参数是替换字符串。最后一个参
+数是一个标志位。
+   setline() 函数将第一个参数表示的行的文本置为第二个参数表示的字符串。本例中
+光标所在的行被 substitute() 函数的结果所替换。因此这三条语句的效果等同于: >
+
+	:substitute/\a/*/g
+
+如果你在调用 substitute() 之前或之后有更多的事情要做的话，用函数的方式就会更有
+趣了。
+
+
+函 数							*function-list*
+
+Vim 提供的函数很多。这里我们以它们的用途分类列出。你可以在 |functions| 找到一
+个以字母顺序排列的列表。在函数名上使用 CTRL-] 可以跳转至该函数的详细说明。
+
+字符串操作:						*string-functions*
+	nr2char()		通过 ASCII 码值取得一个字符
+	char2nr()		取得字符的 ASCII 码值
+	str2nr()		把字符串转换为数值
+	str2float()		把字符串转换为浮点数
+	printf()		根据 % 项目格式化字符串
+	escape()		将字符串通过 '\' 转义
+	shellescape()		转义字符串用于外壳命令
+	fnameescape()		转义 Vim 命令使用的文件名
+	tr()			把一组字符翻译成另一组
+	strtrans()		将一个字符串变成可显示的格式
+	tolower()		将一个字符串转换为小写
+	toupper()		将一个字符串转换为大写
+	match()			字符串中的模式匹配处
+	matchend()		字符串中的模式匹配结束处
+	matchstr()		在一个字符串中匹配一个模式
+	matchlist()		类似 matchstr()，同时返回子匹配
+	stridx()		子串在母串中第一次出现的地方
+	strridx()		子串在母串中最后一次出现的地方
+	strlen()		字符串长度
+	substitute()		用一个字符串替换一个匹配的模式
+	submatch()		取得 ":s" 和 substitute() 匹配中指定的某个匹配
+	strpart()		取得字符串的一部分
+	expand()		展开特殊的关键字
+	iconv()			转换文本编码格式
+	byteidx()		字符串里字符的字节位置
+	repeat()		重复字符串多次
+	eval()			计算字符串表达式
+
+列表处理:						*list-functions*
+	get()			得到项目，错误索引不报错
+	len()			列表的项目总数
+	empty()			检查列表是否为空
+	insert()		在列表某处插入项目
+	add()			在列表后附加项目
+	extend()		在列表后附加另一个列表
+	remove()		删除列表里一或多个项目
+	copy()			建立列表的浅备份
+	deepcopy()		建立列表的完整备份
+	filter()		删除列表的选定项目
+	map()			改变每个列表项目
+	sort()			给列表排序
+	reverse()		反转列表项目的顺序
+	split()			分割字符串成为列表
+	join()			合并列表项目成为字符串
+	range()			返回数值序列的列表
+	string()		列表的字符串表示形式
+	call()			调用函数，参数以列表形式提供
+	index()			列表里某值的索引
+	max()			列表项目的最大值
+	min()			列表项目的最小值
+	count()			计算列表里某值的出现次数
+	repeat()		重复列表多次
+
+字典处理:						*dict-functions*
+	get()			得到项目，错误的键不报错
+	len()			字典项目的总数
+	has_key()		检查某键是否出现在字典里
+	empty()			检查字典是否为空
+	remove()		删除字典的项目
+	extend()		从一个字典增加项目到另一个字典
+	filter()		删除字典的选定项目
+	map()			改变每个字典项目
+	keys()			得到字典的键列表
+	values()		得到字典的值列表
+	items()			得到字典的键-值组对的列表
+	copy()			建立字典的浅备份
+	deepcopy()		建立字典的完整备份
+	string()		字典的字符串表示形式
+	max()			字典项目的最大值
+	min()			字典项目的最小值
+	count()			计算字典里某值的出现次数
+
+浮点数计算:						*float-functions*
+	float2nr()		把浮点数转换为数值
+	abs()			绝对值 (也适用于数值)
+	round()			四舍五入
+	ceil()			向上取整
+	floor()			向下取整
+	trunc()			删除小数点后的值
+	log10()			以 10 为底的对数
+	pow()			x 的 y 次方
+	sqrt()			平方根
+	sin()			正弦
+	cos()			余弦
+	tan()			正切
+	asin()			反正弦
+	acos()			反余弦
+	atan()			反正切
+	atan2()			反正切
+	sinh()			双曲正弦
+	cosh()			双曲余弦
+	tanh()			双曲正切
+
+其它计算:						*bitwise-function*
+	and()			按位与
+	invert()		按位取反
+	or()			按位或
+	xor()			按位异或
+
+变量:						 	*var-functions*
+	type()			变量的类型
+	islocked()		检查变量是否加锁
+	function()		得到函数名对应的函数引用
+	getbufvar()		取得指定缓冲区中的变量值
+	setbufvar()		设定指定缓冲区中的变量值
+	getwinvar()		取得指定窗口的变量值
+	gettabvar()		取得指定标签页的变量值
+	gettabwinvar()		取得指定窗口和标签页的变量值
+	setwinvar()		设定指定窗口的变量值
+	settabvar()		设定指定标签页的变量值
+	settabwinvar()		设定指定窗口和标签页的变量值
+	garbagecollect()	可能情况下释放内存
+
+光标和位置标记位置:			*cursor-functions* *mark-functions*
+	col()			光标或位置标记所在的列
+	virtcol()		光标或位置标记所在的屏幕列
+	line()			光标或位置标记所在行
+	wincol()		光标所在窗口列
+	winline()		光标所在窗口行
+	cursor()		置光标于 行／列 处
+	getpos()		得到光标、位置标记等的位置
+	setpos()		设置光标、位置标记等的位置
+	byte2line()		取得某字节位置所在行号
+	line2byte()		取得某行之前的字节数
+	diff_filler()		得到一行之上的填充行数目
+
+操作当前缓冲区的文本:					*text-functions*
+	getline()		从缓冲区中取一行
+	setline()		替换缓冲区中的一行
+	append()		附加行或行的列表到缓冲区
+	indent()		某行的缩进
+	cindent()		根据 C 缩进法则的某行的缩进
+	lispindent()		根据 Lisp 缩进法则的某行的缩进
+	nextnonblank()		查找下一个非空白行
+	prevnonblank()		查找前一个非空白行
+	search()		查找模式的匹配
+	searchpos()		寻找模式的匹配
+	searchpair()		查找 start/skip/end 配对的另一端
+	searchpairpos()		查找 start/skip/end 配对的另一端
+	searchdecl()		查找名字的声明
+
+					*system-functions* *file-functions*
+系统调用及文件操作:
+	glob()			展开通配符
+	globpath()		在几个路径中展开通配符
+	findfile()		在目录列表里查找文件
+	finddir()		在目录列表里查找目录
+	resolve()		找到一个快捷方式所指
+	fnamemodify()		改变文件名
+	pathshorten()		缩短路径里的目录名
+	simplify()		简化路径，不改变其含义
+	executable()		检查一个可执行程序是否存在
+	filereadable()		检查一个文件可读与否
+	filewritable()		检查一个文件可写与否
+	getfperm()		得到文件权限
+	getftype()		得到文件类型
+	isdirectory()		检查一个目录是否存在
+	getfsize()		取得文件大小
+	getcwd()		取得当前工作路径
+	haslocaldir()		检查当前窗口是否使用过 |:lcd|
+	tempname()		取得一个临时文件的名称
+	mkdir()			建立新目录
+	delete()		删除文件
+	rename()		重命名文件
+	system()		取得一个 shell 命令的结果
+	hostname()		系统的名称
+	readfile()		读入文件到一个行列表
+	writefile()		把一个行列表写到文件里
+
+日期和时间:				*date-functions* *time-functions*
+	getftime()		得到文件的最近修改时间
+	localtime()		得到以秒计的当前时间
+	strftime()		把时间转换为字符串
+	reltime()		得到准确的当前或者已经经过的时间
+	reltimestr()		把 reltime() 的结果转换为字符串
+
+			*buffer-functions* *window-functions* *arg-functions*
+缓冲区，窗口及参数列表:
+	argc()			参数列表项数
+	argidx()		参数列表中的当前位置
+	argv()			从参数列表中取得一项
+	bufexists()		检查缓冲区是否存在
+	buflisted()		检查缓冲区是否存在并在列表内
+	bufloaded()		检查缓冲区是否存在并已加载
+	bufname()		取得某缓冲区名
+	bufnr()			取得某缓冲区号
+	tabpagebuflist()	得到标签页里的缓冲区列表
+	tabpagenr()		得到标签页号
+	tabpagewinnr()		类似于特定标签页里的 winnr()
+	winnr()			取得当前窗口的窗口号
+	bufwinnr()		取得某缓冲区的窗口号
+	winbufnr()		取得某窗口的缓冲区号
+	getbufline()		得到指定缓冲区的行列表
+
+命令行:						*command-line-functions*
+	getcmdline()		得到当前命令行
+	getcmdpos()		得到命令行里的光标位置
+	setcmdpos()		设置命令行里的光标位置
+	getcmdtype()		得到当前命令行的类型
+
+quickfix 和位置列表:				*quickfix-functions*
+	getqflist()		quickfix 错误的列表
+	setqflist()		修改 quickfix 列表
+	getloclist()		位置列表项目的列表
+	setloclist()		修改位置列表
+
+插入模式补全:					*completion-functions*
+	complete()		设定要寻找的匹配
+	complete_add()		加入要寻找的匹配
+	complete_check()	检查补全是否被中止
+	pumvisible()		检查弹出菜单是否显示
+
+折叠:						*folding-functions*
+	foldclosed()		检查某一行是否被折叠起来
+	foldclosedend()		类似 foldclosed() 但同时返回最后一行
+	foldlevel()		检查某行的折叠级别
+	foldtext()		产生折叠关闭时所显示的行
+	foldtextresult()	得到关闭折叠显示的文本
+
+语法和高亮:	 		 *syntax-functions* *highlighting-functions*
+	clearmatches()		清除 |matchadd()| 和 |:match| 诸命令定义的所有
+				匹配
+	getmatches()		得到 |matchadd()| 和 |:match| 诸命令定义的所有
+				匹配
+	hlexists()		检查高亮组是否存在
+	hlID()			取得高亮组标示
+	synID()			取得某位置的语法标示
+	synIDattr()		取得某语法标示的特定属性
+	synIDtrans()		取得翻译后的语法标示
+	synstack()		取得指定位置的语法标示的列表
+	synconcealed()		取得和隐藏 (conceal) 相关的信息
+	diff_hlID()		得到 diff 模式某个位置的高亮标示
+	matchadd()		定义要高亮的模式 (一个 "匹配")
+	matcharg()		得到 |:match| 参数的相关信息
+	matchdelete()		删除 |matchadd()| 或 |:match| 诸命令定义的匹配
+	setmatches()		恢复 |getmatches()| 保存的匹配列表
+
+拼写:	 					*spell-functions*
+	spellbadword()		定位光标所在或之后的错误拼写的单词
+	spellsuggest()		返回建议的拼写校正列表
+	soundfold()		返回 "发音相似" 的单词等价形式
+
+历史记录:					*history-functions*
+	histadd()		在历史记录中加入一项
+	histdel()		从历史记录中删除一项
+	histget()		从历史记录中提取一项
+	histnr()		取得某历史记录的最大索引号
+
+交互:						*interactive-functions*
+	browse()		显示文件查找器
+	browsedir()		显示目录查找器
+	confirm()		让用户作出选择
+	getchar()		从用户那里取得一个字符输入
+	getcharmod()		取得最近键入字符的修饰符
+	feedkeys()		把字符放到预输入队列中
+	input()			从用户那里取得一行输入
+	inputlist()		让用户从列表里选择一个项目
+	inputsecret()		从用户那里取得一行输入，不回显
+	inputdialog()		从用户那里取得一行输入，使用对话框
+	inputsave()		保存和清除预输入 (typeahead)
+	inputrestore()		恢复预输入 (译注: 参阅 input())
+
+GUI:						*gui-functions*
+	getfontname()		得到当前使用的字体名
+	getwinposx()		GUI Vim 窗口的 X 位置
+	getwinposy()		GUI Vim 窗口的 Y 位置
+
+Vim 服务器:					*server-functions*
+	serverlist()		返回服务器列表
+	remote_send()		向 Vim 服务器发送字符命令
+	remote_expr()		在 Vim 服务器内对一个表达式求值
+	server2client()		向一个服务器客户发送应答
+	remote_peek()		检查一个服务器是否已经应答
+	remote_read()		从一个服务器读取应答
+	foreground()		将一个 Vim 窗口移至前台
+	remote_foreground()	将一个 Vim 服务器窗口移至前台
+
+窗口大小和位置:					*window-size-functions*
+	winheight()		取得某窗口的高度
+	winwidth()		取得某窗口的宽度
+	winrestcmd()		恢复窗口大小的返回命令
+	winsaveview()		得到当前窗口的视图
+	winrestview()		恢复保存的当前窗口的视图
+
+映射:						*mapping-functions*
+	hasmapto()		检查映射是否存在
+	mapcheck()		检查匹配的映射是否存在
+	maparg()		取得映射的右部 (rhs)
+	wildmenumode()		检查 wildmode 是否激活
+
+杂项:						*various-functions*
+	mode()			取得当前编辑状态
+	visualmode()		最近一次使用过的可视模式
+	exists()		检查变量，函数等是否存在
+	has()			检查 Vim 是否支持某特性
+	changenr()		返回最近的改变号
+	cscope_connection()	检查有无与 cscope 的连接
+	did_filetype()		检查某文件类型自动命令是否已经使用
+	eventhandler()		检查是否在一个事件处理程序内
+	getpid()		得到 Vim 的进程号
+
+	libcall()		调用一个外部库函数
+	libcallnr()		同上，但返回一个数值
+
+	getreg()		取得寄存器内容
+	getregtype()		取得寄存器类型
+	setreg()		设定寄存器内容及类型
+
+	taglist()		得到匹配标签的列表
+	tagfiles()		得到标签文件的列表
+
+	mzeval()		计算 |MzScheme| 表达式
+
+==============================================================================
+*41.7*	定义一个函数
+
+Vim 允许你定义自己的函数。基本的函数声明如下: >
+
+	:function {name}({var1}, {var2}, ...)
+	:  {body}
+	:endfunction
+<
+	注意:
+	函数名必须以大写字母开始。
+
+让我们来定义一个返回两数中较小者的函数。从下面这一行开始: >
+
+	:function Min(num1, num2)
+
+这将告诉 Vim 这个函数名叫 "Min" 并且带两个参数: "num1" 和 "num2"。
+   你要做的第一件事就是看看哪个数值小一些:
+   >
+	:  if a:num1 < a:num2
+
+特殊前缀 "a:" 告诉 Vim 该变量是一个函数参数。我们把最小的数值赋给 smaller 变
+量: >
+
+	:  if a:num1 < a:num2
+	:    let smaller = a:num1
+	:  else
+	:    let smaller = a:num2
+	:  endif
+
+"smaller" 是一个局部变量。一个在函数内部使用的变量，除非被加上类似 "g:"、
+"a:" 或 "s:" 的前缀，都是局部变量。
+
+	备注:
+	为了从一个函数内部访问一个全局变量你必须在前面加上 "g:"。因此在一个函
+	数内 "g:today" 表示全局变量 "today"，而 "today" 是另外一个仅用于该函数
+	内的局部变量。
+
+现在你可以使用 ":return" 语句来把最小的数值返回给调用者了。最后，你需要结束这
+个函数: >
+
+	:  return smaller
+	:endfunction
+
+下面是这个函数完整的定义: >
+
+	:function Min(num1, num2)
+	:  if a:num1 < a:num2
+	:    let smaller = a:num1
+	:  else
+	:    let smaller = a:num2
+	:  endif
+	:  return smaller
+	:endfunction
+
+如果你喜欢简短的函数，下面是等价的形式: >
+
+	:function Min(num1, num2)
+	:  if a:num1 < a:num2
+	:    return a:num1
+	:  endif
+	:  return a:num2
+	:endfunction
+
+调用用户自定义函数的方式和调用内置函数完全一致。仅仅是函数名不同而已。上面的
+Min 函数可以这样来使用: >
+
+	:echo Min(5, 8)
+
+只有这时函数才被 Vim 解释并执行。如果函数中有类似未定义的变量之类的错误，你将
+得到一个错误信息。这些错误在定义函数时是不会被检测到的。
+
+当一个函数执行到 ":endfunction" 或 ":return" 语句没有带参数时，该函数返回零。
+
+如果要重定义一个已经存在的函数，在 "function" 命令后加上 !: >
+
+	:function!  Min(num1, num2, num3)
+
+
+范 围 的 使 用
+
+":call" 命令可以带一个行表示的范围。这可以分成两种情况。当一个函数定义时给出了
+"range" 关键字时，表示它会自行处理该范围。
+  Vim 在调用这样一个函数时给它传递两个参数: "a:firstline" 和 "a:lastline"，用
+来表示该范围所包括的第一行和最后一行。例如: >
+
+	:function Count_words() range
+	:  let lnum = a:firstline
+	:  let n = 0
+	:  while lnum <= a:lastline
+	:    let n = n + len(split(getline(lnum)))
+	:    let lnum = lnum + 1
+	:  endwhile
+	:  echo "found " . n . " words"
+	:endfunction
+
+你可以这样调用上面的函数: >
+
+	:10,30call Count_words()
+
+这个函数将被调用一次并显示字数。
+   另一种使用范围的方式是在定义函数时不给出 "range" 关键字。Vim 将把光标移动到
+范围内的每一行，并分别对该行调用此函数。例如: >
+
+	:function  Number()
+	:  echo "line " . line(".") . " contains: " . getline(".")
+	:endfunction
+
+如果你用下面的方式调用该函数: >
+
+	:10,15call Number()
+
+它将被执行六次。
+
+
+可 变 参 数
+
+Vim 允许你定义参数个数可变的函数。下面的例子给出一个至少有一个参数 (start)，但
+可以多达 20 个附加参数的函数: >
+
+	:function Show(start, ...)
+
+变量 "a:1" 表示第一个可选的参数，"a:2" 表示第二个，如此类推。变量 "a:0" 表示
+这些参数的个数。
+   例如: >
+
+	:function Show(start, ...)
+	:  echohl Title
+	:  echo "start is " . a:start
+	:  echohl None
+	:  let index = 1
+	:  while index <= a:0
+	:    echo "  Arg " . index . " is " . a:{index}
+	:    let index = index + 1
+	:  endwhile
+	:  echo ""
+	:endfunction
+
+上例中 ":echohl" 命令被用来给出接下来的 ":echo" 命令如何高亮输出。
+":echohl None" 终止高亮。":echon" 命令除了不输出换行符外，和 ":echo" 一样。
+
+你可以用 a:000 变量，它是所有 "..." 参数的列表。见 |a:000|。
+
+
+函 数 清 单
+
+":function" 命令列出所有用户自定义的函数及其参数: >
+
+	:function
+<	function Show(start, ...) ~
+	function GetVimIndent()~
+	function SetSyn(name) ~
+
+如果要查看该函数具体做什么，用该函数名作为 ":function" 命令的参数即可: >
+
+	:function SetSyn
+<	1     if &syntax == '' ~
+	2       let &syntax = a:name ~
+	3     endif ~
+	   endfunction ~
+
+
+调 试
+
+调试或者遇到错误信息时，行号是很有用的。有关调试模式请参阅 |debug-scripts|。
+   你也可以通过将 'verbose' 选项设为 12 以上来察看所有函数调用。将该参数设为
+15 或以上可以查看所有被执行的行。
+
+
+删 除 函 数
+
+为了删除 Show() 函数: >
+
+	:delfunction Show
+
+如果该函数不存在，你会得到一个错误信息。
+
+
+函 数 引 用
+
+有时使变量指向一个或另一个函数可能有用。要这么做，用 function() 函数。它把函数
+名转换为引用: >
+
+	:let result = 0		" 或 1
+	:function! Right()
+	:  return 'Right!'
+	:endfunc
+	:function! Wrong()
+	:  return 'Wrong!'
+	:endfunc
+	:
+	:if result == 1
+	:  let Afunc = function('Right')
+	:else
+	:  let Afunc = function('Wrong')
+	:endif
+	:echo call(Afunc, [])
+<	Wrong! ~
+
+注意 保存函数引用的变量名必须用大写字母开头，不然和内建函数的名字会引起混淆。
+   调用变量指向的函数可以用 call() 函数。它的第一个参数是函数引用，第二个参数
+是参数构成的列表。
+
+和字典组合使用函数引用是最常用的，下一节解释。
+
+==============================================================================
+*41.8*	列表和字典
+
+到目前为止，我们用了基本类型字符串和数值。Vim 也支持两种复合类型: 列表和字典。
+
+列表是事物的有序序列。这里的事物包括各种类型的值。所以你可以建立数值列表、列表
+列表甚至混合项目的列表。要建立包含三个字符串的列表: >
+
+	:let alist = ['aap', 'mies', 'noot']
+
+列表项目用方括号包围，逗号分割。要建立空列表: >
+
+	:let alist = []
+
+用 add() 函数可以为列表加入项目: >
+
+	:let alist = []
+	:call add(alist, 'foo')
+	:call add(alist, 'bar')
+	:echo alist
+<	['foo', 'bar'] ~
+
+列表的连接用 + 完成: >
+
+	:echo alist + ['foo', 'bar']
+<	['foo', 'bar', 'foo', 'bar'] ~
+
+或者，你可以直接扩展一个列表: >
+
+	:let alist = ['one']
+	:call extend(alist, ['two', 'three'])
+	:echo alist
+<	['one', 'two', 'three'] ~
+
+注意 这里如果用 add()，效果不一样: >
+
+	:let alist = ['one']
+	:call add(alist, ['two', 'three'])
+	:echo alist
+<	['one', ['two', 'three']] ~
+
+add() 的第二个参数作为单个项目被加入。
+
+
+FOR 循 环
+
+使用列表的一个好处是可以在上面进行叠代: >
+
+	:let alist = ['one', 'two', 'three']
+	:for n in alist
+	:  echo n
+	:endfor
+<	one ~
+	two ~
+	three ~
+
+这段代码循环遍历列表 "alist" 的每个项目，分别把它们的值赋给变量 "n"。for 循环
+通用的形式是: >
+
+	:for {varname} in {listexpression}
+	:  {commands}
+	:endfor
+
+要循环若干次，你需要长度为给定次数的列表。range() 函数建立这样的列表: >
+
+	:for a in range(3)
+	:  echo a
+	:endfor
+<	0 ~
+	1 ~
+	2 ~
+
+注意 range() 产生的列表的第一个项目为零，而最后一个项目比列表的长度小一。
+   你也可以指定最大值、步进，反向也可以: >
+
+	:for a in range(8, 4, -2)
+	:  echo a
+	:endfor
+<	8 ~
+	6 ~
+	4 ~
+
+更有用的示例，循环遍历缓冲区的所有行: >
+
+	:for line in getline(1, 20)
+	:  if line =~ "Date: "
+	:    echo matchstr(line, 'Date: \zs.*')
+	:  endif
+	:endfor
+
+察看行 1 到 20 (包含)，并回显那里找到的任何日期。
+
+
+字 典
+
+字典保存键-值组对。如果知道键，你可以快速查找值。字典用花括号形式建立: >
+
+	:let uk2nl = {'one': 'een', 'two': 'twee', 'three': 'drie'}
+
+现在你可以把键放在方括号里以查找单词: >
+
+	:echo uk2nl['two']
+<	twee ~
+
+字典定义的通用形式是: >
+
+	{<key> : <value>, ...}
+
+空字典是不包含任何键的字典: >
+
+	{}
+
+字典的用途很多。它可用的函数也不少。例如，你可以得到它的键列表并在其上循环: >
+
+	:for key in keys(uk2nl)
+	:  echo key
+	:endfor
+<	three ~
+	one ~
+	two ~
+
+注意 这些键没有排序。你自己可以对返回列表按照特定顺序进行排序: >
+
+	:for key in sort(keys(uk2nl))
+	:  echo key
+	:endfor
+<	one ~
+	three ~
+	two ~
+
+但你永远不能得到项目定义时的顺序。为此目的，只能用列表。列表里的项目被作为有序
+序列保存。
+
+
+字 典 函 数
+
+字典项目通常可以用方括号里的索引得到: >
+
+	:echo uk2nl['one']
+<	een ~
+
+完成同样操作且无需那么多标点符号的方法: >
+
+	:echo uk2nl.one
+<	een ~
+
+这只能用于由 ASCII 字母、数位和下划线组成的键。此方式也可以用于赋值: >
+
+	:let uk2nl.four = 'vier'
+	:echo uk2nl
+<	{'three': 'drie', 'four': 'vier', 'one': 'een', 'two': 'twee'} ~
+
+现在来一些特别的: 你可以直接定义函数并把它的引用放在字典里: >
+
+	:function uk2nl.translate(line) dict
+	:  return join(map(split(a:line), 'get(self, v:val, "???")'))
+	:endfunction
+
+让我们先试试: >
+
+	:echo uk2nl.translate('three two five one')
+<	drie twee ??? een ~
+
+你注意到的第一个特殊之处是 ":function" 一行最后的 "dict"。这标记该函数为某个字
+典使用。"self" 局部变量这时可以引用该字典。
+   现在把这个复杂的 return 命令拆开: >
+
+	split(a:line)
+
+split() 函数接受字符串，把它分成空白分隔的多个单词，并返回这些单词组成的列表。
+所以下例返回的是: >
+
+	:echo split('three two five one')
+<	['three', 'two', 'five', 'one'] ~
+
+map() 函数的第一个参数是上面这个列表。它然后遍历列表，用它的第二个参数来进行计
+算，过程中 "v:val" 设为每个项目的值。这相当于 for 循环的快捷方式。命令: >
+
+	:let alist = map(split(a:line), 'get(self, v:val, "???")')
+
+等价于: >
+
+	:let alist = split(a:line)
+	:for idx in range(len(alist))
+	:  let alist[idx] = get(self, alist[idx], "???")
+	:endfor
+
+get() 函数检查某键是否在字典里存在。如果是，提取它对应的键。如果不是，返回缺省
+值，此例中缺省值是 '???'。此函数可以很方便地处理键不一定存在而你不想要错误信息
+的情形。
+
+join() 函数和 split() 刚好相反: 它合并列表里的单词，中间放上空格。
+  split()、map() 和 join() 的组合非常简洁地对单词组成的行进行过滤。
+
+
+面 向 对 象 编 程
+
+现在你可以把值和函数都放进字典里，实际上，字典已经可以作为对象来使用。
+   上面我们用了一个字典来把荷兰语翻译为英语。我们可能也想为其他的语言作同样的
+事。让我们先建立一个对象 (也就是字典)，它支持 translate 函数，但没有要翻译的单
+词表: >
+
+	:let transdict = {}
+	:function transdict.translate(line) dict
+	:  return join(map(split(a:line), 'get(self.words, v:val, "???")'))
+	:endfunction
+
+和上面的函数稍有不同，这里用 'self.words' 来查找单词的翻译，但我们还没有
+self.words。所以你可以把这叫做抽象类。
+
+让我们现在实例化一个荷兰语的翻译对象: >
+
+	:let uk2nl = copy(transdict)
+	:let uk2nl.words = {'one': 'een', 'two': 'twee', 'three': 'drie'}
+	:echo uk2nl.translate('three one')
+<	drie een ~
+
+然后来一个德语的翻译器: >
+
+	:let uk2de = copy(transdict)
+	:let uk2de.words = {'one': 'ein', 'two': 'zwei', 'three': 'drei'}
+	:echo uk2de.translate('three one')
+<	drei ein ~
+
+你看到 copy() 函数被用来建立 "transdict" 字典的备份，然后修改此备份以加入单词
+表。当然，原来的字典还是保持原样。
+
+现在你可以再进一步，使用你偏好的翻译器: >
+
+	:if $LANG =~ "de"
+	:  let trans = uk2de
+	:else
+	:  let trans = uk2nl
+	:endif
+	:echo trans.translate('one two three')
+<	een twee drie ~
+
+这里 "trans" 指向两个对象 (字典) 之一，并不涉及到备份的建立。关于列表和字典同
+一性的更多说明可见 |list-identity| 和 |dict-identity|。
+
+你使用的语言现在可能还不支持。你可以覆盖 translate() 函数，让它什么都不做: >
+
+	:let uk2uk = copy(transdict)
+	:function! uk2uk.translate(line)
+	:  return a:line
+	:endfunction
+	:echo uk2uk.translate('three one wladiwostok')
+<	three one wladiwostok ~
+
+注意 使用 ! 会覆盖已有的函数引用。现在，在没找到能够识别的语言的时候，让我们用
+"uk2uk": >
+
+	:if $LANG =~ "de"
+	:  let trans = uk2de
+	:elseif $LANG =~ "nl"
+	:  let trans = uk2nl
+	:else
+	:  let trans = uk2uk
+	:endif
+	:echo trans.translate('one two three')
+<	one two three ~
+
+进一步的阅读可见 |Lists| 和 |Dictionaries|。
+
+==============================================================================
+*41.9*	例外
+
+让我们从一个例子开始: >
+
+	:try
+	:   read ~/templates/pascal.tmpl
+	:catch /E484:/
+	:   echo "Sorry, the Pascal template file cannot be found."
+	:endtry
+
+如果该文件不存在的话，":read" 命令就会失败。这段代码可以捕捉到该错误并向用户
+给出一个友好的信息，而不是一个一般的出错信息。
+
+在 ":try" 和 ":endtry" 之间的命令产生的错误将被转变成为例外。例外以字符串的形
+式出现。当例外是错误时该字符串就是出错信息。而每一个出错信息都有一个对应的错误
+码。在上面的例子中，我们捕捉到的错误包括 "E484"。Vim 确保这个错误码始终不变
+(文字可能会变，例如被翻译)。
+
+当 ":read" 命令引起其它错误时，模式 "E484:" 不会被匹配。因此该例外不会被捕获，
+结果是一个一般的出错信息。
+
+你可能想这样做: >
+
+	:try
+	:   read ~/templates/pascal.tmpl
+	:catch
+	:   echo "Sorry, the Pascal template file cannot be found."
+	:endtry
+
+这意味着所有的错误都将被捕获。然而这样你就无法得到那些有用的错误信息，比如说
+"E21: Cannot make changes, 'modifiable' is off"。
+
+另一个有用的机制是 ":finally" 命令: >
+
+	:let tmp = tempname()
+	:try
+	:   exe ".,$write " . tmp
+	:   exe "!filter " . tmp
+	:   .,$delete
+	:   exe "$read " . tmp
+	:finally
+	:   call delete(tmp)
+	:endtry
+
+这个例子将自光标处到文件尾的所有行通过过滤器 "filter"。该程序的参数是文件名。
+无论在 ":try" 和 ":finally" 之间发生了什么，"call delete(tmp)" 命令始终被执
+行。这可以确保你不会留下一个临时文件。
+
+关于例外处理更多的讨论可以阅读参考手册: |exception-handling|。
+
+==============================================================================
+*41.10*	其它的讨论
+
+这里集中了一些和 Vim 脚本相关的讨论。别的地方其实也提到过，这里算做一个整理。
+
+行结束符取决于所在的系统。Unix 系统使用单个的 <NL> 字符。MS-DOS、Windows、OS/2
+系列的系统使用 <CR><LF>。对于那些使用 <CR> 的映射而言，这一点很重要。参阅
+|:source_crnl|。
+
+
+空 白 字 符
+
+可以使用空白行，但没有作用。
+
+行首的空白字符 (空格和制表符) 总被忽略。参数间的 (例如象下面命令中 'set' 和
+'cpoptions' 之间的) 空白字符被归约为单个，仅用作分隔符。而最后一个 (可见) 字符
+之后的空白字符可能会被忽略也可能不会，视情况而定。见下。
+
+对于一个带有等号 "=" 的 ":set" 命令，如下: >
+
+	:set cpoptions    =aABceFst
+
+紧接着等号之前的空白字符会被忽略。然而其后的空白字符是不允许的！
+
+为了在一个选项值内使用空格，必须像下面例子那样使用反斜杠: >
+
+	:set tags=my\ nice\ file
+
+如果写成这样: >
+
+	:set tags=my nice file
+
+Vim 会给出错误信息，因为它被解释成: >
+
+	:set tags=my
+	:set nice
+	:set file
+
+
+注 释
+
+双引号字符 " 标记注释的开始。除了那些不接受注释的命令外 (见下例)，从双引号起的
+直到行末的所有字符都将被忽略。注释可以从一行的任意位置开始。
+
+对于某些命令来说，这里有一个小小的 "陷阱"。例如: >
+
+	:abbrev dev development		" shorthand
+	:map <F3> o#include		" insert include
+	:execute cmd			" do it
+	:!ls *.c			" list C files
+
+缩写 'dev' 会被展开成 'development     " shorthand'；<F3> 的键盘映射会是包括
+'" insert include' 在内的那一整行；"execute" 命令会给出错误；"!" 命令会将其后
+的所有字符传给 shell，从而引起一个不匹配 '"' 的错误。
+   结论是，":map"，":abbreviate"，":execute" 和 "!" 命令之后不能有注释。(另外
+还有几个命令也是如此)。不过，对于这些命令有一个小窍门: >
+
+	:abbrev dev development|" shorthand
+	:map <F3> o#include|" insert include
+	:execute cmd			|" do it
+
+'|' 字符被用来将两个命令分隔开。后一个命令仅仅是一个注释。最后一个命令里，你需
+要做两件事: |:execute| 和用 '|': >
+	:exe '!ls *.c'			|" list C files
+
+注意 在缩写和映射后的 '|' 之前没有空格。这是因为对于这些命令，直到行尾或者 '|'
+字符为止的内容都是有效的。此行为的后果之一，是你没法总看到这些命令后面包括的空
+白字符: >
+
+	:map <F4> o#include  
+
+要发现这个问题，你可以在你的 vimrc 文件内置位 'list' 选项。
+
+Unix 上有一个特殊的办法给一行加注释，从而使得 Vim 脚本可执行: >
+	#!/usr/bin/env vim -S
+	echo "this is a Vim script"
+	quit
+
+"#" 命令本身列出一行并带行号。加上感叹号后使得它什么也不做。从而，你可以在后面
+加上 shell 命令来执行其余的文件。 |:#!| |-S|
+
+
+陷 阱
+
+下面的例子的问题就更大了: >
+
+	:map ,ab o#include
+	:unmap ,ab 
+
+这里，unmap 命令是行不通的，因为它试着 unmap ",ab "。而这个映射根本就不存在。
+因为 'unmap ,ab ' 的末尾的那个空白字符是不可见的，这个错误很难被找出。
+
+在下面这个类似的例子里，'unmap' 后面带有注释: >
+
+	:unmap ,ab     " comment
+
+注释将被忽略。然而，Vim 会尝试 unmap 不存在的 ',ab     '。可以重写成: >
+
+	:unmap ,ab|" comment
+
+
+恢 复 一 个 视 窗 位 置
+
+有时有你想做一些改动然后回到光标原来的位置。如果能恢复相对位置，把和改动前同样
+的行置于窗口顶端就更好了。
+   这里的例子拷贝当前行，粘贴到文件的第一行，然后恢复视窗位置: >
+
+	map ,p ma"aYHmbgg"aP`bzt`a
+
+解析: >
+	ma"aYHmbgg"aP`bzt`a
+<	ma			在当前位置做标记 a
+	  "aY			将当前行拷贝至寄存器 a
+	     Hmb		移动到窗口的顶行并做标记 b
+		gg		移动到文件首行
+		  "aP		粘贴拷贝的行到上方
+		     `b		移动到刚才的顶行
+		       zt	使窗口出现的文本恢复旧观
+			 `a	回到保存的光标位置
+
+
+封 装
+
+为了避免你的函数名同其它的函数名发生冲突，使用这样的方法:
+- 在函数名前加上独特的字符串。我通常使用一个缩写。例如，"OW_" 被用在 option
+  window 函数上。
+- 将你的函数定义放在一个文件内。设置一个全局变量用来表示这些函数是否已经被加载
+  了。当再次 source 这个文件的时候，先将这些函数卸载。
+例如: >
+
+	" This is the XXX package
+
+	if exists("XXX_loaded")
+	  delfun XXX_one
+	  delfun XXX_two
+	endif
+
+	function XXX_one(a)
+		... body of function ...
+	endfun
+
+	function XXX_two(b)
+		... body of function ...
+	endfun
+
+	let XXX_loaded = 1
+
+==============================================================================
+*41.11*	编写插件				*write-plugin*
+
+用约定方式编写的脚本能够被除作者外的很多人使用。这样的脚本叫做插件。Vim 用户只
+要把你写的脚本放在 plugin 目录下就可以立即使用了: |add-plugin|。
+
+实际上有两种插件:
+
+    全局插件: 适用于所有类型的文件。
+文件类型插件: 仅适用于某种类型的文件。
+
+这一节将介绍第一种。很多的东西也同样适用于编写文件类型插件。仅适用于编写文件类
+型插件的知识将在下一节 |write-filetype-plugin| 做介绍。
+
+
+插 件 名
+
+首先你得给你的插件起个名字。这个名字应该很清楚地表示该插件的用途。同时应该避免
+同别的插件用同样的名字而用途不同。请将插件名限制在 8 个字符以内，这样可以使得
+该插件在老的 Windows 系统也能使用。
+
+一个纠正打字错误的插件可能被命名为 "typecorr.vim"。我们将用这个名字来举例。
+
+为了使一个插件能被所有人使用，要注意一些事项。下面我们将一步步的讲解。最后会给
+出这个插件的完整示例。
+
+
+插 件 体
+
+让我们从做实际工作的插件体开始: >
+
+ 14	iabbrev teh the
+ 15	iabbrev otehr other
+ 16	iabbrev wnat want
+ 17	iabbrev synchronisation
+ 18		\ synchronization
+ 19	let s:count = 4
+
+当然，真正的清单会比这长的多。
+
+上面的行号只是为了方便解释，不要把它们也加入到你的插件文件中去！
+
+
+插 件 头
+
+你很可能对这个插件做新的修改并很快就有了好几个版本。并且当你发布文件的时候，别
+人也想知道是谁编写了这样好的插件或者给作者提点意见。所以，在你的插件头部加上一
+些描述性的注释是很必要的: >
+
+  1	" Vim global plugin for correcting typing mistakes
+  2	" Last Change: 2000 Oct 15
+  3	" Maintainer: Bram Moolenaar <Bram@vim.org>
+
+关于版权和许可: 由于插件很有用，而且几乎不值得限制其发行，请考虑对你的插件使用
+公共领域 (public domain) 或 Vim 许可 |license|。在文件顶部放上说明就行了。例
+如: >
+
+  4	" License:	This file is placed in the public domain.
+
+
+续 行，避 免 副 效 应					*use-cpo-save*
+
+在上面的第 18 行中，用到了续行机制 |line-continuation|。那些置位了
+'compatible' 选项的用户可能会在这里遇到麻烦。他们会得到一个错误信息。我们不能
+简单的复位 'compatible' 选项，因为那样会带来很多的副效应。为了避免这些副效应，
+我们可以将 'cpoptions' 选项设为 Vim 缺省值并在后面恢复之。这将允许续行功能并保
+证对大多数用户来讲脚本是可用的。就像下面这样: >
+
+ 11	let s:save_cpo = &cpo
+ 12	set cpo&vim
+ ..
+ 42	let &cpo = s:save_cpo
+ 43	unlet s:save_cpo
+
+我们先将 'cpoptions' 的旧值存在 s:save_cpo 变量中。在插件的最后该值将被恢复。
+
+注意 上面使用了脚本局部变量 |s:var|。因为可能已经使用了同名的全局变量。对于仅
+在脚本内用到的变量总应该使用脚本局部变量。
+
+
+禁 止 加 载
+
+有可能一个用户并不总希望加载这个插件。或者系统管理员在系统的插件目录中已经把这
+个插件删除了，而用户希望使用它自己安装的插件。用户应该有机会选择不加载指定的插
+件。下面的一段代码就是用来实现这个目的的: >
+
+  6	if exists("g:loaded_typecorr")
+  7	  finish
+  8	endif
+  9	let g:loaded_typecorr = 1
+
+这同时也避免了同一个脚本被加载两次以上。因为那样用户会得到各种各样的错误信息。
+比如函数被重新定义，自动命令被多次加入等等。
+
+建议使用的名字以 "loaded_" 开头，然后是插件的文件名，按原义输入。之前加上 "g:"
+以免错误地在函数中使用该变量 (没有 "g:" 可以是局部于函数的变量)。
+
+"finish" 阻止 Vim 继续读入文件的其余部分，这比用 if-endif 包围整个文件要快得
+多。
+
+映 射
+
+现在让我们把这个插件变得更有趣些: 我们将加入一个映射用来校正当前光标下的单词。
+我们当然可以任意选一个键组合，但是用户可能已经将其定义为其它的什么功能了。为了
+使用户能够自己定义在插件中的键盘映射使用的键，我们可以使用 <Leader> 标识: >
+
+ 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
+
+那个 "<Plug>TypecorrAdd" 会做实际的工作，后面我们还会做更多解释。
+
+用户可以将 "mapleader" 变量设为他所希望的开始映射的键组合。比如假设用户这样
+做: >
+
+	let mapleader = "_"
+
+映射将定义为 "_a"。如果用户没有这样做，Vim 将使用缺省值反斜杠。这样就会定义一
+个映射 - "\a"。
+
+注意 其中用到了 <unique>，这会使得 Vim 在映射已经存在时给出错误信息。
+|:map-<unique>|
+
+但是如果用户希望定义自己的键操作呢？我们可以用下面的方法来解决: >
+
+ 21	if !hasmapto('<Plug>TypecorrAdd')
+ 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
+ 23	endif
+
+我们先检查对 "<Plug>TypecorrAdd" 的映射是否存在。仅当不存在时我们才定义映射
+"<Leader>a"。这样用户就可以在他自己的 vimrc 文件中加入: >
+
+	map ,c  <Plug>TypecorrAdd
+
+那么键序列就会是 ",c" 而不是 "_a" 或者 "\a" 了。
+
+
+分 割
+
+如果一个脚本变得相当长，你通常希望将其分割成几部分。常见做法是函数或映射。但同
+时，你又不希望脚本之间这些函数或映射相互干扰。例如，你定义了一个函数 Add()，但
+另一个脚本可能也试图定一同名的函数。为了避免这样的情况发生，我们可以在局部函数
+的前面加上 "s:"。
+
+我们来定义一个用来添加新的错误更正的函数: >
+
+ 30	function s:Add(from, correct)
+ 31	  let to = input("type the correction for " . a:from . ": ")
+ 32	  exe ":iabbrev " . a:from . " " . to
+ ..
+ 36	endfunction
+
+这样我们就可以在这个脚本之内调用函数 s:Add()。如果另一个脚本也定义 s:Add()，该
+函数将只能在其所定义的脚本内部被调用。独立于这两个函数的全局的 Add() 函数 (不
+带 "s:") 也可以存在。
+
+映射则可用 <SID>。它产生一个脚本 ID。在我们的错误更正插件中我们可以做以下的定
+义: >
+
+ 24	noremap <unique> <script> <Plug>TypecorrAdd  <SID>Add
+ ..
+ 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), 1)<CR>
+
+这样当用户键入 "\a" 时，将触发下面的次序: >
+
+	\a  ->  <Plug>TypecorrAdd  ->  <SID>Add  ->  :call <SID>Add()
+
+如果另一个脚本也定义了映射 <SID>Add，该脚本将产生另一个脚本 ID。所以它定义的映
+射也与前面定义的不同。
+
+注意 在这里我们用了 <SID>Add() 而不是 s:Add()。这是因为该映射将被用户键入，因
+此是从脚本外部调用的。<SID> 被翻译成该脚本的 ID。这样 Vim 就知道在哪个脚本里寻
+找相应的 Add() 函数了。
+
+这的确是有点复杂，但又是使多个插件一起工作所必需的。基本规则是: 在映射中使用
+<SID>Add()；在其它地方 (该脚本内部，自动命令，用户命令) 使用 s:Add()。
+
+我们还可以增加菜单项目来完成映射同样的功能: >
+
+ 26	noremenu <script> Plugin.Add\ Correction      <SID>Add
+
+建议把插件定义的菜单项都加入到 "Plugin" 菜单下。上面的情况只定义了一个菜单选
+项。当有多个选项时，可以创建一个子菜单。例如，一个提供 CVS 操作的插件可以添加
+"Plugin.CVS" 子菜单，并在其中定义 "Plugin.CVS.checkin"，"Plugin.CVS.checkout"
+等菜单项。
+
+注意 为了避免其它映射引起麻烦，在第 28 行使用了 ":noremap"。比如有人可能重新映
+射了 ":call"。在第 24 也用到了 ":noremap"，但我们又希望重新映射 "<SID>Add"。这
+就是为什么在这儿要用 "<script>"。它允许只执行局部于脚本的映射。
+|:map-<script>| 同样的道理也适用于第 26 行的 ":noremenu"。|:menu-<script>|
+
+
+<SID> 和 <Plug>						*using-<Plug>*
+
+<SID> 和 <Plug> 都是用来避免映射的键序列和那些仅仅用于其它映射的映射起冲突。
+注意 <SID> 和 <Plug> 的区别:
+
+<Plug>	在脚本外部是可见的。它被用来定义那些用户可能定义映射的映射。<Plug> 是
+	无法用键盘输入的特殊代码。
+	使用结构: <Plug> 脚本名 映射名，可以使得其它插件使用同样次序的字符来定
+	义映射的几率变得非常小。在我们上面的例子中，脚本名是 "Typecorr"，映射
+	名是 "Add"。结果是 "<Plug>TypecorrAdd"。只有脚本名和映射名的第一个字
+	符是大写的，所以我们可以清楚地看到映射名从什么地方开始。
+
+<SID>	是脚本的 ID，用来唯一的代表一个脚本。Vim 在内部将 <SID> 翻译为
+	"<SNR>123_"，其中 "123" 可以是任何数字。这样一个函数 "<SID>Add()" 可能
+	在一个脚本中被命名为 "<SNR>11_Add()"，而在另一个脚本中被命名为
+	"<SNR>22_Add()"。如果你用 ":function" 命令来获得系统中的函数列表你就可
+	以看到了。映射中对 <SID> 的翻译是完全一样的。这样你才有可能通过一个映
+	射来调用某个脚本中的局部函数。
+
+
+用 户 命 令
+
+现在让我们来定义一个用来添加更正的用户命令: >
+
+ 38	if !exists(":Correct")
+ 39	  command -nargs=1  Correct  :call s:Add(<q-args>, 0)
+ 40	endif
+
+这个用户命令只在系统中没有同样名称的命令时才被定义。否则我们会得到一个错误。用
+":command!" 来覆盖现存的用户命令是个坏主意。这很可能使用户不明白自己定义的命令
+为什么不起作用。|:command|
+
+
+脚 本 变 量
+
+当一个变量前面带有 "s:" 时，我们将它称为脚本变量。该变量只能在脚本内部被使用。
+在脚本以外该变量是不可见的。这样就避免了在不同的脚本中使用同一个变量名的麻烦。
+该变量在 Vim 的运行期间都是可用的。当再次调用 (source) 该脚本时使用的是同一个
+变量。|s:var|
+
+有趣的是这些变量也可以在脚本定义的函数、自动命令和用户命令中使用。在我们的例子
+中我们可以加入几行用来统计更正的个数: >
+
+ 19	let s:count = 4
+ ..
+ 30	function s:Add(from, correct)
+ ..
+ 34	  let s:count = s:count + 1
+ 35	  echo s:count . " corrections now"
+ 36	endfunction
+
+起初 s:count 被脚本初始化为 4。当后来 s:Add() 函数被调用时，其值被增加了。在哪
+里调用函数无关紧要。只要它是定义在该脚本以内的，就可以使用脚本中的局部变量。
+
+
+结 果
+
+下面就是完整的例子: >
+
+  1	" Vim global plugin for correcting typing mistakes
+  2	" Last Change: 2000 Oct 15
+  3	" Maintainer: Bram Moolenaar <Bram@vim.org>
+  4	" License:	This file is placed in the public domain.
+  5
+  6	if exists("g:loaded_typecorr")
+  7	  finish
+  8	endif
+  9	let g:loaded_typecorr = 1
+ 10
+ 11	let s:save_cpo = &cpo
+ 12	set cpo&vim
+ 13
+ 14	iabbrev teh the
+ 15	iabbrev otehr other
+ 16	iabbrev wnat want
+ 17	iabbrev synchronisation
+ 18		\ synchronization
+ 19	let s:count = 4
+ 20
+ 21	if !hasmapto('<Plug>TypecorrAdd')
+ 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
+ 23	endif
+ 24	noremap <unique> <script> <Plug>TypecorrAdd  <SID>Add
+ 25
+ 26	noremenu <script> Plugin.Add\ Correction      <SID>Add
+ 27
+ 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), 1)<CR>
+ 29
+ 30	function s:Add(from, correct)
+ 31	  let to = input("type the correction for " . a:from . ": ")
+ 32	  exe ":iabbrev " . a:from . " " . to
+ 33	  if a:correct | exe "normal viws\<C-R>\" \b\e" | endif
+ 34	  let s:count = s:count + 1
+ 35	  echo s:count . " corrections now"
+ 36	endfunction
+ 37
+ 38	if !exists(":Correct")
+ 39	  command -nargs=1  Correct  :call s:Add(<q-args>, 0)
+ 40	endif
+ 41
+ 42	let &cpo = s:save_cpo
+ 43	unlet s:save_cpo
+
+第 33 行还没有解释过。它将新定义的更正用在当前光标下的单词上。|:normal| 被用来
+使用新的缩写。注意 虽然这个函数是被一个以 ":noremap" 定义的映射调用的，这里的
+映射和缩写还是被展开使用了。
+
+推荐对 'fileformat' 选项使用 "unix" 值。这样的 Vim 脚本就可以在所有系统内使
+用。对 'fileformat' 选项使用 "dos" 的脚本无法正常的在 Unix 上使用。参见
+|:source_crnl|。为确保该值被正确设置，在写入文件前执行下面的命令: >
+
+	:set fileformat=unix
+
+
+文 档						 *write-local-help*
+
+给你的插件写一些文档是个好主意。特别是当用户可以自定义其中的某些功能时尤为必
+要。关于如何安装文档，请查阅 |add-local-help|。
+
+下面是一个插件帮助文档的简单例子，名叫 "typecorr.txt": >
+
+  1	*typecorr.txt*	Plugin for correcting typing mistakes
+  2
+  3	If you make typing mistakes, this plugin will have them corrected
+  4	automatically.
+  5
+  6	There are currently only a few corrections.  Add your own if you like.
+  7
+  8	Mappings:
+  9	<Leader>a   or   <Plug>TypecorrAdd
+ 10		Add a correction for the word under the cursor.
+ 11
+ 12	Commands:
+ 13	:Correct {word}
+ 14		Add a correction for {word}.
+ 15
+ 16							*typecorr-settings*
+ 17	This plugin doesn't have any settings.
+
+其实只有第一行是文档的格式所必需的。Vim 将从该帮助文件中提取该行并加入到
+help.txt 的 "LOCAL ADDITIONS:" |local-additions| (本地附加文档) 一节中。第一个
+"*" 一定要在第一行的第一列。加入你的帮助文件之后用 ":help" 来检查一下各项是否
+很好的对齐了。
+
+你可以为你的帮助文档在 ** 之间加入更多的标签。但请注意不要使用现存的帮助标签。
+你最好能在标签内使用插件名用以区别，比如上例中的 "typecorr-settings"。
+
+建议使用 || 来引用帮助系统中的其它部分。这可以使用户很容易得找到相关联的帮助。
+
+
+文 件 类 型 检 测					*plugin-filetype*
+
+如果 Vim 还不能检测到你的文件类型，你需要在单独的文件里创立一个文件类型检测的
+代码段。通常，它的形式是一个自动命令，它在文件名字匹配某模式时设置文件类型。例
+如: >
+
+	au BufNewFile,BufRead *.foo			set filetype=foofoo
+
+把这个一行的文件写到 'runtimepath' 里第一个目录下的 "ftdetect/foofoo.vim"。
+Unix 上应该是 "~/.vim/ftdetect/foofoo.vim"。惯例是，使用文件类型的名字作为脚本
+的名字。
+
+如果你愿意，你可以使用更复杂的检查。比如检查文件的内容以确定使用的语言。另见
+|new-filetype|。
+
+
+小 结							*plugin-special*
+
+关于插件的小结:
+
+s:name			脚本的局部变量。
+
+<SID>			脚本 ID，用于局部于脚本的映射和函数。
+
+hasmapto()		用来检测插件定义的映射是否已经存在的函数。
+
+<Leader>		"mapleader" 的值。用户可以通过该变量定义插件所定义映射
+			的起始字符。
+
+:map <unique>		如果一个映射已经存在的话，给出警告信息。
+
+:noremap <script>	在映射右边仅执行脚本的局部映射，而不检查全局映射。
+
+exists(":Cmd")		检查一个用户命令是否存在。
+
+==============================================================================
+*41.12*	编写文件类型插件	*write-filetype-plugin* *ftplugin*
+
+文件类型插件和全局插件其实很相似。但是它的选项设置和映射等仅对当前缓冲区有效。
+这类插件的用法请参阅 |add-filetype-plugin|。
+
+请先阅读上面 |41.11| 关于全局插件的叙述。其中所讲的对文件类型插件也都适用。这
+里只讲述一些不同之处。最根本的区别是文件类型插件只应该对当前缓冲区生效。
+
+
+禁 用
+
+如果你在编写一个提供很多人使用的文件类型插件，这些用户应该有机会选择不加载该插
+件。你应该在插件的顶端加上: >
+
+	" Only do this when not done yet for this buffer
+	if exists("b:did_ftplugin")
+	  finish
+	endif
+	let b:did_ftplugin = 1
+
+这同时也避免了同一插件在同一缓冲区内被多次执行的错误 (当使用不带参数的 ":edit"
+命令时就会发生)。
+
+现在用户只要编写一个如下的一行的文件类型插件就可以完全避免加载缺省的文件类型插
+件了: >
+
+	let b:did_ftplugin = 1
+
+当然这要求该文件类型插件所处的文件类型插件目录在 'runtimepath' 所处的位置在
+$VIMRUNTIME 之前！
+
+如果你的确希望使用缺省的插件，但是又想自行支配其中的某一选项，你可以用一个类似
+下例的插件: >
+
+	set textwidth=70
+
+现在将这个文件存入那个 "after" 目录中。这样它就会在调用 Vim 本身的 "vim.vim"
+文件类型插件之后被调用 |after-directory|。对于 Unix 系统而言，该目录会是
+"~/.vim/after/ftplugin/vim.vim"。注意 缺省的插件设置了 "b:did_ftplugin"，但在
+此脚本应该忽略之。
+
+
+选 项
+
+为了确保文件类型插件仅仅影响当前缓冲区，应该使用 >
+
+	:setlocal
+
+命令来设置选项。还要注意只设定缓冲区的局部选项 (查查有关选项的帮助)。当
+|:setlocal| 被用于设置全局选项或者某窗口的局部选项时，会影响到多个缓冲区，这是
+文件类型插件应该避免的。
+
+当一个选项的值是多个标志位或项目的 "合" 时，考虑使用 "+=" 和 "-="，这样可以保
+留现有的值。注意 用户可能已经改变了该选项的值了。通常先将选项的值复位成缺省值
+再做改动是个好主意。例: >
+
+	:setlocal formatoptions& formatoptions+=ro
+
+
+映 射
+
+为了确保键盘映射只对当前缓冲区生效，应该使用 >
+
+	:map <buffer>
+
+命令。这还应该和上面讲述的两步映射法连起来使用。下面是一个例子: >
+
+	if !hasmapto('<Plug>JavaImport')
+	  map <buffer> <unique> <LocalLeader>i <Plug>JavaImport
+	endif
+	noremap <buffer> <unique> <Plug>JavaImport oimport ""<Left><Esc>
+
+|hasmapto()| 被用来检查用户是否已经定义了一个对 <Plug>JavaImport 的映射。如果
+没有，该文件类型插件就定义缺省的映射。因为缺省映射是以 |<LocalLeader>| 开始，
+就使得用户可以自己定义映射的起始字符。缺省的是反斜杠。
+"<unique>" 的用途是当已经存在的了这样的映射或者和已经存在的映射有重叠的时候给
+出错误信息。
+|:noremap| 被用来防止其他用户定义的映射干扰。不过，":noremap <script>" 仍然可
+以允许进行脚本中以 <SID> 开头的映射。
+
+一定要给用户保留禁止一个文件类型插件内的映射而不影响其它功能的能力。下面通过
+一个邮件文件类型插件来演示如何做到这一点: >
+
+	" 增加映射，除非用户反对。
+	if !exists("no_plugin_maps") && !exists("no_mail_maps")
+	  " Quote text by inserting "> "
+	  if !hasmapto('<Plug>MailQuote')
+	    vmap <buffer> <LocalLeader>q <Plug>MailQuote
+	    nmap <buffer> <LocalLeader>q <Plug>MailQuote
+	  endif
+	  vnoremap <buffer> <Plug>MailQuote :s/^/> /<CR>
+	  nnoremap <buffer> <Plug>MailQuote :.,$s/^/> /<CR>
+	endif
+
+其中用到了两个全局变量:
+no_plugin_maps		禁止所有文件类型插件中的映射
+no_mail_maps		禁止某一特定的文件类型插件的映射
+
+
+用 户 命 令
+
+在使用 |:command| 命令时，如果加上 "-buffer" 开关，就可以为某一类型的文件加入
+一个用户命令，而该命令又只能用于一个缓冲区。例: >
+
+	:command -buffer  Make  make %:r.s
+
+
+变 量
+
+文件类型插件对每一个该类型的文件都会被调用。脚本局部变量 |s:var| 会被所有的调
+用共享。如果你想定义一个仅对某个缓冲区生效的变量，使用缓冲区局部变量 |b:var|。
+
+
+函 数
+
+一个函数只需要定义一次就行了。可是文件类型插件会在每次打开相应类型的文件时都被
+调用。下面的结构可以确保函数只被定义一次: >
+
+	:if !exists("*s:Func")
+	:  function s:Func(arg)
+	:    ...
+	:  endfunction
+	:endif
+<
+
+撤 消						*undo_ftplugin*
+
+当用户执行 ":setfiletype xyz" 时，之前的文件类型命令应该被撤消。在你的文件类型
+插件中设定 b:undo_ftplugin 变量，用来撤销该插件的各种设置。例如: >
+
+	let b:undo_ftplugin = "setlocal fo< com< tw< commentstring<"
+		\ . "| unlet b:match_ignorecase b:match_words b:match_skip"
+
+在 ":setlocal" 命令的选项后使用 "<" 会将其值复位为全局值。这可能是最好的复位
+选项值的方法。
+
+但这也需要把 "C" 标志位从 'cpoptions' 选项中去除，就像上面 |use-cpo-save| 提到
+的那样。
+
+
+文 件 名
+
+文件类型必须被包括在插件文件名中 |ftplugin-name|。可以使用以下三种形式之一:
+
+	.../ftplugin/stuff.vim
+	.../ftplugin/stuff_foo.vim
+	.../ftplugin/stuff/bar.vim
+
+"stuff" 是文件类型，"foo" 和 "bar" 是任意名字。
+
+
+小 结						*ftplugin-special*
+
+以下是有关文件类型插件一些特殊环节:
+
+<LocalLeader>		"maplocalleader" 的值，用户可以通过它来自定义文件类型
+			插件中映射的起始字符。
+
+:map <buffer>		定义一个仅对缓冲区有效的局部映射。
+
+:noremap <script>	仅重映射脚本中以 <SID> 开始的映射。
+
+:setlocal		设定仅对当前缓冲区有效的选项。
+
+:command -buffer	定义一个仅对缓冲区有效的局部命令。
+
+exists("*s:Func")	查看是否已经定义了某个函数。
+
+参阅所有插件的特殊环节 |plugin-special|。
+
+==============================================================================
+*41.13*	编写编译器插件				*write-compiler-plugin*
+
+编译器插件可以用来设定于某一特定编译器相关的选项。用户可以使用 |:compiler| 命
+令来加载之。主要是用以设定 'errorformat' 及 'makeprg' 选项。
+
+最简单的方法就是学习一个例子。下面的命令将编辑所有缺省安装的编译器插件: >
+
+	:next $VIMRUNTIME/compiler/*.vim
+
+用 |:next| 可以查阅下一个插件文件。
+
+这类文件有两个特别之处。一是允许用户否决或者增强缺省文件的机制。缺省的文件以下
+面的代码开始: >
+
+	:if exists("current_compiler")
+	:  finish
+	:endif
+	:let current_compiler = "mine"
+
+当你写了编译器文件并把它放到你个人的运行时目录 (例如，Unix 上 ~/.vim/compiler)
+时，你需要设置 "current_compiler" 变量，使得缺省文件不进行设置。
+							*:CompilerSet*
+第二个特别之处是: 用 ":set" 命令来配合 ":compiler!" 而用 ":setlocal" 来配合
+":compiler"。Vim 为此定义了 ":CompilerSet" 用户命令。然而旧版本的 Vim 没有，因
+此你的插件应该提供该命令。下面是一个例子: >
+
+  if exists(":CompilerSet") != 2
+    command -nargs=* CompilerSet setlocal <args>
+  endif
+  CompilerSet errorformat&		" use the default 'errorformat'
+  CompilerSet makeprg=nmake
+
+当你为 Vim 发布版本或者整个系统编写编译器插件时，应该使用上面提到的机制。这样
+当用户插件已经定义了 "current_compiler" 的时候什么也不做。
+
+当你为了自行定义缺省插件的一些设定而编写编译器插件时，不要检查
+"current_compiler"。这个插件应该在最后加载，因此其所在目录应该在 'runtimepath'
+的最后。对于 Unix 来说可能是 ~/.vim/after/compiler。
+
+==============================================================================
+*41.14*	编写快速载入的插件			*write-plugin-quickload*
+
+插件会不断变大而使代码越来越长。启动时的延迟因而会非常显著，而你可能几乎不用这
+个插件。这时，就是时候让我们来编写可以快速载入的插件了。
+
+基本的方法是调用插件两次。第一次定义用户命令和映射，提供需要的功能。第二次定义
+实现这些功能的函数。
+
+听起来很吓人，快速载入意味着载入两次！我们的意思是，第一次载入很快，把脚本的大
+部分内容延迟到第二次才载入，只有实际使用这些功能时才会这么做。当然，如果你总是
+用这些功能，实际上更慢了！
+
+注意 从 Vim 7 开始，有一个替代方法: 使用 |autoload| 功能 |41.15|。
+
+下例演示如何这是如何完成的: >
+
+	" 演示快速载入的 Vim 全局插件
+	" Last Change:	2005 Feb 25
+	" Maintainer:	Bram Moolenaar <Bram@vim.org>
+	" License:	This file is placed in the public domain.
+
+	if !exists("s:did_load")
+		command -nargs=* BNRead  call BufNetRead(<f-args>)
+		map <F19> :call BufNetWrite('something')<CR>
+
+		let s:did_load = 1
+		exe 'au FuncUndefined BufNet* source ' . expand('<sfile>')
+		finish
+	endif
+
+	function BufNetRead(...)
+		echo 'BufNetRead(' . string(a:000) . ')'
+		" 读入功能在此
+	endfunction
+
+	function BufNetWrite(...)
+		echo 'BufNetWrite(' . string(a:000) . ')'
+		" 写回功能在此
+	endfunction
+
+第一次载入脚本时，没有设置 "s:did_load"。这时执行 "if" 和 "endif" 之间的命令。
+它以 |:finish| 命令结束，这样脚本的其余部分不再执行。
+
+第二次载入脚本时，"s:did_load" 已经存在，这时执行 "endif" 之后的命令。这里定义
+(可能很长的) BufNetRead() 和 BufNetWrite() 函数。
+
+如果把该脚本放到你的 plugin 目录，Vim 启动时会执行它。下面列出发生事件的序列:
+
+1. 启动期间执行脚本时，定义 "BNRead" 命令并映射 <F19> 键。定义 |FuncUndefined|
+   自动命令。":finish" 命令使脚本提前终止。
+
+2. 用户输入 BNRead 命令或者按了 <F19> 键。BufNetRead() 或 BufNetWrite() 函数会
+   被调用。
+
+3. Vim 找不到这些函数并因此激活了 |FuncUndefined| 自动命令事件。因为模式
+   "BufNet*" 匹配要调用的函数，执行命令 "source fname"，其中 "fname" 被赋予脚
+   本的名字，不管它实际在何处都没问题。这是因为该名字来自 "<sfile>" 扩展的结果
+   (见 |expand()|)。
+
+4. 再次执行脚本。"s:did_load" 变量已经存在，此时定义函数。
+
+注意后来载入的函数匹配 |FuncUndefined| 自动命令的模式。要确信其它插件没有定义
+匹配此模式的函数。
+
+==============================================================================
+*41.15*	编写库脚本				*write-library-script*
+
+有些功能会在多个地方调用。如果这已经不是一两行的代码，你可能会希望把这些代码放
+进脚本，然后被许多其它脚本使用。我们把这种脚本称为库脚本。
+
+可以手动载入库脚本，只要你不要重复调用它就行了。用 |exists()| 函数可以判断。
+例如: >
+
+	if !exists('*MyLibFunction')
+	   runtime library/mylibscript.vim
+	endif
+	call MyLibFunction(arg)
+
+这里你需要知道 MyLibFunction() 在脚本 "library/mylibscript.vim" 里定义，该脚本
+在 'runtimepath' 的某个目录里。
+
+为了稍稍简化，Vim 提供了自动载入机制。现在，本例看起来像: >
+
+	call mylib#myfunction(arg)
+
+简单多了，是不是？Vim 会识别函数名，如果该函数还没有定义，查找 'runtimepath'
+里的 "autoload/mylib.vim"。该脚本必须定义 "mylib#myfunction()" 函数。
+
+在 mylib.vim 脚本里可以放上许多其它函数，你可以自由组织库脚本的函数。但必须使
+函数名 "#" 前面的部分匹配脚本名。否则 Vim 无法知道载入哪个脚本。
+
+如果你真的热情高涨写了很多库脚本，现在可能想要用子目录吧。例如: >
+
+	call netlib#ftp#read('somefile')
+
+Unix 上，这里使用的库脚本可以是:
+
+	~/.vim/autoload/netlib/ftp.vim
+
+其中的函数应该如此定义: >
+
+	function netlib#ftp#read(fname)
+		"  用 ftp 读入文件 fname
+	endfunction
+
+注意定义所用的函数名必须和调用的函数名完全相同。最后一个 '#' 之前的部分必须准
+确匹配子目录和脚本名。
+
+同样的机制可以用来定义变量: >
+
+	let weekdays = dutch#weekdays
+
+会载入脚本 "autoload/dutch.vim"，它应该包含这样的内容: >
+
+	let dutch#weekdays = ['zondag', 'maandag', 'dinsdag', 'woensdag',
+		\ 'donderdag', 'vrijdag', 'zaterdag']
+
+进一步的阅读可见: |autoload|。
+
+==============================================================================
+*41.16*	发布 Vim 脚本					*distribute-script*
+
+Vim 用户可以在 Vim 网站上寻找脚本: http://www.vim.org。如果你实现了对别人也有
+用的功能，让大家一起分享！
+
+Vim 脚本应该可以用于任何系统。它们不一定有 tar 或 gzip 命令。如果你想把文件打
+包和/或进行压缩，建议使用 "zip" 工具。
+
+最理想的可移植方法是让 Vim 自己给脚本打包，用 Vimball 工具。见 |vimball|。
+
+最好你能加入一行内容，实现自动更新。见 |glvs-plugins|。
+
+==============================================================================
+
+下一章: |usr_42.txt|  添加新的菜单
+
+版权: 参见 |manual-copyright|  vim:tw=78:ts=8:ft=help:norl:
