@@ -1,17 +1,12 @@
 k-vim
 =======================
 
-**Note**: 9.1版本的文档/wiki等, 处理中(原先的常见问题FAQ/插件演示和使用/自定义快捷键等)
 
-当前进度30%
+> VERSION: 9.2
 
-----------------
+> LAST_UPDATE_TIME: 2017-07-29
 
-> VERSION: 9.1
-
-> LAST_UPDATE_TIME: 2015-12-15
-
-> 本次更新: 大版本更新, 众多细节优化
+> 本次更新: 小版本更新, 支持vim8异步愈发检查
 
 详细 [更新日志](https://github.com/wklken/k-vim/wiki/UPDATE_LOG)
 
@@ -76,9 +71,7 @@ brew install the_silver_searcher
 ##### 2.2 使用Python
 
 ```
-sudo pip install pyflakes
-sudo pip install pylint
-sudo pip install pep8
+sudo pip install flake8 yapf
 ```
 
 ##### 2.3 如果使用Javascript(不需要的跳过)
@@ -91,11 +84,13 @@ sudo pip install pep8
 sudo apt-get install nodejs npm
 sudo npm install -g jslint
 sudo npm install jshint -g
+sudo npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
 
 # mac
 brew install node
 npm install jshint -g
 npm install jslint -g
+npm install -g eslint eslint-plugin-standard eslint-plugin-promise eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
 ```
 
 
@@ -256,6 +251,7 @@ ctrl+t 新建一个tab
 Y         =y$   复制到行尾
 U         =Ctrl-r
 ,sa       select all,全选
+gv        选中并高亮最后一次插入的内容
 ,v        选中段落
 kj        代替<Esc>，不用到角落去按esc了
 
@@ -287,32 +283,18 @@ ctrl+n    相对/绝对行号切换
 
 ### UPDATE_LOG
 
-version 9.1
+version 9.2
 
 ```
 插件部分:
-1. 使用 'junegunn/vim-plug' 替代 'VundleVim/Vundle.vim' 来管理插件, 安装/更新速度更快
-2. 支持自定义插件集合, 可以配置自己需要安装的插件
-3. 去除tomorrow主题插件 'chriskempson/vim-tomorrow-theme'
-4. Javascript插件, 使用 'othree/javascript-libraries-syntax.vim' 替代 'nono/jquery.vim',
-5. Javascript插件, 使用 'othree/yajs.vim' 替代 'jelera/vim-javascript-syntax'
-6. 去除 minibufferexpl 所有配置(ctrlspace替代)
-7. 去除 taglist 所有配置(tagbar和ctrl-funky替代)
-8. Python插件, 增加 'hynek/vim-python-pep8-indent'
-9. Python插件, 去除 'kevinw/pyflakes-vim'
-10. Go插件, 使用 'fatih/vim-go' 替代 'Blackrush/vim-gocode'
-11. 快速移动, 增加插件 'unblevable/quick-scope', 按f/F/t/T时触发, 行内快速移动, 与 easymotion 互补
-12. (bundle_groups配置了tmux)tmux插件 'christoomey/vim-tmux-navigator'
-13. (bundle_groups配置了json)json插件 'elzr/vim-json'
+1. 增加 w0rp/ale 异步语法检查插件, 用户vim版本为8.0时自动启用. 非8时, 启用默认scrooloose/syntastic, 两套插件快捷键一致
+2. 切换使用flake8作为python风格检查(pip install pep8)
+3. 启用yapf作为python代码格式化(pip install yapf)
+4. 启用eslint作为javascript代码检查
+5. YCM 设置回车选中不再弹补全框
 
 细节:
-1. 增加 leader+w 保存文件
-2. YCM 开启语法关键字补全 'let g:ycm_seed_identifiers_with_syntax=1'
-3. 插件 'terryma/vim-expand-region', 增加自定义每次加减的区域配置
-4. 解决在insert mode粘贴代码缩进错乱问题(以前需要:set paste . 即k-vim中F5快捷键, 现在不需要了)
-
-其他:
-1. UPDATE_LOG文件迁移到github wiki
+1. 新增快捷键 gv 选中并高亮最后一次插入的内容
 ```
 
 ### Contributors
@@ -351,10 +333,10 @@ The End!
 
 wklken (凌岳/pythoner/vim党预备党员)
 
-Email: wklken@yeah.net
-
 Github: https://github.com/wklken
 
 Blog: [http://www.wklken.me](http://www.wklken.me)
 
 2013-06-11 于深圳
+
+
