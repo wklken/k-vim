@@ -408,8 +408,8 @@ if has_key(g:plugs, 'ale')
     nnoremap <Leader>s :call ToggleErrors()<cr>
 
     let g:ale_set_highlights = 1
-    highlight link ALEErrorSign  error
-    highlight link ALEWarningSign Exception
+    highlight clear ALEErrorSign
+    highlight clear ALEWarningSign
 endif
 
 " }}}
