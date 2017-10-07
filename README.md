@@ -6,7 +6,7 @@ k-vim
 
 > LAST_UPDATE_TIME: 2017-07-29
 
-> 本次更新: 小版本更新, 支持vim8异步愈发检查
+> 本次更新: 小版本更新, 支持vim8异步语法检查
 
 详细 [更新日志](https://github.com/wklken/k-vim/wiki/UPDATE_LOG)
 
