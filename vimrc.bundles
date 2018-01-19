@@ -211,7 +211,9 @@ let g:multi_cursor_quit_key='<Esc>'
 Bundle 'ctrlpvim/ctrlp.vim'
 let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
-map <leader>f :CtrlPMRU<CR>
+map <leader>pf :CtrlPMRU<CR>
+map <leader>pl :CtrlPLine<CR>
+map <leader>pb :CtrlPBuffer<CR>
 "set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux"
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
@@ -381,7 +383,7 @@ hi CtrlSpaceStatus   guifg=#839496 guibg=#002b36 gui=reverse term=reverse cterm=
 
 " 标签导航
 Bundle 'majutsushi/tagbar'
-nmap <F9> :TagbarToggle<CR>
+nmap <leader>tb :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
 " for ruby
@@ -519,5 +521,14 @@ Bundle 'facebook/watchman'
 
 "grep
 Bundle 'dkprice/vim-easygrep'
+
+"TagHighlight
+Bundle 'TagHighlight'
+
+"goyo and limelight
+Bundle 'junegunn/goyo.vim'
+Bundle 'junegunn/limelight.vim'
+
+
 "------------------------------------------- end of configs --------------------------------------------
 

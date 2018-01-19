@@ -391,8 +391,8 @@ noremap <silent><leader>/ :nohls<CR>
 " :b1 :b2   :bf :bl
 nnoremap [b :bprevious<cr>
 nnoremap ]b :bnext<cr>
-"noremap <left> :bp<CR>
-"noremap <right> :bn<CR>
+" noremap <left> :bp<CR>
+" noremap <right> :bn<CR>
 
 
 " tab 操作
@@ -697,3 +697,9 @@ let g:EasyGrepFilesToExclude=".svn,.git,cscope.out, cscope.files"
 
 "YouCompleteMe
 let g:ycm_disable_for_files_larger_than_kb = 10000
+
+"进入goyo模式后自动触发limelight,退出后则关闭
+nmap <Leader>l :Goyo<CR>
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
