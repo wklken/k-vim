@@ -742,6 +742,8 @@ endif
 
     " nerdtreetabs
     map <Leader>n <plug>NERDTreeTabsToggle<CR>
+    " 打开当前buffer在树种的节点
+    nnoremap <silent> <leader>g :NERDTreeFind<cr>
     " 关闭同步
     " let g:nerdtree_tabs_synchronize_view=0
     " let g:nerdtree_tabs_synchronize_focus=0
