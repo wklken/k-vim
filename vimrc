@@ -703,3 +703,5 @@ nmap <Leader>l :Goyo<CR>
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
+"dont indent c++ namespace, public, private
+set cinoptions=g0N-s
