@@ -308,7 +308,7 @@ if has_key(g:plugs, 'syntastic')
     " python
     " pip install flake8
     let g:syntastic_python_checkers=['flake8', ] " 使用pyflakes,速度比pylint快
-    let g:syntastic_python_flake8_args='--ignore=E501,E225,E124,E712,E116,E131'
+    let g:syntastic_python_flake8_options='--ignore=E501,E225,E124,E712,E116,E131'
 
     " javascript
     " let g:syntastic_javascript_checkers = ['jsl', 'jshint']
