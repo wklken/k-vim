@@ -409,6 +409,7 @@ nnoremap <silent> <Leader>z :ZoomToggle<CR>
 
 
 " Go to home and end using capitalized directions
+" 使用 H、L 跳转到行首和行尾
 noremap H ^
 noremap L $
 
@@ -528,8 +529,9 @@ nnoremap gv `[v`]
 " select block
 nnoremap <leader>v V`}
 
-" w!! to sudo & write a file
-cmap w!! w !sudo tee >/dev/null %
+" W: to sudo & write a file
+" 使用 W: 命令来强制使用管理员权限写入文件
+command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " kj 替换 Esc
 inoremap kj <Esc>
