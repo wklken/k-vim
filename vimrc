@@ -529,9 +529,14 @@ nnoremap gv `[v`]
 " select block
 nnoremap <leader>v V`}
 
-" W: to sudo & write a file
-" 使用 W: 命令来强制使用管理员权限写入文件
+" :W to sudo & write a file
+" 使用 :W 命令来强制使用管理员权限写入文件
 command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+" :Wq to sudo & write a file, and then exit vim
+" 使用 :Wq 命令来强制使用管理员权限写入文件并且退出 vim
+command Wq :execute ':silent w !sudo tee % > /dev/null' | :edit! | :quit
+
 
 " kj 替换 Esc
 inoremap kj <Esc>
