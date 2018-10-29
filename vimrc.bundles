@@ -17,7 +17,7 @@ filetype off " required! turn off
 " inspired by spf13, 自定义需要的插件集合
 if !exists('g:bundle_groups')
     " let g:bundle_groups=['python', 'javascript', 'golang', 'php', 'ruby', 'shell', 'markdown', 'html', 'css', 'less', 'coffeescript', 'tmux', 'json', 'beta']
-    let g:bundle_groups=['python', 'javascript', 'markdown', 'html', 'css', 'tmux', 'beta']
+    let g:bundle_groups=['python', 'markdown', 'html', 'css', 'tmux', 'beta']
 endif
 
 " ----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
-" syntastic
+" syntastic 语法高亮 检查语法保存后检查语法错误
 if v:version < 800
     Plug 'scrooloose/syntastic'
 else
@@ -54,8 +54,6 @@ Plug 'docunext/closetag.vim', { 'for': ['html', 'xml'] }
 " quick edit
 " 快速注释
 Plug 'scrooloose/nerdcommenter'
-
-
 " 快速加入修改环绕字符
 " for repeat -> enhance surround.vim, . to repeat command
 Plug 'tpope/vim-repeat' | Plug 'tpope/vim-surround'
@@ -317,7 +315,8 @@ if has_key(g:plugs, 'syntastic')
     " npm install -g eslint-plugin-import eslint-plugin-node eslint-plugin-html babel-eslint
     let g:syntastic_javascript_checkers = ['eslint']
 
-    " to see error location list
+     " to see error location list
+    " :Errors 就可以在修覆之后自动更新它底部的描述
     let g:syntastic_always_populate_loc_list = 1
     let g:syntastic_enable_signs = 1
     let g:syntastic_auto_loc_list = 0
@@ -571,7 +570,7 @@ endif
     endif
 
 " }}}
-
+"cursors多光标操作配置
 " multiplecursors {{{
     let g:multi_cursor_use_default_mapping=0
     " Default mapping
@@ -607,7 +606,7 @@ endif
 
     " ctrlpfunky
     " ctrlp插件1 - 不用ctag进行函数快速跳转
-    nnoremap <Leader>fu :CtrlPFunky<Cr>
+    "nnoremap <Leader>fu :CtrlPFunky<Cr>
     " narrow the list down with a word under cursor
     nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
     let g:ctrlp_funky_syntax_highlight = 1
@@ -730,7 +729,7 @@ endif
 " ################### 快速导航 ###################
 
 " nerdtree nerdtreetabs {{{
-    " map <leader>n :NERDTreeToggle<CR>
+     map <leader>n :NERDTreeToggle<CR>
     let NERDTreeHighlightCursorline=1
     let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
     "close vim if the only window left open is a NERDTree
