@@ -570,12 +570,9 @@ endif
     endif
 
 " }}}
-<<<<<<< HEAD
 
-"应该是快速选择
-=======
+"应该是快速选择=======
 "cursors多光标操作配置
->>>>>>> fc8d3f7974692aa155b0c70a39b3554aff1c0fd8
 " multiplecursors {{{
     let g:multi_cursor_use_default_mapping=0
     " Default mapping
@@ -650,8 +647,9 @@ endif
     nnoremap <leader>ge :Gdiff<CR>
     " not ready to open
     " <leader>gb maps to :Gblame<CR>
-    <leader>gs maps to :Gstatus<CR>
-    " <leader>gd maps to :Gdiff<CR>  和现有冲突
+    " <leader>gs maps to :Gstatus<CR>
+    " 和现有冲突
+    " <leader>gd maps to :Gdiff<CR>
     " <leader>gl maps to :Glog<CR>
     " <leader>gc maps to :Gcommit<CR>
     " <leader>gp maps to :Git push<CR>
