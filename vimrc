@@ -409,6 +409,7 @@ nnoremap <silent> <Leader>z :ZoomToggle<CR>
 
 
 " Go to home and end using capitalized directions
+" 使用 H、L 跳转到行首和行尾
 noremap H ^
 noremap L $
 
@@ -529,9 +530,11 @@ nnoremap gv `[v`]
 nnoremap <leader>v V`}
 
 " :W to sudo & write a file
+" 使用 :W 命令来强制使用管理员权限写入文件
 command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " :Wq to sudo & write a file, and then exit vim
+" 使用 :Wq 命令来强制使用管理员权限写入文件并且退出 vim
 command Wq :execute ':silent w !sudo tee % > /dev/null' | :edit! | :quit
 
 " kj 替换 Esc
