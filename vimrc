@@ -1,11 +1,11 @@
 "==========================================
 " Author:  wklken
-" Version: 9.1
+" Version: 9.2
 " Email: wklken@yeah.net
 " BlogPost: http://www.wklken.me
 " ReadMe: README.md
 " Donation: http://www.wklken.me/pages/donation.html
-" Last_modify: 2015-12-15
+" Last_modify: 2018-10-17
 " Sections:
 "       -> Initial Plugin 加载插件
 "       -> General Settings 基础设置
@@ -99,7 +99,7 @@ set cursorline
 
 " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
 " 好处：误删什么的，如果以前屏幕打开，可以找回
-set t_ti= t_te=
+"set t_ti= t_te=
 
 
 " 鼠标暂不启用, 键盘党....
@@ -207,11 +207,11 @@ set autoindent
 
 " tab相关变更
 " 设置Tab键的宽度        [等同的空格个数]
-set tabstop=4
+set tabstop=2
 " 每一次缩进对应的空格数
-set shiftwidth=4
+set shiftwidth=2
 " 按退格键时可以一次删掉 4 个空格
-set softtabstop=4
+set softtabstop=2
 " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
 set smarttab
 " 将Tab自动转化成空格[需要输入真正的Tab键时，使用 Ctrl+V + Tab]
@@ -528,8 +528,11 @@ nnoremap gv `[v`]
 " select block
 nnoremap <leader>v V`}
 
-" w!! to sudo & write a file
-cmap w!! w !sudo tee >/dev/null %
+" :W to sudo & write a file
+command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+" :Wq to sudo & write a file, and then exit vim
+command Wq :execute ':silent w !sudo tee % > /dev/null' | :edit! | :quit
 
 " kj 替换 Esc
 inoremap kj <Esc>
@@ -554,7 +557,7 @@ nnoremap <leader>w :w<CR>
 nnoremap ' `
 nnoremap ` '
 
-" remap U to <C-r> for easier redo
+" remap U to <C-r> for easier undo
 nnoremap U <C-r>
 
 " Quickly edit/reload the vimrc file
