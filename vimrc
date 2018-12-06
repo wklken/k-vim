@@ -49,7 +49,7 @@ filetype plugin indent on
 
 
 " history存储容量
-set history=2000
+set history=1000
 
 " 检测文件类型
 filetype on
@@ -73,21 +73,21 @@ set shortmess=atI
 " 取消备份。 视情况自己改
 set nobackup
 " 关闭交换文件
-set noswapfile
+" set noswapfile
 
 
-" TODO: remove this, use gundo
-" create undo file
-" if has('persistent_undo')
-  " " How many undos
-  " set undolevels=1000
-  " " number of lines to save for undo
-  " set undoreload=10000
-  " " So is persistent undo ...
-  " "set undofile
-  " set noundofile
-  " " set undodir=/tmp/vimundo/
-" endif
+TODO: remove this, use gundo
+create undo file
+if has('persistent_undo')
+  " How many undos
+  set undolevels=1000
+  " number of lines to save for undo
+  set undoreload=10000
+  " So is persistent undo ...
+  "set undofile
+  set noundofile
+  " set undodir=/tmp/vimundo/
+endif
 
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
