@@ -73,26 +73,26 @@ set shortmess=atI
 " 取消备份。 视情况自己改
 set nobackup
 " 关闭交换文件
-set noswapfile
+" set noswapfile
 
 
 " TODO: remove this, use gundo
 " create undo file
-" if has('persistent_undo')
-  " " How many undos
-  " set undolevels=1000
-  " " number of lines to save for undo
-  " set undoreload=10000
-  " " So is persistent undo ...
-  " "set undofile
+if has('persistent_undo')
+  " How many undos
+  set undolevels=1000
+  " number of lines to save for undo
+  set undoreload=10000
+  " So is persistent undo ...
+  set undofile
   " set noundofile
-  " " set undodir=/tmp/vimundo/
-" endif
+  set undodir=/tmp/vimundo/
+endif
 
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 " 突出显示当前列
-"set cursorcolumn
+set cursorcolumn
 " 突出显示当前行
 "set cursorline
 
@@ -103,9 +103,9 @@ set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 
 " 鼠标暂不启用, 键盘党....
-set mouse-=a
+" set mouse-=a
 " 启用鼠标
-" set mouse=a
+set mouse=a
 " Hide the mouse cursor while typing
 " set mousehide
 
@@ -602,7 +602,6 @@ function! AutoSetFileHead()
     normal o
     normal o
 endfunc
-
 
 " 设置可以高亮的关键字
 if has("autocmd")
