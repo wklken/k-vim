@@ -1,6 +1,6 @@
 "==========================================
-" Author:  wklken
-" Version: 9.1
+" Author:  wklken yihui
+" Version: 9.2
 " Email: wklken@yeah.net
 " BlogPost: http://www.wklken.me
 " ReadMe: README.md
