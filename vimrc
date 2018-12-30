@@ -83,12 +83,8 @@ if has('persistent_undo')
   set undolevels=1000
   " number of lines to save for undo
   set undoreload=10000
-  " So is persistent undo ...
-<<<<<<< HEAD
   set undofile
-=======
-  "set undofile
->>>>>>> 8d520e1b6baef9649b8adc3d55d2e0af486d0b71
+  " 停止生产撤销用的undofile文件
   " set noundofile
   set undodir=/tmp/vimundo/
 endif
