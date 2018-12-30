@@ -73,7 +73,7 @@ set shortmess=atI
 " 取消备份。 视情况自己改
 set nobackup
 " 关闭交换文件
-set noswapfile
+" set noswapfile
 
 
 " TODO: remove this, use gundo
@@ -84,7 +84,11 @@ if has('persistent_undo')
   " number of lines to save for undo
   set undoreload=10000
   " So is persistent undo ...
+<<<<<<< HEAD
   "set undofile
+=======
+  set undofile
+>>>>>>> master
   " set noundofile
   set undodir=/tmp/vimundo/
 endif
@@ -611,7 +615,6 @@ function! AutoSetFileHead()
     normal o
     normal o
 endfunc
-
 
 " 设置可以高亮的关键字
 if has("autocmd")

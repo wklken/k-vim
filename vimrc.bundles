@@ -416,6 +416,8 @@ endif
 " ################### 自动补全 ###################
 
 " YouCompleteMe {{{
+    "停止提示是否载入本地ycm_extra_conf文件
+    let g:ycm_confirm_extra_conf = 0
     "youcompleteme  默认tab  s-tab 和自动补全冲突
     "let g:ycm_key_list_select_completion=['<c-n>']
     let g:ycm_key_list_select_completion = ['<Down>']
