@@ -49,7 +49,7 @@ filetype plugin indent on
 
 
 " history存储容量
-set history=2000
+set history=1000
 
 " 检测文件类型
 filetype on
@@ -84,7 +84,11 @@ if has('persistent_undo')
   " number of lines to save for undo
   set undoreload=10000
   " So is persistent undo ...
+<<<<<<< HEAD
   set undofile
+=======
+  "set undofile
+>>>>>>> 8d520e1b6baef9649b8adc3d55d2e0af486d0b71
   " set noundofile
   set undodir=/tmp/vimundo/
 endif
@@ -323,6 +327,15 @@ endif
 " HotKey Settings  自定义快捷键设置
 "==========================================
 
+" 主要按键重定义
+
+" 关闭方向键, 强迫自己用 hjkl
+" map <Left> <Nop>
+" map <Right> <Nop>
+" map <Up> <Nop>
+" map <Down> <Nop>
+
+" =======
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
 nnoremap k gk
@@ -641,8 +654,6 @@ if has("gui_running")
     set noimd
     set t_Co=256
 endif
-
-
 
 " theme主题
 set background=dark
