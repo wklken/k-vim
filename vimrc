@@ -1,6 +1,6 @@
 "==========================================
-" Author:  wklken
-" Version: 9.1
+" Author:  wklken yihui
+" Version: 9.2
 " Email: wklken@yeah.net
 " BlogPost: http://www.wklken.me
 " ReadMe: README.md
@@ -85,6 +85,7 @@ if has('persistent_undo')
   set undoreload=10000
   " So is persistent undo ...
   "set undofile
+
   " set noundofile
   set undodir=/tmp/vimundo/
 endif
