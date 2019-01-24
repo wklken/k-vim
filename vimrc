@@ -323,6 +323,17 @@ endif
 " HotKey Settings  自定义快捷键设置
 "==========================================
 
+<<<<<<< HEAD
+=======
+" 主要按键重定义
+
+" 关闭方向键, 强迫自己用 hjkl
+" map <Left> <Nop>
+" map <Right> <Nop>
+" map <Up> <Nop>
+" map <Down> <Nop>
+
+>>>>>>> 新修改
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
 nnoremap k gk

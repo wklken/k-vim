@@ -570,7 +570,12 @@ endif
     endif
 
 " }}}
+<<<<<<< HEAD
 "cursors多光标操作配置
+=======
+
+"应该是快速选择
+>>>>>>> 新修改
 " multiplecursors {{{
     let g:multi_cursor_use_default_mapping=0
     " Default mapping
@@ -581,11 +586,13 @@ endif
 " }}}
 
 " ################### 功能相关 ###################
-
+" 模糊搜索工具,支持文件,tag,缓冲区等等,也支持正则
 " ctrlp ctrlpfunky{{{
+    " 搜索当前目录下文件
     let g:ctrlp_map = '<leader>p'
     let g:ctrlp_cmd = 'CtrlP'
     map <leader>f :CtrlPMRU<CR>
+    " 设置搜索时忽略的文件
     let g:ctrlp_custom_ignore = {
         \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
         \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
@@ -643,7 +650,7 @@ endif
     nnoremap <leader>ge :Gdiff<CR>
     " not ready to open
     " <leader>gb maps to :Gblame<CR>
-    " <leader>gs maps to :Gstatus<CR>
+    <leader>gs maps to :Gstatus<CR>
     " <leader>gd maps to :Gdiff<CR>  和现有冲突
     " <leader>gl maps to :Glog<CR>
     " <leader>gc maps to :Gcommit<CR>
@@ -659,6 +666,7 @@ endif
     nnoremap <leader>gs :GitGutterToggle<CR>
 " }}}
 
+" 版本回退 <时光机>
 " gundo {{{
     noremap <leader>h :GundoToggle<CR>
 " }}}
@@ -676,7 +684,7 @@ endif
     let g:airline_symbols.linenr = '¶'
     let g:airline_symbols.branch = '⎇'
     " 是否打开tabline
-    " let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#enabled = 1
 " }}}
 
 
