@@ -93,7 +93,7 @@ endif
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 " 突出显示当前列
-set cursorcolumn
+"set cursorcolumn
 " 突出显示当前行
 "set cursorline
 
@@ -323,7 +323,6 @@ endif
 "==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
-
 " 主要按键重定义
 
 " 关闭方向键, 强迫自己用 hjkl
@@ -332,7 +331,6 @@ endif
 " map <Up> <Nop>
 " map <Down> <Nop>
 
-" =======
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
 nnoremap k gk
