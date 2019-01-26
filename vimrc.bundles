@@ -306,7 +306,7 @@ if has_key(g:plugs, 'syntastic')
     " python
     " pip install flake8
     let g:syntastic_python_checkers=['flake8', ] " 使用pyflakes,速度比pylint快
-    let g:syntastic_python_flake8_args='--ignore=E501,E225,E124,E712,E116,E131'
+    let g:syntastic_python_flake8_options='--ignore=E501,E225,E124,E712,E116,E131'
 
     " javascript
     " let g:syntastic_javascript_checkers = ['jsl', 'jshint']
@@ -416,6 +416,8 @@ endif
 " ################### 自动补全 ###################
 
 " YouCompleteMe {{{
+    "停止提示是否载入本地ycm_extra_conf文件
+    let g:ycm_confirm_extra_conf = 0
     "youcompleteme  默认tab  s-tab 和自动补全冲突
     "let g:ycm_key_list_select_completion=['<c-n>']
     let g:ycm_key_list_select_completion = ['<Down>']
@@ -570,7 +572,9 @@ endif
     endif
 
 " }}}
+
 "cursors多光标操作配置
+"应该是快速选择
 " multiplecursors {{{
     let g:multi_cursor_use_default_mapping=0
     " Default mapping
@@ -581,11 +585,13 @@ endif
 " }}}
 
 " ################### 功能相关 ###################
-
+" 模糊搜索工具,支持文件,tag,缓冲区等等,也支持正则
 " ctrlp ctrlpfunky{{{
+    " 搜索当前目录下文件
     let g:ctrlp_map = '<leader>p'
     let g:ctrlp_cmd = 'CtrlP'
     map <leader>f :CtrlPMRU<CR>
+    " 设置搜索时忽略的文件
     let g:ctrlp_custom_ignore = {
         \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
         \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
@@ -644,7 +650,8 @@ endif
     " not ready to open
     " <leader>gb maps to :Gblame<CR>
     " <leader>gs maps to :Gstatus<CR>
-    " <leader>gd maps to :Gdiff<CR>  和现有冲突
+    " 和现有冲突
+    " <leader>gd maps to :Gdiff<CR>
     " <leader>gl maps to :Glog<CR>
     " <leader>gc maps to :Gcommit<CR>
     " <leader>gp maps to :Git push<CR>
@@ -659,6 +666,7 @@ endif
     nnoremap <leader>gs :GitGutterToggle<CR>
 " }}}
 
+" 版本回退 <时光机>
 " gundo {{{
     noremap <leader>h :GundoToggle<CR>
 " }}}
@@ -676,7 +684,7 @@ endif
     let g:airline_symbols.linenr = '¶'
     let g:airline_symbols.branch = '⎇'
     " 是否打开tabline
-    " let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#enabled = 1
 " }}}
 
 

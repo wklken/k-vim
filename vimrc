@@ -49,7 +49,7 @@ filetype plugin indent on
 
 
 " history存储容量
-set history=2000
+set history=1000
 
 " 检测文件类型
 filetype on
@@ -73,21 +73,22 @@ set shortmess=atI
 " 取消备份。 视情况自己改
 set nobackup
 " 关闭交换文件
-set noswapfile
+" set noswapfile
 
 
 " TODO: remove this, use gundo
 " create undo file
-" if has('persistent_undo')
-  " " How many undos
-  " set undolevels=1000
-  " " number of lines to save for undo
-  " set undoreload=10000
-  " " So is persistent undo ...
-  " "set undofile
+if has('persistent_undo')
+  " How many undos
+  set undolevels=1000
+  " number of lines to save for undo
+  set undoreload=10000
+  " So is persistent undo ...
+  "set undofile
+
   " set noundofile
-  " " set undodir=/tmp/vimundo/
-" endif
+  set undodir=/tmp/vimundo/
+endif
 
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
@@ -103,9 +104,9 @@ set cursorcolumn
 
 
 " 鼠标暂不启用, 键盘党....
-set mouse-=a
+" set mouse-=a
 " 启用鼠标
-" set mouse=a
+set mouse=a
 " Hide the mouse cursor while typing
 " set mousehide
 
@@ -322,6 +323,13 @@ endif
 "==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
+" 主要按键重定义
+
+" 关闭方向键, 强迫自己用 hjkl
+" map <Left> <Nop>
+" map <Right> <Nop>
+" map <Up> <Nop>
+" map <Down> <Nop>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -641,8 +649,6 @@ if has("gui_running")
     set noimd
     set t_Co=256
 endif
-
-
 
 " theme主题
 set background=dark
