@@ -742,6 +742,7 @@ endif
     let NERDTreeHighlightCursorline=1
     let NERDTreeShowHidden=1
     let NERDTreeWinSize=20
+    let NERDTreehDirMode=2
     let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
     "close vim if the only window left open is a NERDTree
     autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end
