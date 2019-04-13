@@ -15,7 +15,7 @@ k-vim
 > Just a Better Vim Config. Keep it Simple.
 
 
-**PS**: 服务器端无插件`k-vim`简化版本(curl直接设置vimrc即可)[vim-for-server](https://github.com/wklken/vim-for-server)
+**PS**: 服务器端无插件`k-vim`简化版本(curl直接设置vimrc即可)[vim-for-server](https://github.com/wklken/vim-for-server) / vscode-vim配置(尽量一致的键位) [k-vim-vscode](https://github.com/wklken/k-vim-vscode)
 
 **PPS**: 一份tmux配置 [k-tmux](https://github.com/wklken/k-tmux)
 
