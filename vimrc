@@ -1,11 +1,11 @@
 "==========================================
 " Author:  wklken
-" Version: 9.1
+" Version: 9.2
 " Email: wklken@yeah.net
 " BlogPost: http://www.wklken.me
 " ReadMe: README.md
 " Donation: http://www.wklken.me/pages/donation.html
-" Last_modify: 2015-12-15
+" Last_modify: 2019-05-04
 " Sections:
 "       -> Initial Plugin 加载插件
 "       -> General Settings 基础设置
@@ -417,6 +417,11 @@ noremap L $
 nnoremap ; :
 
 
+" 插入模式跳转到括号尾部
+" https://stackoverflow.com/questions/11037825/how-can-i-go-to-end-of-parenthesis-brackets-quotes-without-switching-insert-mode
+inoremap <C-e> <C-o>A
+
+
 " 命令行模式增强，ctrl - a到行首， -e 到行尾
 cnoremap <C-j> <t_kd>
 cnoremap <C-k> <t_ku>
@@ -657,8 +662,15 @@ endif
 set background=dark
 set t_Co=256
 
-colorscheme solarized
-" colorscheme molokai
+" colorscheme solarized
+colorscheme molokai
+
+highlight Normal ctermbg=none
+" italic for vim:  https://alexpearce.me/2014/05/italics-in-iterm2-vim-tmux/
+" italic for tmux: https://github.com/tmux/tmux/issues/377
+" term or iterm2, use the settings under others/italic
+highlight Comment cterm=italic
+highlight search ctermfg=Yellow ctermbg=NONE cterm=bold,underline
 
 
 " 设置标记一列的背景颜色和数字一行颜色一致

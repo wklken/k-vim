@@ -92,6 +92,8 @@ git submodule update --init --recursive
 if [ `which clang` ]   # check system clang
 then
     python install.py --clang-completer --system-libclang   # use system clang
+    # for golang
+    # python install.py --clang-completer --system-libclang --go-completer
 else
     python install.py --clang-completer
 fi
