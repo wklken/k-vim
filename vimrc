@@ -1,7 +1,7 @@
 "==========================================
 " Author:  wklken
-" Version: 9.2
-" Email: wklken@yeah.net
+" Version: 9.3
+" Email: wklken@gmail.com
 " BlogPost: http://www.wklken.me
 " ReadMe: README.md
 " Donation: http://www.wklken.me/pages/donation.html
@@ -669,7 +669,7 @@ highlight Normal ctermbg=none
 " italic for vim:  https://alexpearce.me/2014/05/italics-in-iterm2-vim-tmux/
 " italic for tmux: https://github.com/tmux/tmux/issues/377
 " term or iterm2, use the settings under others/italic
-highlight Comment cterm=italic
+" highlight Comment cterm=italic
 highlight search ctermfg=Yellow ctermbg=NONE cterm=bold,underline
 
 

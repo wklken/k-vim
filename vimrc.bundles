@@ -297,9 +297,16 @@ if count(g:bundle_groups, 'beta')
     " brew install fzf
     Plug '/usr/local/opt/fzf'
     Plug 'junegunn/fzf.vim'
-
     " NOTE: ctrl-p for fzf Files
     map <C-P> :Files<CR>
+
+    Plug 'tenfyzhong/CompleteParameter.vim'
+    " let g:complete_parameter_use_ultisnips_mapping = 1
+    inoremap <silent><expr> ( complete_parameter#pre_complete("()")
+    smap <c-l> <Plug>(complete_parameter#goto_next_parameter)
+    imap <c-l> <Plug>(complete_parameter#goto_next_parameter)
+    smap <c-h> <Plug>(complete_parameter#goto_previous_parameter)
+    imap <c-h> <Plug>(complete_parameter#goto_previous_parameter)
 
 endif
 
@@ -911,6 +918,7 @@ endif
 
     " vue
     " Plug 'posva/vim-vue'
+
 
 
 
