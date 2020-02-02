@@ -83,6 +83,9 @@ Plug 'vim-scripts/matchit.zip'
 " m.        add new mark just follow previous mark
 Plug 'kshenoy/vim-signature'
 
+" 中文帮助
+Plug 'yianwillis/vimcdoc'
+
 " quick selection and edit
 " expandregion
 " 选中区块
@@ -168,10 +171,10 @@ if count(g:bundle_groups, 'markdown')
     Plug 'plasticboy/vim-markdown', {'for': 'md'}
     " https://github.com/suan/vim-instant-markdown
     " npm -g install instant-markdown-d
-    " Plug 'suan/vim-instant-markdown'
-    " let g:instant_markdown_slow = 1
-    " let g:instant_markdown_autostart = 0
-    " map <F12> :InstantMarkdownPreview<CR>
+    Plug 'suan/vim-instant-markdown'
+    let g:instant_markdown_slow = 1
+    let g:instant_markdown_autostart = 0
+    map <F12> :InstantMarkdownPreview<CR>
 endif
 
 if count(g:bundle_groups, 'golang')
@@ -260,7 +263,7 @@ endif
 
 if count(g:bundle_groups, 'html')
     " ###### emmet HTML complete #########
-    " Plug 'mattn/emmet-vim'
+    Plug 'mattn/emmet-vim'
 endif
 
 " this is just for beta version
@@ -583,9 +586,13 @@ endif
 " multiplecursors {{{
     let g:multi_cursor_use_default_mapping=0
     " Default mapping
+    " 选择下一个单词
     let g:multi_cursor_next_key='<C-m>'
+    " 返回上一个单词
     let g:multi_cursor_prev_key='<C-p>'
+    " 忽略当前单词
     let g:multi_cursor_skip_key='<C-x>'
+    " 退出multiple cursort模式
     let g:multi_cursor_quit_key='<Esc>'
 " }}}
 

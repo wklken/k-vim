@@ -95,12 +95,12 @@ set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 " 突出显示当前列
 set cursorcolumn
 " 突出显示当前行
-"set cursorline
+set cursorline
 
 
 " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
 " 好处：误删什么的，如果以前屏幕打开，可以找回
-"set t_ti= t_te=
+set t_ti= t_te=
 
 
 " 鼠标暂不启用, 键盘党....
@@ -162,8 +162,7 @@ set nowrap
 " 括号配对情况, 跳转并高亮一下匹配的括号
 set showmatch
 " How many tenths of a second to blink when matching brackets
-set matchtime=2
-
+" set matchtime=2
 
 " 设置文内智能搜索提示
 " 高亮search命中的文本
@@ -601,9 +600,9 @@ function! AutoSetFileHead()
 
     "如果文件类型为python
     if &filetype == 'python'
-        " call setline(1, "\#!/usr/bin/env python")
+        call setline(1, "\#!/usr/bin/env python3")
         " call append(1, "\# encoding: utf-8")
-        call setline(1, "\# -*- coding: utf-8 -*-")
+        call setline(2, "\# -*- coding: utf-8 -*-")
     endif
 
     normal G
