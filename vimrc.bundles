@@ -379,9 +379,7 @@ if has_key(g:plugs, 'ale')
     \   'javascript': ['eslint'],
     \}
 
-    " E501 -> 120 chars
-    let g:ale_python_flake8_args="--ignore=E114,E116,E131 --max-line-length=120"
-    " --ignore=E225,E124,E712,E116
+    let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
 
     let g:ale_sign_error = '>>'
     let g:ale_sign_warning = '>'
