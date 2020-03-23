@@ -78,6 +78,7 @@ set noswapfile
 
 " TODO: remove this, use gundo
 " create undo file
+" let g:gundo_prefer_python3 = 1
 " if has('persistent_undo')
   " " How many undos
   " set undolevels=1000
