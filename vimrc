@@ -84,7 +84,7 @@ if has('persistent_undo')
   " number of lines to save for undo
   set undoreload=10000
   " So is persistent undo ...
-  "set undofile
+  set undofile
 
   " set noundofile
   set undodir=/tmp/vimundo/

@@ -2,6 +2,7 @@ bundle
 *.pyc
 *.bak
 *.bk
+*.un~
 configs
 myconfig.sh
 init.vim
