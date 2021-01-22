@@ -669,7 +669,7 @@ highlight Normal ctermbg=none
 " italic for vim:  https://alexpearce.me/2014/05/italics-in-iterm2-vim-tmux/
 " italic for tmux: https://github.com/tmux/tmux/issues/377
 " term or iterm2, use the settings under others/italic
-" highlight Comment cterm=italic
+highlight Comment cterm=italic
 highlight search ctermfg=Yellow ctermbg=NONE cterm=bold,underline
 
 

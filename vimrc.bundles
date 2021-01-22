@@ -187,17 +187,6 @@ if count(g:bundle_groups, 'golang')
     " 3. :GoUpdateBinaries
     " vimgo  https://github.com/fatih/vim-go-tutorial#quick-setup
     Plug 'fatih/vim-go' ", {'for': 'go', 'do': ':GoInstallBinaries'}
-    let g:go_fmt_command = "goimports"
-    let g:go_highlight_types = 1
-    let g:go_highlight_structs = 1
-    let g:go_highlight_fields = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_functions = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_extra_types = 1
-    let g:go_highlight_build_constraints = 1
-    " https://github.com/golang/go/wiki/gopls
-    let g:go_def_mode='gopls'
 endif
 
 
@@ -308,6 +297,17 @@ if count(g:bundle_groups, 'beta')
     smap <c-h> <Plug>(complete_parameter#goto_previous_parameter)
     imap <c-h> <Plug>(complete_parameter#goto_previous_parameter)
 
+    Plug 'wakatime/vim-wakatime'
+
+    Plug 'AndrewRadev/splitjoin.vim'
+
+    " pip install black
+    " https://black.readthedocs.io/en/stable/editor_integration.html
+    Plug 'psf/black', { 'tag': '19.10b0' }
+    let g:black_linelength=120
+    nnoremap <silent> <Leader>b :Black<CR>
+    " format at save
+    autocmd BufWritePre *.py execute ':Black'
 endif
 
 
@@ -399,7 +399,7 @@ if has_key(g:plugs, 'ale')
     \   'python': ['flake8'],
     \   'javascript': ['eslint'],
     \   'html': [],
-    \   'go': ['golangci-lint'],
+    \   'go': ['gopls', 'golangci-lint'],
     \}
     " E501 -> 120 chars
     let g:ale_python_flake8_options="--ignore=E121,E123,E126,E226,E24,E704,W503 --max-line-length=120"
@@ -772,6 +772,8 @@ endif
     " s/v 分屏打开文件
     let g:NERDTreeMapOpenSplit = 's'
     let g:NERDTreeMapOpenVSplit = 'v'
+    " show bookmarks in nerdtree
+    " let NERDTreeShowBookmarks = 1
 
 
     " nerdtreetabs
@@ -873,15 +875,41 @@ endif
 
 
 " vimgo {{{
-    let g:go_highlight_functions = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_structs = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_build_constraints = 1
-
-    let g:go_fmt_fail_silently = 1
     " format with goimports instead of gofmt
     let g:go_fmt_command = "goimports"
+    let g:go_fmt_fail_silently = 1
+    let g:go_highlight_types = 1
+    let g:go_highlight_fields = 1
+    let g:go_highlight_functions = 1
+    let g:go_highlight_function_calls = 1
+    let g:go_highlight_extra_types = 1
+
+    let g:go_highlight_structs = 1
+    let g:go_highlight_operators = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_build_constraints = 1
+    let g:go_highlight_generate_tags = 1
+    " https://github.com/golang/go/wiki/gopls
+    let g:go_def_mode='gopls'
+    let g:go_info_mode='gopls'
+
+
+    autocmd FileType go nmap <leader>t  <Plug>(go-test)
+    " run :GoBuild or :GoTestCompile based on the go file
+    function! s:build_go_files()
+        let l:file = expand('%')
+        if l:file =~# '^\f\+_test\.go$'
+            call go#test#Test(0, 1)
+        elseif l:file =~# '^\f\+\.go$'
+            call go#cmd#Build(0)
+        endif
+    endfunction
+    autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+    autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+
+    " autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
+
+    " lint
     let g:syntastic_go_checkers = ['golangci_lint']
     let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'java'] }
 " }}}
@@ -910,7 +938,7 @@ endif
 
 " beta {{{
 
-    " yapf, python code format: 
+    " yapf, python code format:
     " - format all file
     " autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
     " - format select block
@@ -918,8 +946,6 @@ endif
 
     " vue
     " Plug 'posva/vim-vue'
-
-
 
 
     " Plug 'xolox/vim-easytags'

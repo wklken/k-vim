@@ -174,3 +174,10 @@ snippet dk "api doc"
         code:
 
 endsnippet
+
+snippet djadmin "django admin"
+class XXAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(XX, XXAdmin)
+${1}
+endsnippet
