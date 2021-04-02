@@ -299,7 +299,7 @@ if count(g:bundle_groups, 'beta')
 
     Plug 'wakatime/vim-wakatime'
 
-    Plug 'AndrewRadev/splitjoin.vim'
+    " Plug 'AndrewRadev/splitjoin.vim'
 
     " pip install black
     " https://black.readthedocs.io/en/stable/editor_integration.html
@@ -308,6 +308,25 @@ if count(g:bundle_groups, 'beta')
     nnoremap <silent> <Leader>b :Black<CR>
     " format at save
     autocmd BufWritePre *.py execute ':Black'
+
+    if has('nvim') || has('patch-8.0.902')
+        Plug 'mhinz/vim-signify'
+    else
+        Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+    endif
+
+    " On-demand lazy load
+    Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+    nnoremap <silent> <leader> :WhichKey '<Leader>'<CR>
+    " By default timeoutlen is 1000 ms
+    set timeoutlen=500
+
+
+    " rust
+    Plug 'rust-lang/rust.vim'
+
+    " Plug 'yuttie/comfortable-motion.vim'
+    Plug 'andrewradev/splitjoin.vim'
 endif
 
 
