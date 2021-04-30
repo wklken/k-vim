@@ -7,7 +7,7 @@
 " ################### 包依赖 #####################
 " package dependence:  ctags, ag(the_silver_searcher)
 " brew install fzf shellcheck
-" python dependence:   pip install flake8 isort yapf
+" python dependence:   pip install flake8 isort black
 
 " 非兼容vi模式。去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
 set nocompatible
@@ -40,7 +40,7 @@ call plug#begin('~/.vim/bundle')
 if v:version < 800
     Plug 'scrooloose/syntastic'
 else
-    Plug 'w0rp/ale'
+    Plug 'dense-analysis/ale'
 endif
 
 " Group dependencies, vim-snippets depends on ultisnips
@@ -76,7 +76,8 @@ Plug 'junegunn/vim-easy-align'
 " quick movement
 " easymotion
 "更高效的移动 [,, + w/fx/h/j/k/l]
-Plug 'Lokaltog/vim-easymotion'
+" Plug 'Lokaltog/vim-easymotion'
+Plug 'easymotion/vim-easymotion'
 
 " 更高效的行内移动, f/F/t/T, 才触发
 " quickscope
@@ -124,8 +125,6 @@ Plug 'thinca/vim-quickrun'
 " git
 " fugitive
 Plug 'tpope/vim-fugitive'
-" gitgutter
-Plug 'airblade/vim-gitgutter'
 " vim-signify 
 if has('nvim') || has('patch-8.0.902')
     Plug 'mhinz/vim-signify'
@@ -211,6 +210,14 @@ if count(g:bundle_groups, 'python')
     Plug 'fisadev/vim-isort'
     " Shift-V 上下选中, ctrl + i 规范化
     let g:vim_isort_map = '<C-i>'
+
+    " pip install black
+    " https://black.readthedocs.io/en/stable/editor_integration.html
+    Plug 'psf/black', { 'tag': '19.10b0' }
+    let g:black_linelength=120
+    nnoremap <silent> <Leader>b :Black<CR>
+    " format at save
+    autocmd BufWritePre *.py execute ':Black'
 endif
 
 if count(g:bundle_groups, 'php')
@@ -288,11 +295,10 @@ if count(g:bundle_groups, 'beta')
     " let g:indent_guides_guide_size = 1
     " let g:indent_guides_auto_colors = 1
 
-    Plug 'robbles/logstash.vim'
     Plug 'ryanoasis/vim-devicons'
+
+    Plug 'robbles/logstash.vim'
     Plug 'ekalinin/dockerfile.vim'
-
-
 
 
     Plug 'tenfyzhong/CompleteParameter.vim'
@@ -305,22 +311,13 @@ if count(g:bundle_groups, 'beta')
 
     Plug 'wakatime/vim-wakatime'
 
-    " Plug 'AndrewRadev/splitjoin.vim'
-
-    " pip install black
-    " https://black.readthedocs.io/en/stable/editor_integration.html
-    Plug 'psf/black', { 'tag': '19.10b0' }
-    let g:black_linelength=120
-    nnoremap <silent> <Leader>b :Black<CR>
-    " format at save
-    autocmd BufWritePre *.py execute ':Black'
 
 
     " On-demand lazy load
-    Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
-    nnoremap <silent> <leader> :WhichKey '<Leader>'<CR>
-    " By default timeoutlen is 1000 ms
-    set timeoutlen=500
+    " Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+    " nnoremap <silent> <leader> :WhichKey '<Leader>'<CR>
+    " " By default timeoutlen is 1000 ms
+    " set timeoutlen=500
 
 
     " rust
@@ -328,6 +325,19 @@ if count(g:bundle_groups, 'beta')
 
     " Plug 'yuttie/comfortable-motion.vim'
     Plug 'andrewradev/splitjoin.vim'
+    " Plug 'AndrewRadev/splitjoin.vim'
+    
+    " vue
+    " Plug 'posva/vim-vue'
+
+
+    " Plug 'xolox/vim-easytags'
+
+    " Plug 'millermedeiros/vim-esformatter'
+    " will run esformatter after pressing <leader> followed by the 'e' and 's'
+    " keys
+    " nnoremap <silent> <leader>es :Esformatter<CR>
+    " vnoremap <silent> <leader>es :EsformatterVisual<CR>
 endif
 
 
@@ -416,8 +426,9 @@ endif
 if has_key(g:plugs, 'ale')
     " install the lint yourself
     let g:ale_linters = {
+    \   '*': ['remove_trailing_lines', 'trim_whitespace'],
     \   'python': ['flake8'],
-    \   'javascript': ['eslint'],
+    \   'javascript': ['prettier', 'eslint'],
     \   'html': [],
     \   'go': ['gopls', 'golangci-lint'],
     \}
@@ -585,6 +596,7 @@ endif
     map <Leader><leader>l <Plug>(easymotion-lineforward)
     " 重复上一次操作, 类似repeat插件, 很强大
     map <Leader><leader>. <Plug>(easymotion-repeat)
+    let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 " }}}
 
 
@@ -661,7 +673,7 @@ endif
         \ }
 
     " ignore those dirs
-    let g:ctrlsf_ignore_dir = ['static/doc', 'assets']
+    let g:ctrlsf_ignore_dir = ['static/doc', 'assets', 'vendor']
 " }}}
 
 " git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
@@ -676,15 +688,6 @@ endif
     " <leader>gl maps to :Glog<CR>
     " <leader>gc maps to :Gcommit<CR>
     " <leader>gp maps to :Git push<CR>
-" }}}
-
-" gitgutter {{{
-    " 同git diff,实时展示文件中修改的行
-    " 只是不喜欢除了行号多一列, 默认关闭,gs时打开
-    let g:gitgutter_map_keys = 0
-    let g:gitgutter_enabled = 0
-    let g:gitgutter_highlight_lines = 1
-    nnoremap <leader>gs :GitGutterToggle<CR>
 " }}}
 
 " gundo {{{
@@ -934,23 +937,6 @@ endif
 
 " beta {{{
 
-    " yapf, python code format:
-    " - format all file
-    " autocmd FileType python nnoremap <leader>y :0,$!yapf<Cr>
-    " - format select block
-    " autocmd FileType python vnoremap <leader>y :!yapf<Cr>
-
-    " vue
-    " Plug 'posva/vim-vue'
-
-
-    " Plug 'xolox/vim-easytags'
-
-    " Plug 'millermedeiros/vim-esformatter'
-    " will run esformatter after pressing <leader> followed by the 'e' and 's'
-    " keys
-    " nnoremap <silent> <leader>es :Esformatter<CR>
-    " vnoremap <silent> <leader>es :EsformatterVisual<CR>
 
 " }}}
 
