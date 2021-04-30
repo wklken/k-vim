@@ -243,6 +243,15 @@ function! NumberToggle()
 endfunc
 nnoremap <C-n> :call NumberToggle()<cr>
 
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
 " 防止tmux下vim的背景色显示异常
 " Refer: http://sunaku.github.io/vim-256color-bce.html
 if &term =~ '256color'
@@ -669,7 +678,7 @@ highlight Normal ctermbg=none
 " italic for vim:  https://alexpearce.me/2014/05/italics-in-iterm2-vim-tmux/
 " italic for tmux: https://github.com/tmux/tmux/issues/377
 " term or iterm2, use the settings under others/italic
-highlight Comment cterm=italic
+highlight Comment cterm=italic gui=italic
 highlight search ctermfg=Yellow ctermbg=NONE cterm=bold,underline
 
 
@@ -687,3 +696,7 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300

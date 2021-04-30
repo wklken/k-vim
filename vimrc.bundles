@@ -101,10 +101,13 @@ Plug 'terryma/vim-expand-region'
 Plug 'terryma/vim-multiple-cursors'
 
 " quick locate file or function
-" 文件搜索
-" change to https://github.com/ctrlpvim/ctrlp.vim
-" ctrlp ctrlpfunky
-Plug 'ctrlpvim/ctrlp.vim' | Plug 'tacahiroy/ctrlp-funky'
+" 文件搜索 
+" change to https://github.com/junegunn/fzf.vim
+" brew install fzf
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'tracyone/fzf-funky',{'on': 'FzfFunky'}
+
 
 " ctrlsf 类似sublimetext的搜索, install ag first
 Plug 'dyng/ctrlsf.vim'
@@ -283,11 +286,8 @@ if count(g:bundle_groups, 'beta')
     Plug 'ryanoasis/vim-devicons'
     Plug 'ekalinin/dockerfile.vim'
 
-    " brew install fzf
-    Plug '/usr/local/opt/fzf'
-    Plug 'junegunn/fzf.vim'
-    " NOTE: ctrl-p for fzf Files
-    map <C-P> :Files<CR>
+
+
 
     Plug 'tenfyzhong/CompleteParameter.vim'
     " let g:complete_parameter_use_ultisnips_mapping = 1
@@ -473,7 +473,7 @@ endif
     let g:ycm_key_list_stop_completion = ['<CR>']
 
     " let g:ycm_python_binary_path = '/usr/local/bin/python3'
-    let g:ycm_python_binary_path = 'python'
+    let g:ycm_python_binary_path = 'python3'
 
 
     " 跳转到定义处, 分屏打开
@@ -627,41 +627,14 @@ endif
 
 " ################### 功能相关 ###################
 
-" ctrlp ctrlpfunky{{{
-    let g:ctrlp_map = '<leader>p'
-    let g:ctrlp_cmd = 'CtrlP'
-    map <leader>f :CtrlPMRU<CR>
-    let g:ctrlp_custom_ignore = {
-        \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
-        \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
-        \ }
-    let g:ctrlp_working_path_mode=0
-    let g:ctrlp_match_window_bottom=1
-    let g:ctrlp_max_height=15
-    let g:ctrlp_match_window_reversed=0
-    let g:ctrlp_mruf_max=500
-    let g:ctrlp_follow_symlinks=1
-    " 如果安装了ag, 使用ag
-    " if executable('ag')
-    " " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-    " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-    " " ag is fast enough that CtrlP doesn't need to cache
-    " let g:ctrlp_use_caching = 0
-    " endif
+" fzf fzf-funky {{{
+    nnoremap <Leader>p :Files<CR>
+    nnoremap <leader>f :History<CR>
 
-    " search in Files, Buffers and MRU files at the same time
-    nnoremap <Leader>fm :CtrlPMixed<Cr>
-
-    " ctrlpfunky
-    " ctrlp插件1 - 不用ctag进行函数快速跳转
-    nnoremap <Leader>fu :CtrlPFunky<Cr>
+    nnoremap <Leader>fu :FzfFunky<Cr>
     " narrow the list down with a word under cursor
-    nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-    let g:ctrlp_funky_syntax_highlight = 1
-
-    let g:ctrlp_extensions = ['funky']
+    nnoremap <Leader>fU :execute 'FzfFunky ' . expand('<cword>')<Cr>
 " }}}
-
 
 " ctrlsf {{{
     nmap \ <Plug>CtrlSFCwordPath<CR>
@@ -911,6 +884,9 @@ endif
     " https://github.com/golang/go/wiki/gopls
     let g:go_def_mode='gopls'
     let g:go_info_mode='gopls'
+
+    " automatically highlight variable your cursor is on
+    let g:go_auto_sameids = 0
 
 
     autocmd FileType go nmap <leader>t  <Plug>(go-test)
