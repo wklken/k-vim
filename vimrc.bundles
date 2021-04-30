@@ -126,6 +126,12 @@ Plug 'thinca/vim-quickrun'
 Plug 'tpope/vim-fugitive'
 " gitgutter
 Plug 'airblade/vim-gitgutter'
+" vim-signify 
+if has('nvim') || has('patch-8.0.902')
+    Plug 'mhinz/vim-signify'
+else
+    Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+endif
 
 " gundo
 " edit history, 可以查看回到某个历史状态
@@ -309,11 +315,6 @@ if count(g:bundle_groups, 'beta')
     " format at save
     autocmd BufWritePre *.py execute ':Black'
 
-    if has('nvim') || has('patch-8.0.902')
-        Plug 'mhinz/vim-signify'
-    else
-        Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-    endif
 
     " On-demand lazy load
     Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
