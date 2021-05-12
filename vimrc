@@ -533,6 +533,10 @@ vnoremap <leader>y "+y
 " vnoremap <silent> p p`]
 " nnoremap <silent> p p`]
 
+" shift-j/k 上下移动选中代码块
+vnoremap <silent> <s-J> :m '>+1<CR>gv=gv
+vnoremap <silent> <s-K> :m '<-2<CR>gv=gv
+
 " select all
 map <Leader>sa ggVG
 
