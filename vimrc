@@ -66,14 +66,14 @@ set autoread
 set shortmess=atI
 
 " 备份,到另一个位置. 防止误删, 目前是取消备份
-"set backup
-"set backupext=.bak
-"set backupdir=/tmp/vimbk/
+set backup
+set backupext=.bak
+set backupdir=/tmp/vimbk/
 
 " 取消备份。 视情况自己改
-set nobackup
+" set nobackup
 " 关闭交换文件
-" set noswapfile
+set noswapfile
 
 
 " TODO: remove this, use gundo
@@ -84,8 +84,8 @@ if has('persistent_undo')
   " number of lines to save for undo
   set undoreload=10000
   " So is persistent undo ...
-  set undofile
 
+  set undofile
   " set noundofile
   set undodir=/tmp/vimundo/
 endif
