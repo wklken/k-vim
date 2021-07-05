@@ -381,10 +381,17 @@ function! XTermPasteBegin()
 endfunction
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
+" -------------分屏操作----------
+" 垂直分屏
+map <leader>x :vsplit<cr>
+" 向右加宽
+map <leader>xc <C-w>>
+" 向左加宽
+map <leader>xa <C-w><
+" 在vim内打开一个终端
+map <leader>xx :terminal<cr>
 
-
-" 分屏窗口移动, Smart way to move between windows
-map <C-j> <C-W>j
+" 分屏窗口移动, Smart way to move between windows map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
