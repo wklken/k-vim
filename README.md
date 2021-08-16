@@ -326,6 +326,11 @@ thx a lot. 可以给我提pull request:)
 
 ![donation](https://raw.githubusercontent.com/wklken/gallery/master/donation/donation_w.jpg)
 
+### Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/wklken/k-vim.svg)](https://starchart.cc/wklken/k-vim)
+
+
 ------------------------
 ------------------------
 
