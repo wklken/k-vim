@@ -66,12 +66,12 @@ set autoread
 set shortmess=atI
 
 " 备份,到另一个位置. 防止误删, 目前是取消备份
-set backup
+" set backup
 set backupext=.bak
 set backupdir=/tmp/vimbk/
 
 " 取消备份。 视情况自己改
-" set nobackup
+set nobackup
 " 关闭交换文件
 set noswapfile
 
