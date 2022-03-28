@@ -221,7 +221,8 @@ if count(g:bundle_groups, 'python')
 
     " pip install black
     " https://black.readthedocs.io/en/stable/editor_integration.html
-    Plug 'psf/black', { 'tag': '19.10b0' }
+    Plug 'psf/black'
+
     let g:black_linelength=120
     nnoremap <silent> <Leader>b :Black<CR>
     " format at save
