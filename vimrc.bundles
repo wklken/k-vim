@@ -105,8 +105,16 @@ Plug 'terryma/vim-multiple-cursors'
 " 文件搜索 
 " change to https://github.com/junegunn/fzf.vim
 " brew install fzf
-Plug '/usr/local/opt/fzf'
+" Plug '/usr/local/opt/fzf'
+if !empty(glob("/usr/local/opt/fzf"))
+    Plug '/usr/local/opt/fzf'
+endif
+if !empty(glob("~/.fzf"))
+    Plug '~/.fzf'
+endif
+" Plug '~/.fzf'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'tracyone/fzf-funky',{'on': 'FzfFunky'}
 
 
@@ -699,7 +707,8 @@ endif
 " ################### 显示增强 ###################
 
 " airline {{{
-    let g:airline_theme="tomorrow"
+    " let g:airline_theme="tomorrow"
+    let g:airline_theme="cobalt2"
     if !exists('g:airline_symbols')
         let g:airline_symbols = {}
     endif
