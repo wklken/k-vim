@@ -106,7 +106,7 @@ Plug 'terryma/vim-multiple-cursors'
 " change to https://github.com/junegunn/fzf.vim
 " brew install fzf
 Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'tracyone/fzf-funky',{'on': 'FzfFunky'}
 
 
