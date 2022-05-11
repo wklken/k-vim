@@ -317,6 +317,8 @@ if count(g:bundle_groups, 'beta')
     " Plug 'robbles/logstash.vim'
     Plug 'ekalinin/dockerfile.vim'
 
+    Plug 'cespare/vim-toml', { 'branch': 'main' }
+
 
     " Plug 'tenfyzhong/CompleteParameter.vim'
     " let g:complete_parameter_use_ultisnips_mapping = 1
