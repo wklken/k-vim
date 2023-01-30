@@ -91,6 +91,9 @@ cd $CURRENT_DIR/bundle/YouCompleteMe/
 git submodule update --init --recursive
 if [ `which clang` ]   # check system clang
 then
+    # export DYLD_LIBRARY_PATH=/Library/Developer/CommandLineTools/usr/lib/
+    # TODO: if the dir exists, do export first?
+    # TODO: change cli to https://github.com/wklken/k-vim/pull/379
     python install.py --clang-completer --system-libclang   # use system clang
     # for golang
     # python install.py --clang-completer --system-libclang --go-completer

@@ -220,8 +220,8 @@ if count(g:bundle_groups, 'python')
     let g:vim_isort_map = '<C-i>'
 
     " pip install black
-    " https://black.readthedocs.io/en/stable/editor_integration.html
-    Plug 'psf/black'
+    " https://black.readthedocs.io/en/stable/integrations/editors.html
+    Plug 'psf/black', { 'branch': 'stable' }
 
     let g:black_linelength=120
     nnoremap <silent> <Leader>b :Black<CR>
