@@ -6,7 +6,7 @@ k-vim
 
 > LAST_UPDATE_TIME: 2017-07-29
 
-> 本次更新: 小版本更新, 支持vim8异步愈发检查
+> 本次更新: 小版本更新, 支持vim8异步语法检查
 
 详细 [更新日志](https://github.com/wklken/k-vim/wiki/UPDATE_LOG)
 
@@ -15,7 +15,7 @@ k-vim
 > Just a Better Vim Config. Keep it Simple.
 
 
-**PS**: 服务器端无插件`k-vim`简化版本(curl直接设置vimrc即可)[vim-for-server](https://github.com/wklken/vim-for-server)
+**PS**: 服务器端无插件`k-vim`简化版本(curl直接设置vimrc即可)[vim-for-server](https://github.com/wklken/vim-for-server) / vscode-vim配置(尽量一致的键位) [k-vim-vscode](https://github.com/wklken/k-vim-vscode)
 
 **PPS**: 一份tmux配置 [k-tmux](https://github.com/wklken/k-tmux)
 
@@ -325,6 +325,11 @@ thx a lot. 可以给我提pull request:)
 
 
 ![donation](https://raw.githubusercontent.com/wklken/gallery/master/donation/donation_w.jpg)
+
+### Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/wklken/k-vim.svg)](https://starchart.cc/wklken/k-vim)
+
 
 ------------------------
 ------------------------

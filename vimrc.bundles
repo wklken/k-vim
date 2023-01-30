@@ -373,7 +373,7 @@ if has_key(g:plugs, 'syntastic')
     " checkers
     " python
     let g:syntastic_python_checkers=['flake8', ] " 使用pyflakes,速度比pylint快
-    let g:syntastic_python_flake8_args='--ignore=E501,E225,E124,E712,E116,E131'
+    let g:syntastic_python_flake8_options='--ignore=E501,E225,E124,E712,E116,E131'
 
     " javascript
     " let g:syntastic_javascript_checkers = ['jsl', 'jshint']
@@ -516,6 +516,10 @@ endif
     " new version
     if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"))
         let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
+    endif
+    " new version
+    if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py"))
+        let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py"
     endif
 
     let g:ycm_extra_conf_globlist = ['!~/*']
@@ -782,8 +786,11 @@ endif
     " s/v 分屏打开文件
     let g:NERDTreeMapOpenSplit = 's'
     let g:NERDTreeMapOpenVSplit = 'v'
+
     " show bookmarks in nerdtree
     " let NERDTreeShowBookmarks = 1
+    " fix Nerdtree ^G before folder and file names OSX terminal vim
+    let g:NERDTreeNodeDelimiter = "\u00a0"
 
 
     " nerdtreetabs
