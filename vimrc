@@ -1,11 +1,11 @@
 "==========================================
 " Author:  wklken
-" Version: 9.1
-" Email: wklken@yeah.net
+" Version: 9.3
+" Email: wklken@gmail.com
 " BlogPost: http://www.wklken.me
 " ReadMe: README.md
 " Donation: http://www.wklken.me/pages/donation.html
-" Last_modify: 2015-12-15
+" Last_modify: 2019-05-04
 " Sections:
 "       -> Initial Plugin 加载插件
 "       -> General Settings 基础设置
@@ -243,6 +243,15 @@ function! NumberToggle()
 endfunc
 nnoremap <C-n> :call NumberToggle()<cr>
 
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
 " 防止tmux下vim的背景色显示异常
 " Refer: http://sunaku.github.io/vim-256color-bce.html
 if &term =~ '256color'
@@ -417,6 +426,11 @@ noremap L $
 nnoremap ; :
 
 
+" 插入模式跳转到括号尾部
+" https://stackoverflow.com/questions/11037825/how-can-i-go-to-end-of-parenthesis-brackets-quotes-without-switching-insert-mode
+inoremap <C-e> <C-o>A
+
+
 " 命令行模式增强，ctrl - a到行首， -e 到行尾
 cnoremap <C-j> <t_kd>
 cnoremap <C-k> <t_ku>
@@ -518,6 +532,10 @@ vnoremap <leader>y "+y
 " vnoremap <silent> y y`]
 " vnoremap <silent> p p`]
 " nnoremap <silent> p p`]
+
+" shift-j/k 上下移动选中代码块
+vnoremap <silent> <s-J> :m '>+1<CR>gv=gv
+vnoremap <silent> <s-K> :m '<-2<CR>gv=gv
 
 " select all
 map <Leader>sa ggVG
@@ -657,8 +675,15 @@ endif
 set background=dark
 set t_Co=256
 
-colorscheme solarized
-" colorscheme molokai
+" colorscheme solarized
+colorscheme molokai
+
+highlight Normal ctermbg=none
+" italic for vim:  https://alexpearce.me/2014/05/italics-in-iterm2-vim-tmux/
+" italic for tmux: https://github.com/tmux/tmux/issues/377
+" term or iterm2, use the settings under others/italic
+highlight Comment cterm=italic gui=italic
+highlight search ctermfg=Yellow ctermbg=NONE cterm=bold,underline
 
 
 " 设置标记一列的背景颜色和数字一行颜色一致
@@ -675,3 +700,7 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
