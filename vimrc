@@ -51,6 +51,8 @@ filetype plugin indent on
 " history存储容量
 set history=2000
 
+set updatetime=500
+
 " 检测文件类型
 filetype on
 " 针对不同的文件类型采用不同的缩进格式
