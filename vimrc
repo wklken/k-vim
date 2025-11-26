@@ -115,7 +115,7 @@ set selection=inclusive
 set selectmode=mouse,key
 
 " change the terminal's title
-set title
+" set title
 " 去掉输入错误的提示声音
 set novisualbell
 set noerrorbells
@@ -657,8 +657,8 @@ endif
 set background=dark
 set t_Co=256
 
-colorscheme solarized
-" colorscheme molokai
+" colorscheme solarized
+colorscheme molokai
 
 
 " 设置标记一列的背景颜色和数字一行颜色一致
